@@ -91,7 +91,8 @@ Once `SPECS.md` is written, derive a scoring rubric from it — not a generic ch
 
 1. Always include **triggering accuracy** as two sides of one criterion: firing when the trigger conditions in the spec are met, and staying quiet on things that merely look similar (the near-misses named in the spec's trigger conditions section).
 2. From the spec's purpose, outputs, and edge cases, derive additional criteria — the specific things *this* skill would need to get right to be worth using. Ground each one in a concrete section of `SPECS.md`, not a generic template.
-3. Aim for around 4–6 criteria total (including triggering accuracy). Go beyond that only when a genuinely distinct, important criterion would otherwise be dropped.
+3. Aim for around 6–12 criteria total (including triggering accuracy). Don't pad to hit a number, and don't force a narrow idea to stretch past what it genuinely supports — but with per-criterion scoring (next step) doing real work, a wider set of specific, narrowly-scoped criteria is usually more useful than a handful of broad ones.
+4. For every criterion, define a fixed 0–3 scale and write out what each level actually looks like *for that specific criterion* — not a generic "great/fine/bad" gradient, but concrete enough that two different people scoring the same real output would land on the same number. Ground each level in something from `SPECS.md`: what a 3 looks like when the spec's trickiest case is handled right, what a 0 looks like when the spec's most important boundary is violated. Keep each level description tight (a sentence or two) — the specificity should come from being concrete, not from length, since this is the section most likely to push `RUBRIC.md` toward the size limit in the hard boundaries below.
 
 Format, mirroring `SPECS.md`'s directness:
 
@@ -103,14 +104,38 @@ Format, mirroring `SPECS.md`'s directness:
 ### 1. Triggering accuracy
 <prose: what firing correctly and staying quiet correctly both look like, grounded in the spec's trigger conditions>
 
+- **3:** <what a perfect result looks like for this criterion>
+- **2:** <a minor, forgivable miss>
+- **1:** <a real, noticeable miss>
+- **0:** <a fundamental failure of this criterion>
+
 ### 2. <spec-derived criterion>
-<prose: what doing this well looks like for this specific skill, and what a clear failure looks like>
+<prose: what this criterion is checking and why it matters for this specific skill>
+
+- **3:** ...
+- **2:** ...
+- **1:** ...
+- **0:** ...
 
 ...
 
-## Overall score (out of 10)
-<prose describing how to judge holistically — not a rigid formula, a description of what a 9-10 vs. a 5-6 looks like>
+## Scoring summary
+
+| Criterion | Score (0–3) |
+|---|---|
+| 1. Triggering accuracy | |
+| 2. <criterion> | |
+| ... | |
+| **Total (max <3 × number of criteria>)** | |
+
+**Interpretation:**
+- **~90%+ of max:** Ready to use as-is.
+- **~65–89%:** Usable but needs light touch-up — worth checking which criterion is dragging the score down.
+- **~45–64%:** Needs real revision before trusting it.
+- **Below ~45%:** Not yet reliable — investigate for a systematic issue rather than a one-off slip.
 ```
+
+Compute the actual percentage cutoffs against this run's real number of criteria (e.g. a max of 18 for 6 criteria, up to 36 for 12) rather than reusing fixed point values from a different rubric.
 
 This document is a deliverable, not something this skill applies to anything — it's handed off unused, ready for whoever later tests and grades the finished skill.
 
@@ -121,6 +146,7 @@ Before presenting the draft, reread both documents adversarially, as if you were
 - Is there any section that's vague, generic, or could be interpreted more than one way?
 - Does any rubric criterion fail to trace back to something specific in the spec?
 - Did an edge case get named in Step 1 but not actually addressed in the spec?
+- Do any criterion's four level descriptions actually distinguish four different real outcomes, or do adjacent levels (e.g. 2 vs. 1) blur into near-duplicate phrasing?
 - Is either document ballooning in a way that suggests scope crept beyond the original idea?
 
 Note what you find, fix what you can fix yourself, and flag anything you're genuinely unsure about rather than silently picking an answer.
@@ -134,7 +160,7 @@ Present both documents along with your self-evaluation notes. Ask directly wheth
 - **Never write any SKILL.md content** — not the frontmatter, not instructions, not even a rough skeleton or example. Stay at the specification level, however tempting it is to sketch ahead.
 - **Never score or apply the rubric.** `RUBRIC.md` is a deliverable, not a tool this skill uses on anything — don't grade the spec against it, don't grade anything else against it.
 - **Never produce more than one spec per run.** No side-by-side candidate documents, no `SPECS-v1.md` / `SPECS-v2.md`. Resolve forks through questions (Step 2) instead.
-- **Watch the size of both files.** If it becomes clear that `SPECS.md` or `RUBRIC.md` is headed past roughly 30,000 tokens, stop and check with the person before continuing to expand it — that's usually a sign the idea is actually several skills, or that detail is being added past the point of usefulness.
+- **Watch the size of both files.** If it becomes clear that `SPECS.md` or `RUBRIC.md` is headed past roughly 30,000 tokens, stop and check with the person before continuing to expand it — that's usually a sign the idea is actually several skills, or that detail is being added past the point of usefulness. `RUBRIC.md` is the more likely of the two to approach this now: 6–12 criteria at four level descriptions each adds up fast, so keep level descriptions concrete and tight rather than let them sprawl.
 - **Don't assume a new skill is warranted** (Step 0) — a one-off task dressed up as a skill idea doesn't need this treatment.
 
 ## Tone
