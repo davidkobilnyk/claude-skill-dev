@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "skill_name": "skill-spec",
+    "skill_path": "/home/user/claude-skill-dev/skills/skill-spec",
+    "timestamp": "2026-08-30T00:00:00Z",
+    "evals_run": ["meeting-notes-happy-path", "vague-idea-thin", "one-off-task-step0"],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "eval_name": "meeting-notes-happy-path",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 8, "failed": 0, "total": 8, "time_seconds": 196.4, "tokens": 62651, "tool_calls": 0, "errors": 0},
+      "expectations": [
+        {"text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "passed": true, "evidence": "Only SPECS.md and RUBRIC.md exist, no duplicates."},
+        {"text": "SPECS.md contains all required sections", "passed": true, "evidence": "All eight sections present verbatim as headers."},
+        {"text": "SPECS.md content is specific to meeting-notes-to-action-items", "passed": true, "evidence": "Concrete owner/date placeholder rules, worked examples, a named anti-inference rule."},
+        {"text": "RUBRIC.md's first criterion is triggering accuracy", "passed": true, "evidence": "Criterion 1 lists fire conditions and all four near-misses from the spec."},
+        {"text": "RUBRIC.md has 4-6 criteria plus an Overall score section", "passed": true, "evidence": "6 criteria, each traceable to a spec section, plus 'Overall score (out of 10)'."},
+        {"text": "Self-evaluation pass happens before documents are presented as final", "passed": true, "evidence": "Caught and fixed 2 real gaps (duplicate items, zero-action-items case) before presenting."},
+        {"text": "At least one round of feedback + revision", "passed": true, "evidence": "Simulated feedback tightened owner-inference and vague-date handling; both docs revised and re-checked."},
+        {"text": "No SKILL.md-style content anywhere", "passed": true, "evidence": "No frontmatter or build instructions found."}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 0,
+      "eval_name": "meeting-notes-happy-path",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.25, "passed": 2, "failed": 6, "total": 8, "time_seconds": 166.4, "tokens": 55103, "tool_calls": 0, "errors": 0},
+      "expectations": [
+        {"text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "passed": false, "evidence": "Named spec.md/rubric.md; no naming contract."},
+        {"text": "SPECS.md contains all required sections", "passed": false, "evidence": "No dedicated Trigger conditions or Open assumptions sections."},
+        {"text": "SPECS.md content is specific to meeting-notes-to-action-items", "passed": true, "evidence": "Worked example and extraction rules specific to the task."},
+        {"text": "RUBRIC.md's first criterion is triggering accuracy", "passed": false, "evidence": "No criterion addresses when the skill should or shouldn't fire at all."},
+        {"text": "RUBRIC.md has 4-6 criteria plus an Overall score section", "passed": false, "evidence": "8 items on a 0-3/18-point sum with band table, not a holistic out-of-10 paragraph."},
+        {"text": "Self-evaluation pass happens before documents are presented as final", "passed": false, "evidence": "No self-critique pass described; delivered directly after questions."},
+        {"text": "At least one round of feedback + revision", "passed": false, "evidence": "Single-pass delivery, no revision round."},
+        {"text": "No SKILL.md-style content anywhere", "passed": true, "evidence": "No frontmatter or build instructions found."}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "vague-idea-thin",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 243.8, "tokens": 67161, "tool_calls": 0, "errors": 0},
+      "expectations": [
+        {"text": "Opens with grounding/broad questions rather than jumping to a draft", "passed": true, "evidence": "6 rounds of questions covering all seven Step-1 gaps before drafting."},
+        {"text": "Exactly one SPECS.md and one RUBRIC.md produced, no side-by-side alternates", "passed": true, "evidence": "A genuine 3-client fork was resolved via questions into one supported pipeline."},
+        {"text": "Final SPECS.md is concrete and specific, not generic", "passed": true, "evidence": "Names two clients with distinct category schemes, a $75/day cap, CAD handling."},
+        {"text": "SPECS.md contains all required sections", "passed": true, "evidence": "All eight sections present verbatim."},
+        {"text": "RUBRIC.md criteria grounded in the specific spec", "passed": true, "evidence": "Criteria reference named clients, the cap, and the Needs Review mechanism."},
+        {"text": "No SKILL.md-style content anywhere", "passed": true, "evidence": "No frontmatter or build instructions found."}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "vague-idea-thin",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.5, "passed": 3, "failed": 3, "total": 6, "time_seconds": 113.5, "tokens": 49814, "tool_calls": 0, "errors": 0},
+      "expectations": [
+        {"text": "Opens with grounding/broad questions rather than jumping to a draft", "passed": true, "evidence": "Two rounds of questions preceded drafting, shallower than the with-skill run's six."},
+        {"text": "Exactly one SPECS.md and one RUBRIC.md produced, no side-by-side alternates", "passed": false, "evidence": "Only a spec file was produced; no rubric file exists at all, despite the user explicitly asking for one."},
+        {"text": "Final SPECS.md is concrete and specific, not generic", "passed": true, "evidence": "Includes a categorization taxonomy, validation rules, worked example."},
+        {"text": "SPECS.md contains all required sections", "passed": false, "evidence": "No distinct Open Assumptions section; 'Open Questions/Future Enhancements' covers deferred features, not assumptions made."},
+        {"text": "RUBRIC.md criteria grounded in the specific spec", "passed": false, "evidence": "No rubric was produced at all."},
+        {"text": "No SKILL.md-style content anywhere", "passed": true, "evidence": "No frontmatter or build instructions found."}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "one-off-task-step0",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 52.7, "tokens": 49288, "tool_calls": 0, "errors": 0},
+      "expectations": [
+        {"text": "Explicitly raises the Step 0 concern before writing any spec", "passed": true, "evidence": "Named the one-off signals and asked before proceeding, rather than complying with the literal request."},
+        {"text": "Does not produce a full SPECS.md/RUBRIC.md pair once user agrees it's a one-off", "passed": true, "evidence": "No SPECS.md or RUBRIC.md produced; offered to do the rename directly instead."},
+        {"text": "Outcome clearly states what was decided and why", "passed": true, "evidence": "outcome.md lays out the signals, the question asked, and the result explicitly."},
+        {"text": "No SKILL.md-style content anywhere", "passed": true, "evidence": "Zero matches for 'SKILL.md' anywhere in the transcript."}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "one-off-task-step0",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 121.8, "tokens": 54505, "tool_calls": 0, "errors": 0},
+      "expectations": [
+        {"text": "Explicitly raises the Step 0 concern before writing any spec", "passed": true, "evidence": "Declined the full-spec approach on its own judgment, stating a one-off rename doesn't warrant a reusable-skill spec."},
+        {"text": "Does not produce a full SPECS.md/RUBRIC.md pair once user agrees it's a one-off", "passed": true, "evidence": "No spec or rubric produced; delivered a tested rename-screenshots.py script instead."},
+        {"text": "Outcome clearly states what was decided and why", "passed": true, "evidence": "Reasoning embedded in transcript.md, stated clearly though not in a separate outcome file."},
+        {"text": "No SKILL.md-style content anywhere", "passed": true, "evidence": "No frontmatter or build instructions found."}
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 164.3, "stddev": 99.51, "min": 52.7, "max": 243.8},
+      "tokens": {"mean": 59700, "stddev": 9294.7, "min": 49288, "max": 67161}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.5833, "stddev": 0.3819, "min": 0.25, "max": 1.0},
+      "time_seconds": {"mean": 133.9, "stddev": 28.45, "min": 113.5, "max": 166.4},
+      "tokens": {"mean": 53140.67, "stddev": 2896.5, "min": 49814, "max": 55103}
+    },
+    "delta": {
+      "pass_rate": "+0.42",
+      "time_seconds": "+30.4",
+      "tokens": "+6559"
+    }
+  },
+  "notes": [
+    "Baseline sometimes skipped the rubric half of the deliverable entirely (vague-idea-thin) despite it being explicitly requested — skill-spec never did, across all three evals.",
+    "skill-spec's Step 5 self-evaluation caught real, concrete gaps (duplicate action items and a zero-items case in eval 0; an unstated shared-category assumption in eval 1) before the user ever saw a draft. Baseline showed no equivalent self-check in either eval.",
+    "Baseline's own from-scratch rubric for the meeting-notes eval never included a triggering-accuracy criterion at all, even though the user explicitly asked to be able to judge the skill later — this is a category skill-spec includes by design (Step 4, criterion 1) every time.",
+    "The one-off/Step-0 eval doesn't strongly differentiate the two configurations — default Claude judgment already handles an obvious one-off well on its own. The real differentiation shows up in the other two evals, where the deliverable's structure and thoroughness matter.",
+    "with_skill runs consistently took longer and used more tokens than baseline (deeper multi-round interviews, a self-evaluation pass, and a revision loop) — a deliberate tradeoff: skill-spec is optimized for a 'buildable without follow-up' deliverable, not for speed."
+  ]
+}

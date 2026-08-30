@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Skill opens with grounding/broad clarifying questions rather than jumping straight to a SPECS.md draft on the first turn", "passed": true, "evidence": "Executor report: 6 rounds of questions covering all seven Step-1 gaps before any drafting began."},
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced by the end (no side-by-side alternates)", "passed": true, "evidence": "Only SPECS.md and RUBRIC.md exist in outputs/; a genuine 3-client fork was resolved via questions into one supported pipeline rather than split into multiple documents."},
+    {"text": "Final SPECS.md is concrete and specific to whatever expense-report scenario emerged from questioning, not generic/hand-wavy", "passed": true, "evidence": "Names two specific clients with distinct category schemes and templates, a $75/day cap, CAD currency handling, and concrete edge cases (duplicate receipts, mixed-client batches)."},
+    {"text": "SPECS.md contains all required sections (Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions)", "passed": true, "evidence": "All eight sections present verbatim as headers."},
+    {"text": "RUBRIC.md criteria are grounded in the specific spec produced, not a generic template", "passed": true, "evidence": "Criteria reference Client A/B by name, the $75/day cap, and the specific Needs Review mechanism from SPECS.md."},
+    {"text": "No SKILL.md-style content appears anywhere in the output", "passed": true, "evidence": "grep found no YAML frontmatter or skill-drafting content in transcript.md."}
+  ],
+  "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 243.8}
+}

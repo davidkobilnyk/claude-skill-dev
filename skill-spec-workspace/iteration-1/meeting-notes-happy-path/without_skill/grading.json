@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "passed": false, "evidence": "Files are named spec.md and rubric.md, not SPECS.md/RUBRIC.md; no established naming contract."},
+    {"text": "SPECS.md contains all required sections: Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions", "passed": false, "evidence": "spec.md has Problem Statement/Goals/Non-Goals/Inputs/Output/Processing Rules/Edge Cases/Open Questions, but has no dedicated Trigger conditions section addressing near-misses, and 'Open Questions for Future Versions' is about deferred features, not stated assumptions."},
+    {"text": "SPECS.md content is specific to meeting-notes-to-action-items (not generic boilerplate)", "passed": true, "evidence": "Includes a worked example, anti-hallucination rule, and owner/due-date extraction rules specific to this task."},
+    {"text": "RUBRIC.md's first criterion is triggering accuracy and covers both firing correctly and staying quiet on near-misses", "passed": false, "evidence": "rubric.md's criteria are Bucketing Accuracy, Format Compliance, Completeness, Deduplication, Clarity, Grouping Correctness plus two fabrication/ambiguity gates — no criterion addresses when the skill should or shouldn't fire at all."},
+    {"text": "RUBRIC.md has 4-6 criteria total, each traceable to a specific part of SPECS.md, plus an Overall score section", "passed": false, "evidence": "8 total items (2 hard gates + 6 scored criteria) on a 0-3/18-point sum, with a 'Scoring Summary' band table rather than a holistic 'Overall score (out of 10)' prose paragraph."},
+    {"text": "Transcript shows a self-evaluation pass (Step 5) happening before the documents are presented as final", "passed": false, "evidence": "No self-critique or gap-finding pass described — documents were delivered directly after the clarifying-question round."},
+    {"text": "Transcript shows at least one round of simulated user feedback followed by a revision (Step 6 loop actually exercised)", "passed": false, "evidence": "Single-pass delivery; no revision round occurred."},
+    {"text": "No SKILL.md-style content (frontmatter, imperative build instructions) appears anywhere in the output", "passed": true, "evidence": "No SKILL.md frontmatter or build instructions found."}
+  ],
+  "summary": {"passed": 2, "failed": 6, "total": 8, "pass_rate": 0.25},
+  "timing": {"total_duration_seconds": 166.4}
+}

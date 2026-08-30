@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Transcript explicitly raises the Step 0 'is this actually reusable' concern before writing any spec, even though a spec was explicitly requested", "passed": true, "evidence": "outcome.md: named the one-off signals (fixed existing batch, non-varying logic, no recurring trigger) and asked before proceeding, rather than complying with the literal request."},
+    {"text": "Given the simulated user agrees it's a one-off, the skill does NOT produce a full SPECS.md/RUBRIC.md pair and instead stops gracefully", "passed": true, "evidence": "No SPECS.md or RUBRIC.md exist in outputs/; outcome.md confirms neither was produced, with an offer to do the rename directly instead."},
+    {"text": "outcome.md (or equivalent) clearly states what was decided and why", "passed": true, "evidence": "outcome.md lays out the condition, the signals noticed, the question asked, and the final result in explicit sections."},
+    {"text": "No SKILL.md-style content appears anywhere in the output", "passed": true, "evidence": "grep for 'SKILL.md' in transcript.md returned zero matches."}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 52.7}
+}

@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "passed": true, "evidence": "Only SPECS.md and RUBRIC.md exist in outputs/, single files, no duplicates."},
+    {"text": "SPECS.md contains all required sections: Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions", "passed": true, "evidence": "All eight sections present verbatim as headers in SPECS.md."},
+    {"text": "SPECS.md content is specific to meeting-notes-to-action-items (not generic boilerplate)", "passed": true, "evidence": "Concrete details throughout: owner/date placeholder rules, worked multi-topic/flat-list examples, a named 'never infer owner from first-person phrasing' rule."},
+    {"text": "RUBRIC.md's first criterion is triggering accuracy and covers both firing correctly and staying quiet on near-misses", "passed": true, "evidence": "Criterion 1 'Triggering accuracy' explicitly lists fire conditions and the four near-misses from the spec (agenda drafting, non-meeting summarization, personal to-do lists, send/post requests)."},
+    {"text": "RUBRIC.md has 4-6 criteria total, each traceable to a specific part of SPECS.md, plus an Overall score section", "passed": true, "evidence": "6 criteria, each maps to a spec section (extraction completeness, owner/date handling, format, scope boundaries, empty/ambiguous handling), plus 'Overall score (out of 10)' with 9-10/5-6/below bands."},
+    {"text": "Transcript shows a self-evaluation pass (Step 5) happening before the documents are presented as final", "passed": true, "evidence": "Executor report: self-check caught two real gaps (unaddressed duplicate action items, unhandled zero-action-items case) and fixed both before presenting to the simulated user."},
+    {"text": "Transcript shows at least one round of simulated user feedback followed by a revision (Step 6 loop actually exercised)", "passed": true, "evidence": "Executor report: simulated feedback tightened the owner-inference rule and broadened vague-date handling to event-dependent dates; both documents were revised and re-checked before sign-off."},
+    {"text": "No SKILL.md-style content (frontmatter, imperative build instructions) appears anywhere in the output", "passed": true, "evidence": "grep for 'SKILL.md'/'name:'/'description:' frontmatter markers in transcript.md found no YAML frontmatter or skill-drafting content, only markdown horizontal rules."}
+  ],
+  "summary": {"passed": 8, "failed": 0, "total": 8, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 196.4}
+}

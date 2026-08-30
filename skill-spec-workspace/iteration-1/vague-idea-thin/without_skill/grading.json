@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Skill opens with grounding/broad clarifying questions rather than jumping straight to a SPECS.md draft on the first turn", "passed": true, "evidence": "Two rounds of clarifying questions preceded drafting, though shallower than the with-skill run's six rounds."},
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced by the end (no side-by-side alternates)", "passed": false, "evidence": "Only expense-report-skill-spec.md was produced — no rubric file of any kind exists, despite the user explicitly asking to 'spec it out' including scoring."},
+    {"text": "Final SPECS.md is concrete and specific to whatever expense-report scenario emerged from questioning, not generic/hand-wavy", "passed": true, "evidence": "Includes a categorization taxonomy, validation/flag rules, and a worked example interaction."},
+    {"text": "SPECS.md contains all required sections (Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions)", "passed": false, "evidence": "Has Trigger Conditions and Out of Scope sections, but no distinct 'Open assumptions' section — 'Open Questions / Future Enhancements' covers deferred features, not assumptions made during drafting."},
+    {"text": "RUBRIC.md criteria are grounded in the specific spec produced, not a generic template", "passed": false, "evidence": "No rubric was produced at all, so no criteria exist to evaluate."},
+    {"text": "No SKILL.md-style content appears anywhere in the output", "passed": true, "evidence": "No frontmatter or skill-drafting content found."}
+  ],
+  "summary": {"passed": 3, "failed": 3, "total": 6, "pass_rate": 0.5},
+  "timing": {"total_duration_seconds": 113.5}
+}

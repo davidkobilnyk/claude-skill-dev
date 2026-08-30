@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Transcript explicitly raises the Step 0 'is this actually reusable' concern before writing any spec, even though a spec was explicitly requested", "passed": true, "evidence": "Executor report: declined the full-spec approach on its own judgment, stating directly that a one-off batch rename doesn't warrant a reusable-skill spec."},
+    {"text": "Given the simulated user agrees it's a one-off, the skill does NOT produce a full SPECS.md/RUBRIC.md pair and instead stops gracefully", "passed": true, "evidence": "No spec or rubric file produced; delivered a tested rename-screenshots.py script instead."},
+    {"text": "outcome.md (or equivalent) clearly states what was decided and why", "passed": true, "evidence": "The reasoning and closing note are embedded in transcript.md rather than a separate outcome file, but state the decision and rationale clearly."},
+    {"text": "No SKILL.md-style content appears anywhere in the output", "passed": true, "evidence": "No frontmatter or skill-drafting content found."}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 121.8}
+}
