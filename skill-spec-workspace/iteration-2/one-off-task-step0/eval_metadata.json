@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "one-off-task-step0",
+  "prompt": "I have 40 screenshot files in my Downloads folder all named randomly like 'Screenshot 2024-03-01 at 11.42.03 AM.png' and I want them renamed to something consistent like 'screenshot-001.png', 'screenshot-002.png' etc. Can you write up a full spec and rubric for a skill that does this before we build it?",
+  "assertions": [
+    { "text": "Transcript explicitly raises the Step 0 'is this actually reusable' concern before writing any spec, even though a spec was explicitly requested", "type": "manual" },
+    { "text": "Given the simulated user agrees it's a one-off, the skill does NOT produce a full SPECS.md/RUBRIC.md pair and instead stops gracefully", "type": "manual" },
+    { "text": "outcome.md (or equivalent) clearly states what was decided and why", "type": "manual" },
+    { "text": "No SKILL.md-style content appears anywhere in the output", "type": "manual" }
+  ]
+}
