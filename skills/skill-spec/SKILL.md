@@ -85,6 +85,8 @@ Anything decided by assumption rather than explicit answer, stated plainly so it
 
 Every section should be concrete enough that a builder wouldn't need to come back and ask "but what about X" — if you notice a section is vague while writing it, that's a signal to go back and ask more questions rather than paper over the gap.
 
+Write in general terms throughout — even though the answers came from one specific person in this conversation, `SPECS.md` describes a skill for anyone in a similar situation, not that individual. Never write the requester's own name into the document, and don't describe the Purpose or Inputs around them personally (e.g. not "the underlying need: Priya currently does this by hand," but "the underlying need: this is typically done by hand after each meeting, which..."). Refer to "the person using this skill," or a role when it adds real clarity (e.g. "a team lead running weekly syncs"). This doesn't mean stripping out concrete grounding — a worked example can still use illustrative sample data (fictional names in a sample input block, say) to demonstrate format, since that's showing what realistic input looks like, not personalizing who the skill is for.
+
 ## Step 4: draft `RUBRIC.md`
 
 Once `SPECS.md` is written, derive a scoring rubric from it — not a generic checklist, but criteria that follow specifically from what this spec says the skill is for and where its edges are.
@@ -137,6 +139,8 @@ Format, mirroring `SPECS.md`'s directness:
 
 Compute the actual percentage cutoffs against this run's real number of criteria (e.g. a max of 18 for 6 criteria, up to 36 for 12) rather than reusing fixed point values from a different rubric.
 
+The same generality rule from Step 3 applies here: write criteria in general terms and never write the requester's own name into `RUBRIC.md` — a criterion should read as judging the skill's behavior for anyone using it, not as a note to one specific person.
+
 This document is a deliverable, not something this skill applies to anything — it's handed off unused, ready for whoever later tests and grades the finished skill.
 
 ## Step 5: self-evaluate before showing the user
@@ -147,6 +151,7 @@ Before presenting the draft, reread both documents adversarially, as if you were
 - Does any rubric criterion fail to trace back to something specific in the spec?
 - Did an edge case get named in Step 1 but not actually addressed in the spec?
 - Do any criterion's four level descriptions actually distinguish four different real outcomes, or do adjacent levels (e.g. 2 vs. 1) blur into near-duplicate phrasing?
+- Did the requester's own name, or other details that only make sense for them personally, slip into either document?
 - Is either document ballooning in a way that suggests scope crept beyond the original idea?
 
 Note what you find, fix what you can fix yourself, and flag anything you're genuinely unsure about rather than silently picking an answer.
@@ -162,6 +167,7 @@ Present both documents along with your self-evaluation notes. Ask directly wheth
 - **Never produce more than one spec per run.** No side-by-side candidate documents, no `SPECS-v1.md` / `SPECS-v2.md`. Resolve forks through questions (Step 2) instead.
 - **Watch the size of both files.** If it becomes clear that `SPECS.md` or `RUBRIC.md` is headed past roughly 30,000 tokens, stop and check with the person before continuing to expand it — that's usually a sign the idea is actually several skills, or that detail is being added past the point of usefulness. `RUBRIC.md` is the more likely of the two to approach this now: 6–12 criteria at four level descriptions each adds up fast, so keep level descriptions concrete and tight rather than let them sprawl.
 - **Don't assume a new skill is warranted** (Step 0) — a one-off task dressed up as a skill idea doesn't need this treatment.
+- **Never write the requester's name into `SPECS.md` or `RUBRIC.md`**, and don't frame either document around them personally. Both describe a skill for anyone in a similar situation, not the specific person being interviewed this run — so someone else who never took part in this conversation would find both documents just as usable.
 
 ## Tone
 
