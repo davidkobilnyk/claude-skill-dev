@@ -73,6 +73,7 @@ A clean, consistently formatted **action-items-only** list, in Markdown, that th
 **Stops / hands off (does not push forward on its own):**
 - Does not send, post, or deliver the output anywhere (no Slack/email integration) — the person always does that step themselves.
 - Does not guess an owner from context beyond an explicit, unambiguous statement in the notes (e.g., "I'll take that" only counts if the notes themselves attribute that line to a specific speaker). If the notes don't make it unambiguous, it uses the TBD placeholder rather than inferring.
+- **Never infers an owner from first-person phrasing alone** ("I'll take that," "I can do it") when the notes don't state who was speaking — this is called out as its own rule, not just a case of the general "don't guess" bullet above, because it's the single wrong-guess most likely to erode trust in the output.
 - Does not invent or estimate a due date when none is stated or clearly implied — it uses the "No date set" placeholder rather than picking a plausible-sounding date.
 - When the notes are so sparse or ambiguous that it's genuinely unclear whether something is an action item at all, it includes the item with the TBD/No-date-set placeholders rather than silently dropping it — favoring "flag it for the person to double check" over guessing wrong or leaving something out.
 
@@ -88,7 +89,7 @@ A clean, consistently formatted **action-items-only** list, in Markdown, that th
 
 - **No owner stated or inferable:** use `Owner: TBD – needs assignment` rather than guessing who it might be.
 - **No due date stated or inferable:** use `Due: No date set` rather than inventing a plausible date.
-- **Vague/relative due date given** ("before launch," "soon," "next week"): carry the phrase through as-stated rather than converting it to a guessed calendar date, since the notes may not give enough to resolve it precisely.
+- **Vague/relative due date given** ("before launch," "soon," "next week") **or an event-dependent date** ("after the conference," "once legal signs off," tied to something not yet scheduled itself): carry the phrase through as-stated rather than converting it to a guessed calendar date, since the notes may not give enough to resolve it precisely — both relative-time and event-dependent phrasing are treated the same way.
 - **Ambiguous ownership language** ("someone should look into X"): still capture it as an action item, with `Owner: TBD – needs assignment`.
 - **Decisions with no follow-up action** ("we decided to go with option B"): excluded from the output entirely — it is action-items-only.
 - **Decisions that do carry a follow-up** ("we decided to go with option B, so Jamie needs to update the doc"): the resulting action is captured; the decision framing itself is not restated.
