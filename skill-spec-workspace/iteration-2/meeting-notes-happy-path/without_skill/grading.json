@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "passed": false, "evidence": "Files are named spec.md and rubric.md, not SPECS.md/RUBRIC.md."},
+    {"text": "SPECS.md contains all required sections: Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions", "passed": false, "evidence": "Has Scope, Input Assumptions, Output Format, Edge Cases, Non-Goals — but no dedicated Trigger conditions section, and 'Open Questions (for David, before build)' covers deferred questions, not stated assumptions."},
+    {"text": "SPECS.md content is specific to meeting-notes-to-action-items (not generic boilerplate)", "passed": true, "evidence": "Includes a worked example against a real sample and a 3-way line classification scheme."},
+    {"text": "Every RUBRIC.md criterion has a 0-3 scale with concrete, spec-grounded per-level descriptions, and criterion 1 is triggering accuracy", "passed": false, "evidence": "Uses a 1-5 scale (not 0-3) plus separate hard-fail gates; scored criteria are recall/precision/owner attribution/due-date/phrasing/dedup/format/usability — no triggering-accuracy criterion at all."},
+    {"text": "RUBRIC.md has 6-12 criteria plus a scoring summary table with band cutoffs correctly computed against this run's actual max", "passed": false, "evidence": "8 scored criteria (within range) plus 2 separate hard-fail gates, but on a 1-5 scale rather than 0-3, with a pass-threshold summary rather than the specified banded table format."},
+    {"text": "Transcript shows a self-evaluation pass (Step 5) happening before the documents are presented as final", "passed": false, "evidence": "No adversarial self-check described; documents delivered directly after the Q&A round."},
+    {"text": "Transcript shows at least one round of simulated user feedback followed by a revision (Step 6 loop actually exercised)", "passed": false, "evidence": "Single-pass delivery, no revision round."},
+    {"text": "No SKILL.md-style content (frontmatter, imperative build instructions) appears anywhere in the output", "passed": true, "evidence": "No frontmatter or build instructions found."}
+  ],
+  "summary": {"passed": 2, "failed": 6, "total": 8, "pass_rate": 0.25},
+  "timing": {"total_duration_seconds": 161.1}
+}

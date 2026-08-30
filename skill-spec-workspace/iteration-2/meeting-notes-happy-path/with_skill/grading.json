@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "passed": true, "evidence": "Only SPECS.md and RUBRIC.md exist in outputs/, single files, no duplicates."},
+    {"text": "SPECS.md contains all required sections: Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions", "passed": true, "evidence": "All eight sections present verbatim as headers."},
+    {"text": "SPECS.md content is specific to meeting-notes-to-action-items (not generic boilerplate)", "passed": true, "evidence": "Concrete 7-person team, named individuals, a real worked example of messy standup notes, an explicit fork resolution (no Notion/doc connector) logged as a non-goal."},
+    {"text": "Every RUBRIC.md criterion has a 0-3 scale with concrete, spec-grounded per-level descriptions, and criterion 1 is triggering accuracy", "passed": true, "evidence": "9 criteria, each with a 0/1/2/3 breakdown grounded in specific spec details (e.g. the exact ⚠️ unclear— prefix, the 'Needs an owner' sub-list); criterion 1 is Triggering accuracy covering fire+near-miss cases."},
+    {"text": "RUBRIC.md has 6-12 criteria plus a scoring summary table with band cutoffs correctly computed against this run's actual max", "passed": true, "evidence": "9 criteria, max 27; bands (24-27 / 18-23 / 12-17 / 0-11) correctly correspond to ~90%/65%/45% of 27."},
+    {"text": "Transcript shows a self-evaluation pass (Step 5) happening before the documents are presented as final", "passed": true, "evidence": "Executor report: self-check caught a Slack-only wording gap and a thinly-grounded criterion before presenting."},
+    {"text": "Transcript shows at least one round of simulated user feedback followed by a revision (Step 6 loop actually exercised)", "passed": true, "evidence": "Simulated feedback merged duplicate-handling into extraction completeness and split out a standalone Tone fit criterion; second self-check ran after the revision."},
+    {"text": "No SKILL.md-style content (frontmatter, imperative build instructions) appears anywhere in the output", "passed": true, "evidence": "grep for frontmatter markers found no matches in transcript.md."}
+  ],
+  "summary": {"passed": 8, "failed": 0, "total": 8, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 260.7}
+}

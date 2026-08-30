@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Skill opens with grounding/broad clarifying questions rather than jumping straight to a SPECS.md draft on the first turn", "passed": true, "evidence": "Asked 5 scoping questions then 3 follow-ups before drafting; reasonable depth though shallower than the with-skill run's 3 rounds of grounding->narrowing->fork-resolution."},
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced by the end (no side-by-side alternates)", "passed": false, "evidence": "Only expense-report-skill-spec.md was produced; no rubric file exists at all."},
+    {"text": "Final SPECS.md is concrete and specific to whatever expense-report scenario emerged from questioning, not generic/hand-wavy", "passed": true, "evidence": "Includes an 8-step workflow and specific edge cases (OCR reliability, FX, split expenses, multi-card, dupes)."},
+    {"text": "SPECS.md contains all required sections (Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions)", "passed": false, "evidence": "Has a 'Who Uses It / When It Triggers' section (partial credit vs. iteration-1's baseline, which had none) and 'Explicitly Out of Scope', but no distinct Open Assumptions section — 'Next Steps' covers deferred work, not stated assumptions; also flags real policy numbers as unconfirmed placeholders rather than the skill's own reasonable assumptions."},
+    {"text": "Every RUBRIC.md criterion has a 0-3 scale with concrete, spec-grounded per-level descriptions; 6-12 criteria plus a correctly-computed scoring summary table", "passed": false, "evidence": "No rubric was produced at all, so no criteria exist to evaluate."},
+    {"text": "No SKILL.md-style content appears anywhere in the output", "passed": true, "evidence": "No frontmatter or skill-drafting content found."}
+  ],
+  "summary": {"passed": 3, "failed": 3, "total": 6, "pass_rate": 0.5},
+  "timing": {"total_duration_seconds": 89.4}
+}

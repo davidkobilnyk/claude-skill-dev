@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "Skill opens with grounding/broad clarifying questions rather than jumping straight to a SPECS.md draft on the first turn", "passed": true, "evidence": "Executor report: round 1 was pure grounding (who submits/receives, current process, pain point) before touching inputs/outputs/format, appropriately starting vague and sharpening by round 3."},
+    {"text": "Exactly one SPECS.md and one RUBRIC.md were produced by the end (no side-by-side alternates)", "passed": true, "evidence": "Only SPECS.md and RUBRIC.md exist; a genuine individual-vs-bulk-reconciliation fork was resolved via a question, not split into two documents."},
+    {"text": "Final SPECS.md is concrete and specific to whatever expense-report scenario emerged from questioning, not generic/hand-wavy", "passed": true, "evidence": "Grounded in specific policy numbers ($25/$75/$100 limits) and a fixed six-column template."},
+    {"text": "SPECS.md contains all required sections (Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions)", "passed": true, "evidence": "Executor report confirms all eight required sections present."},
+    {"text": "Every RUBRIC.md criterion has a 0-3 scale with concrete, spec-grounded per-level descriptions; 6-12 criteria plus a correctly-computed scoring summary table", "passed": true, "evidence": "11 criteria, each with a 0/1/2/3 breakdown grounded in specific policy numbers and rules; scoring table max is 33, bands (30-33/21-29/15-20/14-or-below) correctly correspond to ~90%/65%/45% of 33."},
+    {"text": "No SKILL.md-style content appears anywhere in the output", "passed": true, "evidence": "grep found no frontmatter or skill-drafting content."}
+  ],
+  "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 210.1}
+}
