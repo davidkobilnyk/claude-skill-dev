@@ -1,0 +1,15 @@
+{
+  "eval_id": 0,
+  "eval_name": "meeting-notes-happy-path",
+  "prompt": "I keep manually turning my messy meeting notes into clean action item lists for my team afterward, and it takes forever. I want a skill that does this so I don't have to reformat it every time. Can you help me spec this out — I want a proper written spec and rubric before I actually build it, not just a quick chat.",
+  "assertions": [
+    { "text": "Exactly one SPECS.md and one RUBRIC.md were produced (no v1/v2 or side-by-side alternates)", "type": "manual" },
+    { "text": "SPECS.md contains all required sections: Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions", "type": "manual" },
+    { "text": "SPECS.md content is specific to meeting-notes-to-action-items (not generic boilerplate that could apply to any skill)", "type": "manual" },
+    { "text": "RUBRIC.md's first criterion is triggering accuracy and covers both firing correctly and staying quiet on near-misses", "type": "manual" },
+    { "text": "RUBRIC.md has 4-6 criteria total, each traceable to a specific part of SPECS.md, plus an Overall score section", "type": "manual" },
+    { "text": "Transcript shows a self-evaluation pass (Step 5) happening before the documents are presented as final", "type": "manual" },
+    { "text": "Transcript shows at least one round of simulated user feedback followed by a revision (Step 6 loop actually exercised, not a single-shot output)", "type": "manual" },
+    { "text": "No SKILL.md-style content (frontmatter, imperative build instructions) appears anywhere in the output", "type": "manual" }
+  ]
+}

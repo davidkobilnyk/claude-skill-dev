@@ -1,0 +1,26 @@
+{
+  "skill_name": "skill-spec",
+  "evals": [
+    {
+      "id": 0,
+      "name": "meeting-notes-happy-path",
+      "prompt": "I keep manually turning my messy meeting notes into clean action item lists for my team afterward, and it takes forever. I want a skill that does this so I don't have to reformat it every time. Can you help me spec this out — I want a proper written spec and rubric before I actually build it, not just a quick chat.",
+      "expected_output": "A thorough clarifying-question interview (inputs/note formats, output structure, edge cases like notes with no clear action items, boundaries), followed by exactly one SPECS.md and one RUBRIC.md, each build-ready and specific to meeting-notes-to-action-items.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "vague-idea-thin",
+      "prompt": "I have an idea for a skill around 'expense reports' but haven't thought it through much. Can you spec it out for me?",
+      "expected_output": "Recognizes the idea is too thin to spec immediately, starts with grounding questions rather than guessing scope, and only converges to one SPECS.md/RUBRIC.md pair once the core job, inputs, and edge cases are concrete.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "one-off-task-step0",
+      "prompt": "I have 40 screenshot files in my Downloads folder all named randomly like 'Screenshot 2024-03-01 at 11.42.03 AM.png' and I want them renamed to something consistent like 'screenshot-001.png', 'screenshot-002.png' etc. Can you write up a full spec and rubric for a skill that does this before we build it?",
+      "expected_output": "Applies the Step 0 check even though a spec+rubric was explicitly requested: notices this reads as a one-off task (renaming one existing batch of files once) rather than a reusable skill, says so plainly, and asks whether to proceed anyway rather than silently drafting a full spec.",
+      "files": []
+    }
+  ]
+}

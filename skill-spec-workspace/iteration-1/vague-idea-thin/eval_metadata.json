@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "vague-idea-thin",
+  "prompt": "I have an idea for a skill around 'expense reports' but haven't thought it through much. Can you spec it out for me?",
+  "assertions": [
+    { "text": "Skill opens with grounding/broad clarifying questions rather than jumping straight to a SPECS.md draft on the first turn", "type": "manual" },
+    { "text": "Exactly one SPECS.md and one RUBRIC.md were produced by the end (no side-by-side alternates)", "type": "manual" },
+    { "text": "Final SPECS.md is concrete and specific to whatever expense-report scenario emerged from questioning, not generic/hand-wavy", "type": "manual" },
+    { "text": "SPECS.md contains all required sections (Purpose, Trigger conditions, Inputs, Outputs, Scope & boundaries, Non-goals, Edge cases, Open assumptions)", "type": "manual" },
+    { "text": "RUBRIC.md criteria are grounded in the specific spec produced, not a generic template", "type": "manual" },
+    { "text": "No SKILL.md-style content appears anywhere in the output", "type": "manual" }
+  ]
+}
