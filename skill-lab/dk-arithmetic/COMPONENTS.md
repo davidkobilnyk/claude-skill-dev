@@ -18,26 +18,34 @@ Atomic, named building blocks that a variant's `SKILL.md` text or design can mix
 - **`verification-recompute`** — a second, independent computation pass with a concrete, checkable criterion (not a vague "double-check your work").
 - **`worked-example`** — one or more fully worked sample problems included directly in the instructions.
 - **`primary-fallback-split`** — a labeled "Primary method" / "Fallback method: only if X" structure, with a fully spelled-out alternate procedure under the fallback heading.
+- **`bare-number-rule`** — explicit statement that a single number with no operator is itself the arithmetic expression (output it as-is), distinguishing that case from "no arithmetic expression found."
 
 ## Components × variants
 
 Filled in as each variant is created (Step 5 onward).
 
-| Component | v1 | v2 | v3 | v4 | v5 |
-|---|---|---|---|---|---|
-| `order-of-ops-rule` | | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `parse-then-eval-split` | | ✓ | ✓ | ✓ | ✓ |
-| `word-number-mapping` | | ✓ | ✓ | ✓ | ✓ |
-| `implicit-mult-rule` | | ✓ | ✓ | ✓ | ✓ |
-| `sign-handling-rule` | | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `percent-fraction-rule` | | ✓ | ✓ | ✓ | ✓ |
-| `no-expression-fallback` | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `injection-immunity-rule` | | ✓ | ✓ | ✓ | ✓ |
-| `precision-preservation-rule` | | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `repeating-decimal-format-rule` | | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `code-execution` | | | ✓ | | ✓ (primary) |
-| `verification-recompute` | | | | ✓ | |
-| `worked-example` | | | | ✓ | |
-| `primary-fallback-split` | | | | | ✓ |
+| Component | v1 | v1b | v1c | v2 | v2b | v3 | v4 | v5 |
+|---|---|---|---|---|---|---|---|---|
+| `order-of-ops-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `parse-then-eval-split` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `word-number-mapping` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `implicit-mult-rule` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `sign-handling-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `percent-fraction-rule` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `no-expression-fallback` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `injection-immunity-rule` | | | | ✓ | | ✓ | ✓ | ✓ |
+| `precision-preservation-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `repeating-decimal-format-rule` | | ✓ | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `code-execution` | | | | | | ✓ | | ✓ (primary) |
+| `verification-recompute` | | | | | | | ✓ | |
+| `worked-example` | | | | | | | ✓ | |
+| `primary-fallback-split` | | | | | | | | ✓ |
+| `bare-number-rule` | | | ✓ | | | | | |
+
+v1b = v1 + `repeating-decimal-format-rule` only (parent: v1). v1c = v1 + `bare-number-rule` only (parent: v1). v2b = v2 minus `injection-immunity-rule` (parent: v2). See `HYPOTHESES.md` for the hypothesis each is testing.
 
 v1 is the minimal baseline (no explicit rules beyond the no-expression fallback) to establish how much the explicit components in v2-v5 actually buy over letting the model wing it. v3/v5 mark `order-of-ops-rule` / `sign-handling-rule` / `precision-preservation-rule` / `repeating-decimal-format-rule` as "via script" since `eval_expr.py` enforces these mechanically rather than through instructed text — the model only needs to normalize the input, not apply precedence or precision rules itself.
+
+## Round 1 results (N=5, see HYPOTHESES.md for full writeup)
+
+v1 scored 97.80 avg / 96 min / 100% failure rate (467 chars). v2, v3, v4, v5 all scored 102/102 on every run (0% failure rate) at N=5. v1's only misses were on "single number, no operator" (rows 79-81, missing in 3/5 runs) and "repeating-decimal division" (rows 82-84, missing in 4/5 runs) — exactly the two scenario categories where v1's text gives no explicit rule (no `repeating-decimal-format-rule`, and no stated handling for a bare-number input under `no-expression-fallback`). This directly supports the "unaddressed ambiguity is a coin flip" principle from `text-principles.md`.
