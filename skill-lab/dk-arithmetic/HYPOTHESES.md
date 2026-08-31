@@ -29,6 +29,16 @@ Change made: removed the `injection-immunity-rule` sentence from v2's Step 1. No
 Result: CONFIRMED. N=5: 102/102 on every run, identical to v2's own record — all 3 injection-shaped rows (100-102) still answered correctly in all 5 runs with the rule removed. v2b is now the leanest variant with a perfect record (2,527 chars vs. v2's 2,794).
 Lesson: not every plausible-sounding safety rule is actually load-bearing for a given model/task — the model already resists this specific injection pattern by default. Confirmed by subtraction, not just by v1's absence of the rule (different variant, more confounds), which is why this component-isolation test was worth running on v2 directly. v2b now becomes the new brevity-ranked leader over v2, tied on correctness.
 
+## dk-arithmetic-v1d (parent: dk-arithmetic-v1b + dk-arithmetic-v1c, combined)
+Note: this variant deliberately combines two components (`repeating-decimal-format-rule` + `bare-number-rule`) in one step, at the user's explicit request, rather than following the lab's default one-hypothesis-per-variant rule. The user is specifically interested in how far a very short SKILL.md (v1's minimal style, extended with just the two smallest fixes) can go on correctness.
+Hypothesis: since v1b and v1c each independently and fully fixed their respective miss cluster with no side effects on the other rows, combining both additions onto v1 should fix both miss clusters simultaneously and produce a 102/102 result, while staying far shorter than v2/v2b (662 + 670 - v1's base ≈ 865 bytes expected, vs. v2b's 2,527).
+Change made: v1's text plus both the `repeating-decimal-format-rule` sentence (from v1b) and the `bare-number-rule` sentence (from v1c). No other changes — no `parse-then-eval-split`, no other v2-style rules.
+Result: (fill in after this round)
+Lesson: (fill in after this round)
+
+## Round 3 plan: v1d vs. v3 vs. v5 at N=20, with token-count tracking
+At the user's request: run the new `v1d` combination variant against `v3` (code-execution) and `v5` (primary/fallback) at N=20 each (60 runs total), and add average per-run token consumption to the Step 7 results table this round (not tracked in Rounds 1-2).
+
 ## Depth escalation: dk-arithmetic-v2 to N=20
 Per the Step 7 hard rule, no variant can be called "final" or "reliable" below N=20 zero-failure. v2 is the current top-ranked candidate (tied-best correctness, lowest char count) — escalating it to N=20 fresh runs to test whether its clean N=5 record holds at depth, per the project's zero-tolerance failure bar from intake.
 Result: CONFIRMED. All 20 fresh runs scored 102/102, zero failures. Combined with Round 1's original N=5 (also 102/102), v2 now has 25/25 clean runs total — it clears the N≥20 zero-failure bar and can legitimately be called reliable (not just "clean at N=5").

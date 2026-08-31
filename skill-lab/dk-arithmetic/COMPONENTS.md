@@ -24,25 +24,25 @@ Atomic, named building blocks that a variant's `SKILL.md` text or design can mix
 
 Filled in as each variant is created (Step 5 onward).
 
-| Component | v1 | v1b | v1c | v2 | v2b | v3 | v4 | v5 |
-|---|---|---|---|---|---|---|---|---|
-| `order-of-ops-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `parse-then-eval-split` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `word-number-mapping` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `implicit-mult-rule` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `sign-handling-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `percent-fraction-rule` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `no-expression-fallback` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `injection-immunity-rule` | | | | ✓ | | ✓ | ✓ | ✓ |
-| `precision-preservation-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `repeating-decimal-format-rule` | | ✓ | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `code-execution` | | | | | | ✓ | | ✓ (primary) |
-| `verification-recompute` | | | | | | | ✓ | |
-| `worked-example` | | | | | | | ✓ | |
-| `primary-fallback-split` | | | | | | | | ✓ |
-| `bare-number-rule` | | | ✓ | | | | | |
+| Component | v1 | v1b | v1c | v1d | v2 | v2b | v3 | v4 | v5 |
+|---|---|---|---|---|---|---|---|---|---|
+| `order-of-ops-rule` | | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `parse-then-eval-split` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `word-number-mapping` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `implicit-mult-rule` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `sign-handling-rule` | | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `percent-fraction-rule` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `no-expression-fallback` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `injection-immunity-rule` | | | | | ✓ | | ✓ | ✓ | ✓ |
+| `precision-preservation-rule` | | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `repeating-decimal-format-rule` | | ✓ | | ✓ | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `code-execution` | | | | | | | ✓ | | ✓ (primary) |
+| `verification-recompute` | | | | | | | | ✓ | |
+| `worked-example` | | | | | | | | ✓ | |
+| `primary-fallback-split` | | | | | | | | | ✓ |
+| `bare-number-rule` | | | ✓ | ✓ | | | | | |
 
-v1b = v1 + `repeating-decimal-format-rule` only (parent: v1). v1c = v1 + `bare-number-rule` only (parent: v1). v2b = v2 minus `injection-immunity-rule` (parent: v2). See `HYPOTHESES.md` for the hypothesis each is testing.
+v1b = v1 + `repeating-decimal-format-rule` only (parent: v1). v1c = v1 + `bare-number-rule` only (parent: v1). v1d = v1 + both `repeating-decimal-format-rule` and `bare-number-rule` (parent: v1b + v1c combined, at the user's explicit request — this deliberately combines two components in one variant, departing from the lab's usual one-hypothesis-per-variant default). v2b = v2 minus `injection-immunity-rule` (parent: v2). See `HYPOTHESES.md` for the hypothesis each is testing.
 
 ## Round 2 results (see HYPOTHESES.md for full writeup)
 
