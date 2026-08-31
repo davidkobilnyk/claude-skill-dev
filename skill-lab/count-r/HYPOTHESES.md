@@ -367,4 +367,8 @@ Spot-checked against strawberry, the CR-vs-backslash-r rows, punctuation-heavy r
 
 **v26 (1084 chars SKILL.md + 1594 chars count_r.py, parent v22) — explicitly forbids reading the bundled script.** Identical `count_r.py` to v22, but the SKILL.md adds "Do not read, open, or view this script's source code — there is no need to inspect it." This directly targets what was flagged in chat: several of v22's actual round-9/10 test runs read the script's source anyway despite never being told to, adding avoidable input tokens that ate into the efficiency v22 was designed to demonstrate. If this explicit prohibition reliably stops that behavior, v26 should show a measurable token reduction versus v22 under the same batched-suite methodology.
 
+## count-r-v27 (parent: count-r-v23) — bundled shell script instead of inline command
+
+Same relationship as v22 is to v21: v23 has the agent write out the grep/wc command inline every invocation; v27 ships that exact command as a pre-written, executable, pre-verified `count_r.sh` (728 chars) and has the SKILL.md (948 chars) instruct calling it rather than authoring the command fresh. The script bakes in the `LC_ALL=C.UTF-8` locale requirement and the homoglyph character class internally, so the caller doesn't need to remember either — a real advantage over v23, where an agent could in principle drop the locale prefix or mistype the character class on some future invocation. Made executable (`chmod +x`) and re-verified against all 8 of v23's spot-check cases by calling the script directly (not just the inline command) — all 8 passed.
+
 Not yet run.
