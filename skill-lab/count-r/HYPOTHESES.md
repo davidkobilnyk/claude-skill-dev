@@ -157,3 +157,59 @@ A mechanism with a lower average but a tighter StdDev/Range and higher Min is of
 | Re-scan-and-majority-vote | 9, 10 | 2 | 9.50 | 9 | 1 | 0.50 |
 
 **Length-check verification is still the standout on consistency, not just average**: highest average (11.60) among mechanisms with n≥3, highest floor (11), and the lowest StdDev (0.49) of any mechanism with n≥5 — still roughly 2x tighter than independent recount (0.98), even though recount's own new data point (round 4 stayed at 11, not another crash to 9) narrowed the gap from round 3's 2.7x. Independent recount's floor moved up to 9 (unchanged) but its round-4 repeat at 11 (not a repeat crash) is a small point in its favor — it's no longer strictly "one bad round away from length-check's level," though length-check remains ahead on every axis.
+
+## Round 5: subtractive tests against v9 (v4/v6/v7/v8/v10 dropped from active rotation)
+
+With v9 now the clear correctness/brevity leader (12/12 in rounds 3 and 4, smallest chars among the round-3/4 perfect scorers), round 5 narrows focus entirely to v9: re-run v9 itself for a third replication, plus six new variants (v11–v16), each removing exactly one component from v9's 896-char text to test whether it's load-bearing or safely droppable. v4, v6, v7, v8, and v10 are set aside for now (kept on disk, not deleted) rather than formally retired, since they never lost to v9 by strict domination on every prior round — just consistently scored lower.
+
+**Also new this round**: switched from one-agent-per-test-case (72 agents in round 4) to one-agent-per-variant, with each agent running all 12 of its own test cases internally. Round 4 cost ≈3.2M tokens; round 5 (7 agents, 84 test-case-runs total) cost **309,562 tokens** — about **10.3x cheaper** for the same number of test-case evaluations. Confirms the diagnosis: the token cost was almost entirely fixed per-agent-spawn overhead (system prompt, tool schemas, skill listing), not the counting task itself, and it scales with agent count far more than with total work done.
+
+## count-r-v11 (parent: count-r-v9)
+Hypothesis: the worked example "(for example, "bar" becomes b-a-r; keep spaces and punctuation as their own items too)" may be scaffolding the model doesn't need once told to hyphen-separate the input — removing it should save chars at no correctness cost.
+Change made: deleted the entire parenthetical from v9's spell-out instruction. 810 chars (vs v9's 896).
+Result: CONFIRMED on this round. 12/12, identical to v9.
+Lesson: the example (including the punctuation reminder) does not appear necessary for correctness on this round's suite. One data point — needs replication before fully trusting, per the same standard applied to v9's own early clean sweeps.
+
+## count-r-v12 (parent: count-r-v9)
+Hypothesis: the length-check alone (detecting a transcription mismatch) may be sufficient without also prescribing the fix ("redo the spelling from scratch") — the model may self-correct once a mismatch is flagged, without needing to be told how.
+Change made: deleted "if it doesn't, you made a transcription error, so redo the spelling from scratch" from v9's verification step, keeping only the length-match confirmation. 811 chars.
+Result: CONFIRMED on this round. 12/12, identical to v9 and v11.
+Lesson: no observed cost to dropping the explicit corrective instruction this round. This was flagged as the riskiest of the "safe-looking" cuts going in (the clause most directly tied to catching the Rrrrr/purrrring transcription errors v6/v8 have struggled with in earlier rounds) — a clean pass here is a more interesting result than v11's and deserves closer scrutiny on replication, since a mismatch could in principle be detected but silently ignored by a less careful run.
+
+## count-r-v13 (parent: count-r-v9)
+Hypothesis: of the two things bundled in v9's parenthetical example, the "bar" example itself may be doing the real work, while the separate "keep spaces and punctuation as their own items too" reminder is redundant (spaces/punctuation naturally get their own hyphenated slot once you're transcribing character-by-character).
+Change made: kept "(for example, "bar" becomes b-a-r)", deleted "; keep spaces and punctuation as their own items too". 845 chars.
+Result: CONFIRMED on this round. 12/12, including the punctuation-heavy stress cases (r,r.r!r?r; the R2D2 sentence) that this clause was specifically hypothesized to protect.
+Lesson: no observed cost this round, even on the exact cases most likely to expose a problem. Still worth replicating given how directly targeted the removed clause was at these cases.
+
+## count-r-v14 (parent: count-r-v9)
+Hypothesis: the body's opening line "run only when explicitly called;" is pure duplication of the frontmatter `description`, which already gates invocation — removing the body copy should have zero effect on the counting mechanism itself.
+Change made: deleted the duplicate body line entirely. 864 chars.
+Result: CONFIRMED, as expected. 12/12.
+Lesson: this was never really a correctness hypothesis (invocation gating lives in frontmatter regardless), so the clean result is unsurprising — but it's a free, safe char reduction worth keeping in any future v9-derived variant.
+
+## count-r-v15 (parent: count-r-v9)
+Hypothesis: v9's verification sentence is more verbose than it needs to be ("count the total number of items in your hyphenated sequence and confirm it matches the length of the original input exactly"); a terser phrasing carrying the same instruction ("confirm the sequence length equals the input length") should work identically.
+Change made: condensed the verification sentence's phrasing as above, kept the corrective clause. 825 chars.
+Result: CONFIRMED on this round. 12/12.
+Lesson: the elaborated phrasing doesn't appear necessary — the terser version carries the same instruction fine. One data point.
+
+## count-r-v16 (parent: count-r-v9)
+Hypothesis: the closing line "Report only the final, verified count." constrains output format, not counting accuracy — removing it should not change correctness, only possibly verbosity of the final answer.
+Change made: deleted the final line entirely. 857 chars.
+Result: CONFIRMED on this round. 12/12.
+Lesson: as expected, a format-only instruction with no bearing on correctness in this test. Free cut, though real-world use might still want it for a clean single-number output rather than relying on the agent's own judgment about response length.
+
+## Round 5 results summary (v9, v11–v16 — 12-case suite)
+
+| Variant | Chars | Score | Note |
+|---|---:|---:|---|
+| v9 | 896 | 12/12 | third consecutive clean sweep (R3, R4, R5) |
+| v11 | 810 | 12/12 | dropped worked example |
+| v12 | 811 | 12/12 | dropped corrective "redo from scratch" clause |
+| v13 | 845 | 12/12 | dropped punctuation reminder only |
+| v14 | 864 | 12/12 | dropped duplicate invocation line |
+| v15 | 825 | 12/12 | condensed verification phrasing |
+| v16 | 857 | 12/12 | dropped output-format line |
+
+**All 7 variants scored a perfect 12/12** — the first round in the whole experiment where every active variant swept the suite. This is a genuinely unusual result and should be read with the same caution consistently applied elsewhere in this log: v9 now has three replications behind its clean sweep, which is real evidence; v11–v16 each have exactly **one**, which is not yet enough to call any of them "confirmed" in the same sense. It's plausible some of these cuts (particularly v12's dropped corrective clause and v13's dropped punctuation reminder, the two most directly tied to previously-observed failure modes in the v6/v8 lineage) will show cracks on a harder or larger test suite, or simply on a second independent run, the way v4 and v6 did after early perfect rounds. The clean sweep across the board is nonetheless a positive signal that v9's true load-bearing core is smaller than its full 896-char text — the open question is exactly how small, which the next round (repeating v11–v16, or trying a combined variant that stacks multiple safe-looking cuts) would help answer.
