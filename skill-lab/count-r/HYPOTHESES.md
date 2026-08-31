@@ -82,3 +82,22 @@ Lesson: a bare re-scan-and-majority-vote, without externalizing the character se
 | v10 | 1049 | 9/12 |
 
 **v9 is the new correctness/brevity leader.** v4 and v6, both perfect in round 2, each picked up new failures this round (v4: hello, R2D2 stress, and a brand-new failure on the "eighteenth symbol" indirect-0 test; v6: R2D2 stress only). v7 and v10 both picked up a new failure on the same indirect-0 test that v4 also newly failed. No variant has scored perfectly on two consecutive rounds — v9's clean sweep is a first data point, not yet a proven track record, and should be treated as such until replicated.
+
+## Cross-round mechanism track record (as of round 3)
+
+Grouping variants by their actual underlying mechanism (not just version number) makes clearer which approaches are genuinely robust vs. lucky on one run:
+
+| Mechanism thread | Variant(s) | R1 | R2 | R3 | Times run | Avg | Replicated? |
+|---|---|:-:|:-:|:-:|:-:|:-:|---|
+| Baseline, no mechanism | v1 | 7/12 | 7/12 (diff. failures) | retired | 2 | 7/12 | — |
+| Char-by-char scan | v2 | 9/12 | 9/12 (diff. failures) | retired | 2 | 9/12 | — |
+| + cluster warning | v7 | — | 11/12 | 9/12 | 2 | 10/12 | Partial — cluster-specific fix held, other failures didn't |
+| + cluster warning + re-scan | v10 | — | — | 9/12 | 1 | 9/12 | No improvement over v7 |
+| Spell-out-then-count (bare) | v3 | 9/12 | 9/12 (diff. failures) | retired | 2 | 9/12 | Consistently transcription-prone both times |
+| + mandatory/visible spelling | v5 | — | 10/12 | retired | 1 | 10/12 | Refuted, one-shot |
+| Word-by-word tally (bare) | v4 | 10/12 | 12/12 | 9/12 | 3 | ~10.3/12 | **No** — swung from perfect to below-average |
+| Spell-out + length-check + recount | v6 | — | 12/12 | 11/12 | **2** | **11.5/12** | **Yes** — highest and most stable average, never below 11/12 |
+| Spell-out + recount only | v8 | — | — | 9/12 | 1 | 9/12 | Refuted this round |
+| Spell-out + length-check only | v9 | — | — | 12/12 | 1 | 12/12 | **Unreplicated** |
+
+**Key caution (flagged by user)**: v9 is a subtractive test of v6 (removed the recount half), and it hit 12/12 on its first try — structurally the same position v4 was in after round 2, before regressing to 9/12 in round 3. Only 2 of the 12 test cases (Rrrrr, purrrring) actually stress the specific failure mode the length-check/recount pair targets, so a single clean pass on those two is not strong evidence the length-check-only mechanism is as robust as full v6. v6 is currently the only mechanism with a genuine multi-round track record (2 rounds, never below 11/12). Before trusting v9 over v6, both need a second independent data point — v9 to see if its clean sweep holds, v6 to add a third confirmation.
