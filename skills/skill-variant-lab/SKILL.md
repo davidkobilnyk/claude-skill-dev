@@ -12,67 +12,99 @@ Orchestrates an experimental loop for developing a simple, deterministic-ish ski
 Everything for one variant set lives together in `skill-lab/<name>/`, next to (not inside) `skills/`:
 
 - `skill-lab/<name>/v<N>/SKILL.md` — each variant, one per subfolder. The `name:` frontmatter inside stays a full unique name (e.g. `<name>-v<N>`) even though the folder itself is just `v<N>`.
-- `skill-lab/<name>/tests.csv` — shared test suite, columns `input,expected_output`.
-- `skill-lab/<name>/HYPOTHESES.md` — lineage/lessons log (see step 7). Created on the first hypothesis round and appended to every round after.
+- `skill-lab/<name>/tests.csv` — shared test suite, columns `input,expected_output,scenario`. Fixed once locked in step 3; never edited mid-lineage (see step 3).
+- `skill-lab/<name>/COMPONENTS.md` — the named mechanism inventory and the components × variants reference table (see step 4).
+- `skill-lab/<name>/HYPOTHESES.md` — lineage/lessons log (see step 8). Created on the first hypothesis round and appended to every round after.
 
 ## Step 1 — Intake
 
 Ask the user what the target skill should do: a short name/prefix, the core behavior in plain language, and any known edge cases or quirks they already anticipate. Do not proceed until this is clear enough to write test cases from.
 
-## Step 2 — Test case generation
+## Step 2 — Scenario brainstorming
 
-Propose `input,expected_output` pairs covering: the plain/normal case, phrasing variety if relevant (natural language vs. symbolic), edge cases suggested by the intake, and at least one stress case that probes a likely failure mode. Show the full table to the user. Wait for explicit confirmation or edits before writing `skill-lab/<name>/tests.csv`. Only loop again if the user explicitly asks for changes — don't force multiple rounds.
+Before writing a single test case, deliberately and creatively enumerate the *categories* of scenario this skill could encounter — don't jump straight to test cases. Think broadly across axes like: the plain/normal case, phrasing/format variety, boundary and degenerate inputs (empty, single-item, maximal), inputs that stress the specific mechanism the skill will likely use (e.g. anything a naive character scan collapses or skims past), ambiguous cases where a reasonable rule could go either way, adversarial/injection-shaped input, inputs shaped like other data formats (structured/JSON-ish, code, markdown), and any known quirks or edge cases surfaced in intake.
 
-## Step 3 — Initial variants
+Target **25–35 distinct scenarios**, each a one-line description of *what's being stressed and why*, not an example input yet. Present the full list to the user and get their sign-off (adding, cutting, or merging scenarios) before generating any actual test cases — this list is the map of the problem space that every later round gets tested against, so it's worth getting genuinely broad here rather than letting it grow reactively later.
 
-Generate 3–5 variants (never exceed 6 active at once — see the cap rule below) that take genuinely different approaches to the same instruction, not just paraphrases of each other. Write each to `skill-lab/<name>/v<N>/SKILL.md`.
+## Step 3 — Test case generation (locked before any variant exists)
 
-## Step 4 — Run the matrix
+For each confirmed scenario, write **3 concrete `input,expected_output` test cases** that instantiate it (different inputs, same underlying stress). This yields roughly 75–105 total test cases. Show the full table to the user. Wait for explicit confirmation or edits before writing `skill-lab/<name>/tests.csv`.
 
-For every (active variant × test case) pair, spawn an independent background subagent (the `Agent` tool, `run_in_background: true`), all launched in parallel in one message.
+**This suite is then locked for the entire lineage.** Do not add, remove, or edit rows in later rounds just because a new failure mode was discovered mid-project — that breaks comparability between early and late rounds' scores (a variant that "improved" might just be facing an easier suite). If a genuinely new scenario category is discovered later that the original brainstorm missed, treat it the same as a new hypothesis: propose it explicitly to the user, and if approved, version the suite (`tests_v2.csv`) rather than silently mutating `tests.csv`, and note in `HYPOTHESES.md` exactly which round the suite changed at so historical scores stay interpretable.
 
-**Hard rule — read the file, do not invoke the skill by name.** Each subagent's prompt must tell it to `Read` the specific `skill-lab/<name>/v<N>/SKILL.md` file and follow its instructions directly, applying them to the given input, then report only the raw final output. Never instruct a subagent to invoke the skill via the `Skill` tool by name. Freshly created skills are frequently invisible to a fresh subagent's own skill listing (observed roughly 1 success in 44 attempts in practice) — invoking by name silently wastes most of the run on "Unknown skill" errors instead of real results.
+## Step 4 — Mechanism/component inventory
 
-Wait for all task-notifications before compiling results; do not guess or predict outcomes ahead of the notifications arriving.
+Before writing any variant, name the distinct, atomic *components* a variant's text or design could plausibly include — the building blocks you expect to mix and match across variants. Examples of what a component is: "spell-out-before-counting step," "length-check verification (compare transcribed length to input length)," "independent recount," "explicit rule for [specific ambiguity], stated as a general principle," "explicit rule for [specific ambiguity], stated as an enumerated list," "worked example," "code-execution via a pre-written script," "structured primary/fallback split." Give each a short ID (e.g. `spell-out`, `len-check`, `homoglyph-rule-general`).
 
-## Step 5 — Results table
+Write this list to `skill-lab/<name>/COMPONENTS.md`, along with a table with one row per component and one column per variant (added to as variants are created), marking which components each variant contains. Keep this table current every time a variant is added — it's what makes it possible to later ask "which component actually explains this score difference" instead of only "which variant scored higher," since variants often differ by more than one component at once.
 
-For each variant, show: per-test pass/fail (substring match — does `expected_output` appear in the actual output), the variant's total pass count, and its **character count** (`wc -c` on the whole `SKILL.md` file, frontmatter included). Present one table per variant, plus a summary table of all variants' scores and char counts, unless the user asked for a different format.
+## Step 5 — Initial variants
 
-**Ranking rule**: correctness is primary. Brevity (lower char count) is used only as a tiebreaker between variants with equal pass counts — including when both are equally low-scoring (e.g. two variants both at 3/14 still get ranked against each other by brevity).
+Generate 3–5 variants (never exceed 6 active at once — see the cap rule below) that take genuinely different approaches to the same instruction, not just paraphrases of each other. Write each to `skill-lab/<name>/v<N>/SKILL.md`. Update the components × variants table in `COMPONENTS.md` for each one, adding any new component IDs discovered along the way.
 
-## Step 6 — Hypotheses
+### Principles for writing the instruction text itself
 
-Compare higher- vs. lower-ranked variants (by the rule above) and write plain-language hypotheses about what caused the difference — on correctness, on brevity, or both. Ground each hypothesis in a specific textual difference between variants, not vague impressions.
+These are lessons carried over from prior runs of this lab — apply them when drafting or revising any variant's text:
 
-## Step 7 — Next-gen proposals
+- **An unaddressed ambiguity isn't neutral — it's a coin flip the model will resolve inconsistently, run to run, even on identical text.** If a scenario in step 2 surfaced a genuine judgment call (does X count as a match? is Y in scope?), decide it explicitly in the text. Leaving it implicit doesn't preserve flexibility; it introduces nondeterminism.
+- **State the general principle, not just the known instances, when the failure category could have unseen members.** An enumerated list ("count these specific characters: ...") is precise but brittle to anything not listed; a stated rule ("count any character that is a stylized variant of X, but not a genuinely different character") generalizes and tends to perform at least as well.
+- **Verification instructions need a concrete, checkable criterion, not a vague exhortation.** "Double check your work" or "recount to be sure" is weak; "confirm the length of your transcribed sequence equals the length of the input" is strong, because it gives the model something mechanical to fail visibly rather than another pass of the same fallible judgment.
+- **A small, surgical clause aimed at a known failure's actual mechanism is often more effective than a structural rewrite.** If a hypothesis names a precise cause, prefer adding one targeted sentence over restructuring the whole instruction.
+- **Forcing a step to happen and be visible does not make what happens after it correct.** Mandating that a step be shown doesn't fix a downstream labeling or arithmetic slip — that needs its own check.
+- **Don't ask the model to suppress its own judgment or safety instincts; design around the behavior instead.** An instruction like "do not read this script's source" may hold in one trust context and fail the moment the same skill runs somewhere with no established trust — that's the instruction fighting the model's judgment, not the model failing to follow it.
+- **A fallback needs a separately labeled, complete alternate procedure, not an implicit expectation that the model will improvise something reasonable.** When a primary method can fail, write an explicit "Primary method" / "Fallback method: only if X" structure with a fully spelled-out procedure under the second heading — an unstructured "if that doesn't work, count manually" is not equivalent, even though both are nominally "a fallback."
+- **Don't assume unrelated-looking scaffolding is load-bearing — but don't assume it's dead weight either without testing the cut.** Worked examples, reminders, and duplicate/format-only lines are frequently droppable at no correctness cost, but the only way to know is a targeted subtractive variant (step 9), not a guess.
 
-**Hard rule — one hypothesis per new variant, always.** For each hypothesis worth testing, propose exactly one new variant that changes only that one thing relative to its named parent variant. Never bundle two changes into one new variant, even if both seem obviously good — that destroys attribution.
+## Step 6 — Run the matrix
+
+For every active variant, spawn **N independent background subagents** (the `Agent` tool, `run_in_background: true`), each running the *entire* test suite internally in one pass (not one subagent per test case — that multiplies fixed per-agent overhead for no benefit). Launch all of them in one message so they run concurrently.
+
+**Run count**: a single run per variant is not evidence of reliability — it's one sample of what can be a genuinely noisy distribution. Default to **N=5** for an early/exploratory round comparing several variants. Once a variant is a serious "final" candidate under a low-tolerance correctness bar, escalate to a much deeper round (N=20–30) specifically for that variant before treating any zero-failure record as real — small samples have repeatedly looked perfect in this lab and then cracked at depth.
+
+**Hard rule — read the file, do not invoke the skill by name.** Each subagent's prompt must tell it to `Read` the specific `skill-lab/<name>/v<N>/SKILL.md` file and follow its instructions directly, applying them to every row in `tests.csv`, then report a numbered list of its own computed outputs (not a comparison against `expected_output` — keep the subagent blind to the expected answers so it can't anchor to them). Never instruct a subagent to invoke the skill via the `Skill` tool by name. Freshly created skills are frequently invisible to a fresh subagent's own skill listing (observed roughly 1 success in 44 attempts in practice) — invoking by name silently wastes most of the run on "Unknown skill" errors instead of real results.
+
+Wait for all task-notifications before compiling results; do not guess or predict outcomes ahead of the notifications arriving. Watch for garbled/misnumbered subagent output (an internal transcription slip in the agent's own final list, not a counting/reasoning failure) — flag and exclude these runs from scoring as a reporting artifact, noted explicitly, rather than force-realigning or guessing at the intended values.
+
+## Step 7 — Results table
+
+For each variant, across its N runs, report: per-run score, **avg, min, range (max−min), and stddev**, plus the variant's character count (`wc -c` on the whole `SKILL.md` file, frontmatter included, plus any bundled asset files). Also report **failure rate** (fraction of runs with zero misses) as its own number alongside the average — a high average can still hide a meaningful nonzero failure rate, which matters most once the project's bar is "never fails" rather than "best on average."
+
+Break out **per-row miss frequency** across the N runs for any variant with failures — which specific rows are actually driving the misses, and whether misses within a single bad run cluster together (suggesting one bad pass corrupted several answers) or are scattered independently across different runs (suggesting isolated slips). This is usually more informative than the aggregate score alone for deciding what to fix next.
+
+**Ranking rule**: correctness (average, then failure rate, then min) is primary. Brevity (lower char count) is used only as a tiebreaker between variants with equal correctness — including when both are equally low-scoring.
+
+## Step 8 — Hypotheses
+
+Compare higher- vs. lower-ranked variants (by the rule above) and write plain-language hypotheses about what caused the difference — on correctness, on brevity, or both. Ground each hypothesis in a specific **component** from the `COMPONENTS.md` table (not just "variant A vs variant B" — if two variants differ by more than one component, the table tells you which components are actually in play, and the hypothesis should isolate one) or a specific textual difference. Cross-reference the atomic-component consistency numbers across variants that share a component to see whether a pattern is really tied to that component or just to one variant's overall text.
+
+## Step 9 — Next-gen proposals
+
+**Hard rule — one hypothesis per new variant, always.** For each hypothesis worth testing, propose exactly one new variant that changes only that one thing (ideally: adds, removes, or swaps exactly one named component) relative to its named parent variant. Never bundle two changes into one new variant, even if both seem obviously good — that destroys attribution.
 
 For each proposed variant, record before building it:
 - parent variant
 - the single hypothesis being tested
-- the specific change being made
+- the specific change being made (named against the component ID it adds/removes/swaps, per `COMPONENTS.md`)
 
 Present this plan to the user before writing any files.
 
-## Step 8 — Create files + log
+## Step 10 — Create files + log
 
-Write the new `SKILL.md` files per the approved plan. Then update `skill-lab/<name>/HYPOTHESES.md`, appending one entry per new variant:
+Write the new `SKILL.md` files per the approved plan. Update `skill-lab/<name>/COMPONENTS.md`'s reference table for each new variant. Then update `skill-lab/<name>/HYPOTHESES.md`, appending one entry per new variant:
 
 ```
 ## <name>-v<N> (parent: <name>-v<M>)
 Hypothesis: <what we believed and why>
-Change made: <the single concrete change>
+Change made: <the single concrete change, named against its component ID>
 Result: (fill in after the next run: confirmed / refuted / inconclusive)
 Lesson: (fill in after the next run)
 ```
 
-Leave `Result` and `Lesson` blank until the next run's data comes in, then fill them in as part of step 5/6 of that next round — this file is the persistent memory of what's already been tried and learned, so don't re-test a hypothesis that a past entry already refuted without a new reason to believe it'd go differently.
+Leave `Result` and `Lesson` blank until the next run's data comes in, then fill them in as part of step 7/8 of that next round — this file is the persistent memory of what's already been tried and learned, so don't re-test a hypothesis that a past entry already refuted without a new reason to believe it'd go differently.
 
-## Step 9 — Confirm before re-running, and propose retirement
+## Step 11 — Confirm before re-running, and propose retirement
 
 Before spending more tokens on another full matrix run:
-- **Never re-run the matrix with the same variant set as a prior run.** Every re-run must include at least one new variant from step 7/8. If the only motivation to re-run is to check whether a prior result was noise, that's a signal to design a targeted variant for it (e.g., a near-duplicate testing determinism isn't itself useful — prefer moving forward with real hypotheses), not to just repeat the exact same set.
+- **Never re-run the matrix with the same variant set and same N as a prior round.** Every re-run must either include at least one new variant from step 9/10, or be a deliberate depth escalation on an existing variant (more runs to firm up a reliability estimate) — state explicitly which of the two a new round is for.
 - Recommend retiring the oldest/weakest variants when a newer variant clearly dominates them on both correctness and brevity — keep the active set within the 3–5 target (never above 6). "Retire" means excluding from future run matrices, not deleting the files — leave them in the repo/git history for audit purposes unless the user explicitly asks to delete.
 - Ask the user to confirm the new variant set and the retirement list before launching the next matrix run.
