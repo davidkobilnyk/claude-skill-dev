@@ -115,6 +115,24 @@ Grouping variants by their actual underlying mechanism (not just version number)
 
 **Update on the user's caution about v9**: the concern was well-founded going in — a single clean sweep is not strong evidence, and v4's earlier "perfect then regressed" pattern was the right thing to worry about. Round 4 is the actual test of that concern, and v9 passed it: two independent 12/12 runs, Min 12, Range 0, StdDev 0.00 — currently the only mechanism thread with zero observed variance across 2+ runs. v6, the mechanism v9 was subtracted from, has NOT repeated its own perfect score in two follow-up rounds (12→11→11) and just picked up a new failure type (Mirror) it hadn't shown before. That doesn't mean v6 is worse — its floor (11) still slightly beats v9's average competitor pool and its StdDev (0.47) is excellent — but v9 no longer looks like a fluke; it now has the stronger two-round track record of the pair. A third round for both would still be the most convincing next step before fully retiring v6 in favor of v9.
 
+## Mechanism × round/variant matrix (through round 4)
+
+Same idea as the cross-round table above, but broken out to the individual run level (one column per round/variant combination actually observed) instead of collapsed into per-round summaries. Blank = mechanism not present in that variant.
+
+| Mechanism | R1/v1 | R1/v2 | R1/v3 | R1/v4 | R2/v1 | R2/v2 | R2/v3 | R2/v4 | R2/v5 | R2/v6 | R2/v7 | R3/v4 | R3/v6 | R3/v7 | R3/v8 | R3/v9 | R3/v10 | R4/v4 | R4/v6 | R4/v7 | R4/v8 | R4/v9 | R4/v10 | n | Avg | Min | Range | StdDev |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| Bare instruction | 7 | | | | 7 | | | | | | | | | | | | | | | | | | | 2 | 7.00 | 7 | 0 | 0.00 |
+| Char-by-char scan | | 9 | | | | 9 | | | | | 11 | | | 9 | | | 9 | | | 10 | | | 10 | 7 | 9.57 | 9 | 2 | 0.73 |
+| Cluster warning | | | | | | | | | | | 11 | | | 9 | | | 9 | | | 10 | | | 10 | 5 | 9.80 | 9 | 2 | 0.75 |
+| Spell-out | | | 9 | 10 | | | 9 | 12 | 10 | 12 | | 9 | 11 | | 9 | 12 | | 11 | 11 | | 11 | 12 | | 14 | 10.57 | 9 | 3 | 1.18 |
+| Mandatory/no-skip spelling | | | | | | | | | 10 | | | | | | | | | | | | | | | 1 | 10.00 | 10 | n/a | n/a |
+| Word-by-word decomposition | | | | 10 | | | | 12 | | | | 9 | | | | | | 11 | | | | | | 4 | 10.50 | 9 | 3 | 1.12 |
+| Length-check verification | | | | | | | | | | 12 | | | 11 | | | 12 | | | 11 | | | 12 | | 5 | 11.60 | 11 | 1 | 0.49 |
+| Independent recount | | | | | | | | | | 12 | | | 11 | | 9 | | | | 11 | | 11 | | | 5 | 10.80 | 9 | 3 | 0.98 |
+| Re-scan-and-majority-vote | | | | | | | | | | | | | | | | | 9 | | | | | | 10 | 2 | 9.50 | 9 | 1 | 0.50 |
+
+Reading this alongside the per-mechanism-thread table above: **length-check verification and re-scan-and-majority-vote are the only two mechanisms whose per-run scores never dropped below their own previous low** (length-check: 12,11,11,12,12 — floor held at 11 across 3 different rounds; re-scan: 9,10 — improved on its only repeat). Char-by-char scan and cluster warning show the widest single-mechanism spread relative to their sample size (both still swing between 9 and 11 after 5+ runs each), and spell-out — the most-tested mechanism by far at n=14 — has the widest absolute range (3) of any mechanism with n≥3, a reminder that its high average is propped up by v9's and v6's stronger companion mechanisms (length-check, recount) rather than being reliable on its own (bare spell-out, i.e. v3, averaged only 9.0 with zero range — consistently mediocre, not consistently good).
+
 ## Consistency metrics (adopted going forward)
 
 Starting round 4, every mechanism/variant with 2+ runs gets three consistency numbers alongside its average, computed on the 0–12 score:
@@ -131,7 +149,7 @@ A mechanism with a lower average but a tighter StdDev/Range and higher Min is of
 | Bare instruction | 7, 7 | 2 | 7.00 | 7 | 0 | 0.00 |
 | Char-by-char scan | 9, 9, 11, 9, 9, 10, 10 | 7 | 9.57 | 9 | 2 | 0.73 |
 | Cluster warning | 11, 9, 9, 10, 10 | 5 | 9.80 | 9 | 2 | 0.75 |
-| Spell-out (write char sequence before counting) | 9, 10, 9, 12, 10, 12, 9, 11, 9, 12, 11, 11, 12 | 13 | 10.54 | 9 | 3 | 1.22 |
+| Spell-out (write char sequence before counting) | 9, 10, 9, 12, 10, 12, 9, 11, 9, 12, 11, 11, 12, 11 | 14 | 10.57 | 9 | 3 | 1.18 |
 | Mandatory / no-skip spelling enforcement | 10 | 1 | 10.00 | 10 | n/a | n/a |
 | Word-by-word decomposition | 10, 12, 10, 9, 11 | 5 | 10.40 | 9 | 3 | 1.02 |
 | Length-check verification | 12, 11, 12, 11, 12 | 5 | 11.60 | 11 | 1 | 0.49 |
