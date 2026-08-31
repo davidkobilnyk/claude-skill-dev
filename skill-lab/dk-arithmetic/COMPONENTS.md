@@ -44,6 +44,14 @@ Filled in as each variant is created (Step 5 onward).
 
 v1b = v1 + `repeating-decimal-format-rule` only (parent: v1). v1c = v1 + `bare-number-rule` only (parent: v1). v2b = v2 minus `injection-immunity-rule` (parent: v2). See `HYPOTHESES.md` for the hypothesis each is testing.
 
+## Round 2 results (see HYPOTHESES.md for full writeup)
+
+All three component-isolation hypotheses were CONFIRMED: v1b (662 chars) fixed exactly the repeating-decimal rows (99.0 avg) and nothing else; v1c (670 chars) fixed exactly the bare-number rows (99.6 avg) and nothing else; v2b (2,527 chars) matched v2's perfect 102/102 with `injection-immunity-rule` removed, proving that component is not load-bearing for this model/task.
+
+v2 was also escalated to N=20 fresh runs (on top of Round 1's N=5) and scored 102/102 on every single run — 25/25 clean, clearing the N≥20 zero-failure bar from the intake's zero-tolerance requirement.
+
+**Updated ranking**: v2b now leads (matches v2's perfect record at 267 fewer characters), followed by v2 (now depth-validated), then v4, v3, v5, with v1/v1b/v1c serving as diagnostic baselines rather than shipping candidates.
+
 v1 is the minimal baseline (no explicit rules beyond the no-expression fallback) to establish how much the explicit components in v2-v5 actually buy over letting the model wing it. v3/v5 mark `order-of-ops-rule` / `sign-handling-rule` / `precision-preservation-rule` / `repeating-decimal-format-rule` as "via script" since `eval_expr.py` enforces these mechanically rather than through instructed text — the model only needs to normalize the input, not apply precedence or precision rules itself.
 
 ## Round 1 results (N=5, see HYPOTHESES.md for full writeup)
