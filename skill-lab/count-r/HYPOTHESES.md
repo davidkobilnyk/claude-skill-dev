@@ -87,17 +87,42 @@ Lesson: a bare re-scan-and-majority-vote, without externalizing the character se
 
 Grouping variants by their actual underlying mechanism (not just version number) makes clearer which approaches are genuinely robust vs. lucky on one run:
 
-| Mechanism thread | Variant(s) | R1 | R2 | R3 | Times run | Avg | Replicated? |
-|---|---|:-:|:-:|:-:|:-:|:-:|---|
-| Baseline, no mechanism | v1 | 7/12 | 7/12 (diff. failures) | retired | 2 | 7/12 | — |
-| Char-by-char scan | v2 | 9/12 | 9/12 (diff. failures) | retired | 2 | 9/12 | — |
-| + cluster warning | v7 | — | 11/12 | 9/12 | 2 | 10/12 | Partial — cluster-specific fix held, other failures didn't |
-| + cluster warning + re-scan | v10 | — | — | 9/12 | 1 | 9/12 | No improvement over v7 |
-| Spell-out-then-count (bare) | v3 | 9/12 | 9/12 (diff. failures) | retired | 2 | 9/12 | Consistently transcription-prone both times |
-| + mandatory/visible spelling | v5 | — | 10/12 | retired | 1 | 10/12 | Refuted, one-shot |
-| Word-by-word tally (bare) | v4 | 10/12 | 12/12 | 9/12 | 3 | ~10.3/12 | **No** — swung from perfect to below-average |
-| Spell-out + length-check + recount | v6 | — | 12/12 | 11/12 | **2** | **11.5/12** | **Yes** — highest and most stable average, never below 11/12 |
-| Spell-out + recount only | v8 | — | — | 9/12 | 1 | 9/12 | Refuted this round |
-| Spell-out + length-check only | v9 | — | — | 12/12 | 1 | 12/12 | **Unreplicated** |
+| Mechanism thread | Variant(s) | R1 | R2 | R3 | Times run | Avg | Min | Range | StdDev | Replicated? |
+|---|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| Baseline, no mechanism | v1 | 7/12 | 7/12 (diff. failures) | retired | 2 | 7.0 | 7 | 0 | 0.00 | — |
+| Char-by-char scan | v2 | 9/12 | 9/12 (diff. failures) | retired | 2 | 9.0 | 9 | 0 | 0.00 | — |
+| + cluster warning | v7 | — | 11/12 | 9/12 | 2 | 10.0 | 9 | 2 | 1.00 | Partial — cluster-specific fix held, other failures didn't |
+| + cluster warning + re-scan | v10 | — | — | 9/12 | 1 | 9.0 | 9 | n/a | n/a | No improvement over v7 |
+| Spell-out-then-count (bare) | v3 | 9/12 | 9/12 (diff. failures) | retired | 2 | 9.0 | 9 | 0 | 0.00 | Consistently transcription-prone both times |
+| + mandatory/visible spelling | v5 | — | 10/12 | retired | 1 | 10.0 | 10 | n/a | n/a | Refuted, one-shot |
+| Word-by-word tally (bare) | v4 | 10/12 | 12/12 | 9/12 | 3 | 10.3 | 9 | 3 | 1.25 | **No** — swung from perfect to below-average |
+| Spell-out + length-check + recount | v6 | — | 12/12 | 11/12 | **2** | **11.5** | 11 | 1 | 0.50 | **Yes** — highest and most stable average, never below 11/12 |
+| Spell-out + recount only | v8 | — | — | 9/12 | 1 | 9.0 | 9 | n/a | n/a | Refuted this round |
+| Spell-out + length-check only | v9 | — | — | 12/12 | 1 | 12.0 | 12 | n/a | n/a | **Unreplicated** |
 
-**Key caution (flagged by user)**: v9 is a subtractive test of v6 (removed the recount half), and it hit 12/12 on its first try — structurally the same position v4 was in after round 2, before regressing to 9/12 in round 3. Only 2 of the 12 test cases (Rrrrr, purrrring) actually stress the specific failure mode the length-check/recount pair targets, so a single clean pass on those two is not strong evidence the length-check-only mechanism is as robust as full v6. v6 is currently the only mechanism with a genuine multi-round track record (2 rounds, never below 11/12). Before trusting v9 over v6, both need a second independent data point — v9 to see if its clean sweep holds, v6 to add a third confirmation.
+**Key caution (flagged by user)**: v9 is a subtractive test of v6 (removed the recount half), and it hit 12/12 on its first try — structurally the same position v4 was in after round 2, before regressing to 9/12 in round 3. Only 2 of the 12 test cases (Rrrrr, purrrring) actually stress the specific failure mode the length-check/recount pair targets, so a single clean pass on those two is not strong evidence the length-check-only mechanism is as robust as full v6. v6 is currently the only mechanism with a genuine multi-round track record (2 rounds, never below 11/12, StdDev 0.50 — the tightest of any multi-run mechanism). Before trusting v9 over v6, both need a second independent data point — v9 to see if its clean sweep holds, v6 to add a third confirmation.
+
+## Consistency metrics (adopted going forward)
+
+Starting round 4, every mechanism/variant with 2+ runs gets three consistency numbers alongside its average, computed on the 0–12 score:
+- **Min** — the worst score observed. The practical "floor" — what we risk if we build on this mechanism.
+- **Range** (max − min) — simplest spread measure, meaningful even at n=2.
+- **StdDev** (population standard deviation) — a single spread number, most useful once n≥3.
+
+A mechanism with a lower average but a tighter StdDev/Range and higher Min is often more useful to build on than one with a higher average but wide swings, because its behavior is more predictable from round to round — which matters more than peak score once we're trying to draw durable conclusions from small numbers of runs.
+
+## Atomic-mechanism consistency (all runs so far)
+
+| Mechanism | Scores (all runs) | n | Avg | Min | Range | StdDev |
+|---|---|:-:|:-:|:-:|:-:|:-:|
+| Bare instruction | 7, 7 | 2 | 7.00 | 7 | 0 | 0.00 |
+| Char-by-char scan | 9, 9, 11, 9, 9 | 5 | 9.40 | 9 | 2 | 0.80 |
+| Cluster warning | 11, 9, 9 | 3 | 9.67 | 9 | 2 | 0.94 |
+| Spell-out (write char sequence before counting) | 9, 10, 9, 12, 10, 12, 9, 11, 9, 12 | 10 | 10.30 | 9 | 3 | 1.27 |
+| Mandatory / no-skip spelling enforcement | 10 | 1 | 10.00 | 10 | n/a | n/a |
+| Word-by-word decomposition | 10, 12, 10, 9 | 4 | 10.25 | 9 | 3 | 1.09 |
+| Length-check verification | 12, 11, 12 | 3 | 11.67 | 11 | 1 | 0.47 |
+| Independent recount | 12, 11, 9 | 3 | 10.67 | 9 | 3 | 1.25 |
+| Re-scan-and-majority-vote | 9 | 1 | 9.00 | 9 | n/a | n/a |
+
+**Length-check verification is currently the standout on consistency, not just average**: highest average (11.67), highest floor (11), and by far the lowest StdDev (0.47) of any mechanism with n≥3 — nearly 2.7x tighter than independent recount (1.25), despite similar averages. This is the strongest evidence yet that length-check, not recount, is the reliable core of what made v6 good.
