@@ -1,0 +1,13 @@
+input,expected_output
+"strawberry",3
+"hello",0
+"Mirror",3
+"",0
+"RRRR",4
+"The quick brown fox jumps over the lazy dog",2
+"Rrrrr",5
+"r,r.r!r?r",5
+"irregular",3
+"R2D2 rolled over 3 times, purrrring loudly!!!",7
+"The eighteenth symbol of the alphabet shows up often in that jam topping's name, but not in this sentence.",0
+"This symbol looks like a P with an additional diagonal leg, and comes immediately following Q in the alphabet.",0
