@@ -43,4 +43,29 @@ v4 and v6 tie on correctness at 12/12; v4 wins the brevity tiebreak decisively (
 
 **Observed non-determinism**: v1, v2, and v3 (unchanged since round 1) each showed a *different* specific set of failures between round 1 and round 2 — e.g. v2 fixed "hello"/"irregular" this round but newly failed the sentence test and the R2D2 stress case; v3 newly failed "hello" this round despite fixing it in round 1. This confirms borderline pass/fail results are genuinely noisy from run to run and shouldn't be treated as a stable property of a variant without repeated evidence.
 
-No variant is currently dominated on *both* correctness and brevity by another (the strict retirement bar), so no automatic retirement is triggered this round — see the round-2 chat summary for discussion of judgment-call candidates.
+## Retirements after round 2
+
+- **v1, v2, v3**: retired by user judgment call (not strict domination) — v1 was the worst performer both rounds and has nothing more to teach as the plain baseline; v2 and v3 were consistently second-to-last both rounds and each now has a child variant (v7, v6 respectively) that clearly outperforms it.
+- **v5**: retired under the strict rule — dominated on *both* axes by v4 (613 chars/12/12 vs v5's 839 chars/10/12).
+
+Files are kept in the repo for all four; they are simply excluded from future run matrices.
+
+Active going into round 3: v4, v6, v7, plus v8/v9/v10 below (6 total, at cap).
+
+## count-r-v8 (parent: count-r-v6)
+Hypothesis: v6's verification block has two separable sub-steps — a length-check (transcribed sequence length == original input length) and an independent second recount. The recount alone may already be doing most of the work of catching counting-after-correct-spelling slips (like "irregular"), independent of the length-check, which more specifically targets transcription drift (like "Rrrrr"/"purrrring"). Removing the length-check should reveal whether v6's 12/12 score depends on it or not.
+Change made: deleted the length-check sentence from v6; kept only the independent-recount instruction.
+Result: (fill in after the next run: confirmed / refuted / inconclusive)
+Lesson: (fill in after the next run)
+
+## count-r-v9 (parent: count-r-v6)
+Hypothesis: conversely, the length-check may be the more load-bearing of the two sub-steps — confirming the transcribed sequence's length matches the input's length forces careful re-transcription and may already catch most errors, making the separate independent recount redundant.
+Change made: deleted the independent-recount instruction from v6; kept only the length-check.
+Result: (fill in after the next run: confirmed / refuted / inconclusive)
+Lesson: (fill in after the next run)
+
+## count-r-v10 (parent: count-r-v7)
+Hypothesis: v7 (877 chars, 11/12 in round 2) still fails "hello" — a hallucinated r on a zero-r word, the one failure mode its cluster-warning fix didn't target. A lightweight final re-scan (re-run the character-by-character count a second time and use majority agreement) might catch this hallucination without inheriting v6/v8/v9's heavier spell-out-and-verify mechanism.
+Change made: added a re-scan-and-compare step (scan twice; on disagreement, scan a third time and take the majority) to v7's existing character-scanning instructions.
+Result: (fill in after the next run: confirmed / refuted / inconclusive)
+Lesson: (fill in after the next run)
