@@ -331,5 +331,23 @@ Change made: `count_r.py` implements identical logic to what v21's agents conver
 
 One methodology caveat worth noting: the SKILL.md references the script by a hardcoded absolute path (`/home/user/claude-skill-dev/skill-lab/count-r/v22/count_r.py`), consistent with how every variant in this lab has been tested (agents are always told to `Read` an absolute path, never invoked via the `Skill` tool by name). A real deployed skill would more naturally reference its bundled script with a path relative to its own skill directory, resolved automatically by the skill-loading mechanism — this lab's testing setup doesn't exercise that resolution, only the counting logic itself.
 
-Result: pending.
-Lesson: pending.
+Result: CONFIRMED, 8/8 clean runs — see Round 10 below.
+Lesson: see Round 10.
+
+## Round 10: v19, v21, v22 each run 8 independent times — a clean sweep, plus an efficiency correction
+
+Deepened replication on the three variants that looked strongest after round 9 (v19: perfect reasoning-only; v21: perfect code-execution-on-the-fly; v22: the new pre-written-script variant, untested until now), 8 independent runs each (24 total).
+
+**Every single run of every variant scored a perfect 75/75.** v19: 8/8. v21: 8/8 (now 8/8 combined with round 9's implicit re-run pattern... actually this is v21's first true 8-run block in addition to round 9's 5, giving it 13 consecutive clean runs across the two rounds). v22: 8/8 on its very first exposure to replication. Min 75, Range 0, StdDev 0.00 for all three, at n=8 each — the deepest zero-failure evidence gathered anywhere in this lab.
+
+**Token comparison — the efficiency hypothesis behind v22 did not pan out the way expected, and it's worth being upfront about why:**
+
+| Variant | Avg tokens/run | Min | Max |
+|---|---:|---:|---:|
+| v19 (reasoning only) | 52,621 | 48,055 | 66,452 |
+| v21 (writes its own script) | 50,400 | 49,750 | 51,943 |
+| v22 (calls pre-written script) | 51,021 | 50,287 | 51,777 |
+
+v22 was not cheaper than v21 — if anything, slightly more expensive on average. The reason is a quirk of this lab's batched-testing methodology, not a flaw in the pre-written-script idea itself: v21's agents typically wrote **one** self-contained script that reads all of `tests.csv` via `csv.reader` and processes all 75 rows in a single pass, while v22's agents (following the SKILL.md's real-world-shaped instructions) wrote a small driver that calls the pre-written script **once per row** — 75 separate subprocess invocations, each with its own file-write and process-spawn overhead, which adds up to more than the tokens saved by not generating the counting logic itself (which is only ~20 lines to begin with, so the generation cost was never that large relative to everything else in a 75-row batch report).
+
+This means the round-9/10 comparison doesn't cleanly settle the original efficiency question, because our lab's "batch all 75 test cases into one agent" methodology inherently rewards a single self-contained script over a call-an-existing-script-per-input pattern — but a **real deployed skill is invoked once per single piece of text**, which is exactly v22's natural shape and exactly what its efficiency argument was about. A fair test of the original hypothesis would need to measure per-single-invocation cost (e.g., timing/tokens for one real skill call), not the cost of a 75-row batched test report. On correctness, though, the comparison is clean and decisive: both are perfectly reliable at this sample size, so v22's design (bundling a pre-written, pre-verified script) remains the better real-world choice on the grounds originally argued — removing the residual risk of the model regenerating the algorithm slightly wrong on some future invocation — even though this round didn't produce the token savings expected from this particular test harness.
