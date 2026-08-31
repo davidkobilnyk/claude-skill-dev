@@ -417,4 +417,14 @@ v27's live claude.ai failure (script unreachable → silent drop to a wrong manu
 
 Both keep the primary code-execution path exactly as already validated (30/30 clean runs across the v21/v22/v23/v26/v27 lineage), while giving the one demonstrated real-world failure mode (script unreachable → bad silent fallback) an actual answer instead of leaving it to improvisation. The fallback text itself is v25's, which has its own clean 3/3 record from round 11 — not a new, unvalidated procedure.
 
-Not yet run.
+## Real-world spot check: v28 and v29 on claude.ai — the fallback actually triggered, and it worked
+
+Both v28 and v29 were packaged and tested as claude.ai skills. Result: **both fell back — including v29, whose bundled Python script (identical file to v26's) had worked successfully in the earlier claude.ai test.** Exact reported text:
+- v28: *"The script wasn't available (not found), so I'll use the manual fallback method."*
+- v29: *"The script wasn't available, so I used the manual fallback method."*
+
+One detail worth flagging: this "not found" text rendered in a visibly different font, styled with an HTML `<code>` tag — distinct from the model's own freely-composed prose around it. That's consistent with this being a platform-level, templated notice (claude.ai's skill-asset resolution failing and surfacing a standardized message) rather than the model discovering and describing the absence in its own words. This matters for interpretation: it points toward an intermittent *file-resolution reliability issue on claude.ai's serving side* for bundled skill assets generally, not something specific to file type (`.py` vs `.sh`) and not something a SKILL.md can instruct around.
+
+**The important result: both fallbacks produced the correct count.** This is the actual test v28/v29 were built for, and it passed for real — not synthetically. v27's identical failure mode (script unreachable) previously produced a wrong answer via unstructured "count manually" improvisation; v28/v29's structured fallback to v25's validated procedure got it right both times.
+
+**This reframes the whole code-execution-lineage risk assessment.** Before this test, "the bundled script might be unreachable" looked like a claude.ai-specific gap affecting only non-Python assets (v27's `.sh`), with Python (v26) looking safe. Now a previously-working Python asset has also failed to resolve on a later invocation — meaning bundled-script availability on claude.ai isn't a static "this file type works / doesn't work" fact, it's intermittent, for reasons outside the skill author's control. **Practical consequence: a validated fallback isn't an edge-case nicety for one known gap, it's necessary any time a code-execution skill might run on a surface where asset resolution can't be guaranteed to succeed every time** — which, per this test, includes claude.ai even for asset types that have previously worked there. v28/v29's design is the correct response to that reality, and it's now been confirmed working under the exact real conditions it was built for, not just in this lab's own (fully reliable, 30/30) Claude Code sandbox.
