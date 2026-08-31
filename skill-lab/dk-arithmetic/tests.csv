@@ -74,6 +74,9 @@ Begin with 20. Divide by 4. Then add 1.,6,Multiple sentences describing a sequen
 1.2345 + 2.6789,3.9134,Many-decimal-place operands
 0.001 * 1000,1,Many-decimal-place operands
 9.9999 - 0.0001,9.9998,Many-decimal-place operands
+0.333333333333333333333333333 + 0.333333333333333333333333333 + 0.333333333333333333333333333,0.999999999999999999999999999,Many-decimal-place operands (very long decimal)
+1.111111111111111111111111111 + 2.222222222222222222222222222,3.333333333333333333333333333,Many-decimal-place operands (very long decimal)
+9.999999999999999999999999999 - 0.000000000000000000000000001,9.999999999999999999999999998,Many-decimal-place operands (very long decimal)
 42,42,"Single number, no operator"
 7,7,"Single number, no operator"
 -3,-3,"Single number, no operator"
