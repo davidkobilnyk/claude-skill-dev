@@ -256,3 +256,29 @@ The natural open question now: is 580 chars (v17) actually the floor, or would a
 2. **v11 missed row 55 for a real reason, not an anticipated one.** Row 55 (`{'word': 'strawberry' 'count': null}`, expected 4) was undercounted to 3 — the agent correctly found the 3 r's in "strawberry" but missed the r in "word," and initially reported believing the test file's expected value was wrong rather than catching its own miss. This is v11's first non-homoglyph failure across every round it's run (5, 6, and now this expanded suite) — a genuine crack in what had looked like a fully safe cut (dropping the worked example). Whether this generalizes (JSON/structured-data-shaped input specifically confusing v11) or was a one-off slip is unknown from a single data point; worth watching on a replication run.
 
 **Everything else — including every category invented this session (needle-in-haystack, markdown formatting, rule-redefinition injection, self-referential text, emoji, punctuation-only input, and the 1200–2200 char long inputs) — passed clean across all 6 variants.** None of the adversarial categories (confidently-wrong embedded claims, "ignore previous instructions" injection, rule-redefinition injection) fooled any variant; every agent counted the literal text rather than complying with or being anchored by injected/false content. That's a meaningfully positive result for the whole v9 lineage's robustness, independent of the brevity question this lab has mostly focused on.
+
+## Round 8: replication of v9/v11, first run of v13/v15/v16 on the expanded suite
+
+Motivated directly by round 7's two open questions — was v9's clean homoglyph sweep a real capability or a coincidence, and was v11's JSON-row miss a structural weakness from dropping the worked example (a concern specifically that v17, which inherits the same cut, might share)? — this round re-ran v9 and v11 unchanged, and ran v13/v15/v16 (the three single-cut variants never yet tested on the expanded suite) for the first time.
+
+| Variant | Chars | R7 Score | R8 Score | R8 misses |
+|---|---:|---:|---:|---|
+| v6 | 1102 | 72/75 | — | (not re-run) |
+| v9 | 896 | **75/75** | 72/75 | homoglyphs only |
+| v11 | 810 | 71/75 | **75/75** | none |
+| v12 | 811 | 72/75 | — | (not re-run) |
+| v13 | 845 | — | **75/75** | none |
+| v14 | 864 | 72/75 | — | (not re-run) |
+| v15 | 825 | — | 70/75 | homoglyphs + rows 55, 57 (JSON) |
+| v16 | 857 | — | 70/75 | homoglyphs + rows 46, 47 (injection rows, undercounted by 1) |
+| v17 | 580 | 72/75 | 72/75 | homoglyphs only |
+
+**Both open questions from round 7 got answered, and both answers point the same direction: this is stochastic run-to-run variance, not a structural property of any specific variant's text.**
+
+1. **v9 flipped from 75/75 (counted all 3 homoglyphs) to 72/75 (counted none of them), on byte-identical text.** Round 7's clean sweep was exactly the coincidence-of-interpretation it was flagged as at the time — it did not replicate. v9 has no special claim to homoglyph-handling; whether a given run counts fullwidth/bold/superscript R as a match appears to be close to a coin flip, independent of which variant's text is used.
+
+2. **v11 flipped from 71/75 (missed the JSON row) to a clean 75/75, on byte-identical text.** This directly answers the concern raised last round — since v11's exact same JSON-row miss did not reproduce, and since v13 (which *kept* the worked example v11 dropped) scored a perfect 75/75 on its very first run, there's no evidence tying either failure mode to the missing worked example specifically. The mechanistic hypotheses discussed in chat (recount-forces-correction, worked-example-anchors-scope, verbosity-drives-looseness) each already broke against the round 7 data; round 8 removes the last plausible thread by showing the "failure" itself doesn't even reproduce on the same text.
+
+3. **v15 and v16 each surfaced a genuinely new, small miss neither v9/v11/v13/v17 have shown — but in different places, on their first-ever run.** v15 (condensed verification wording only) undercounted two JSON rows by exactly 1 each; v16 (dropped output-format line only) undercounted two of the three prompt-injection rows by exactly 1 each — not by falling for the injected fake numbers, just a small real miscount landing near them. Both are single-run, unreplicated data points, and given how thoroughly round 8 just demonstrated that identical text produces different results across runs, neither should be read as "v15 is bad at JSON" or "v16 is bad at injection resistance" without a second run showing the same pattern.
+
+**Bottom line: at this suite size and this level of scrutiny, every v9-lineage variant (v9, v11, v13, v15, v16, v17) is landing somewhere in the low-70s to 75 out of 75 depending on the specific run, with the misses concentrated almost entirely in the 3 homoglyph rows plus occasional one-off slips on the newest, hardest categories (JSON-shaped input, injection rows).** None of these misses have shown any stable association with a specific textual cut across replications — the evidence increasingly favors "this is close to the noise floor of the mechanism at this suite size" over "some specific cut is unsafe." The strongest remaining lead is JSON-shaped input specifically (tripped v11 once and v15 twice, always by missing an r hidden in a short/common word like "word" or "true") — worth a dedicated small round if it's worth chasing further, but even that pattern is thin at n=3 misses across 2 variants.
