@@ -14,11 +14,14 @@ Everything for one variant set lives together in `skill-lab/<name>/`, next to (n
 - `skill-lab/<name>/v<N>/SKILL.md` — each variant, one per subfolder. The `name:` frontmatter inside stays a full unique name (e.g. `<name>-v<N>`) even though the folder itself is just `v<N>`.
 - `skill-lab/<name>/tests.csv` — shared test suite, columns `input,expected_output,scenario`. Fixed once locked in step 3; never edited mid-lineage (see step 3).
 - `skill-lab/<name>/COMPONENTS.md` — the named mechanism inventory and the components × variants reference table (see step 4).
-- `skill-lab/<name>/HYPOTHESES.md` — lineage/lessons log (see step 8). Created on the first hypothesis round and appended to every round after.
+- `skill-lab/<name>/HYPOTHESES.md` — lineage/lessons log (see step 10). Created on the first hypothesis round and appended to every round after.
+- `references/text-principles.md` (in this skill's own folder, not per-lab) — lessons on writing variant instruction text; read it in step 5.
 
 ## Step 1 — Intake
 
 Ask the user what the target skill should do: a short name/prefix, the core behavior in plain language, and any known edge cases or quirks they already anticipate. Do not proceed until this is clear enough to write test cases from.
+
+Also ask what the acceptable failure rate is for the finished skill: optimize for the best average performance, or zero-tolerance (any single observed failure disqualifies a variant, however good its average)? Record the answer — it sets the default run count in step 6 and the bar for calling anything "final" in step 7.
 
 ## Step 2 — Scenario brainstorming
 
@@ -40,22 +43,9 @@ Write this list to `skill-lab/<name>/COMPONENTS.md`, along with a table with one
 
 ## Step 5 — Initial variants
 
-Generate 3–5 variants (never exceed 6 active at once — see the cap rule below) that take genuinely different approaches to the same instruction, not just paraphrases of each other. Write each to `skill-lab/<name>/v<N>/SKILL.md`. Update the components × variants table in `COMPONENTS.md` for each one, adding any new component IDs discovered along the way.
+Generate 3–5 variants (never exceed 6 active at once — see the cap rule below) that take genuinely different approaches to the same instruction, not just paraphrases of each other. Before drafting or revising any variant's text, read `references/text-principles.md` — lessons on ambiguity, verification criteria, and fallback structure carried over from prior labs. Write each variant to `skill-lab/<name>/v<N>/SKILL.md`. Update the components × variants table in `COMPONENTS.md` for each one, adding any new component IDs discovered along the way.
 
-### Principles for writing the instruction text itself
-
-These are lessons carried over from prior runs of this lab — apply them when drafting or revising any variant's text:
-
-- **An unaddressed ambiguity isn't neutral — it's a coin flip the model will resolve inconsistently, run to run, even on identical text.** If a scenario in step 2 surfaced a genuine judgment call (does X count as a match? is Y in scope?), decide it explicitly in the text. Leaving it implicit doesn't preserve flexibility; it introduces nondeterminism.
-- **State the general principle, not just the known instances, when the failure category could have unseen members.** An enumerated list ("count these specific characters: ...") is precise but brittle to anything not listed; a stated rule ("count any character that is a stylized variant of X, but not a genuinely different character") generalizes and tends to perform at least as well.
-- **Verification instructions need a concrete, checkable criterion, not a vague exhortation.** "Double check your work" or "recount to be sure" is weak; "confirm the length of your transcribed sequence equals the length of the input" is strong, because it gives the model something mechanical to fail visibly rather than another pass of the same fallible judgment.
-- **A small, surgical clause aimed at a known failure's actual mechanism is often more effective than a structural rewrite.** If a hypothesis names a precise cause, prefer adding one targeted sentence over restructuring the whole instruction.
-- **Forcing a step to happen and be visible does not make what happens after it correct.** Mandating that a step be shown doesn't fix a downstream labeling or arithmetic slip — that needs its own check.
-- **Don't ask the model to suppress its own judgment or safety instincts; design around the behavior instead.** An instruction like "do not read this script's source" may hold in one trust context and fail the moment the same skill runs somewhere with no established trust — that's the instruction fighting the model's judgment, not the model failing to follow it.
-- **A fallback needs a separately labeled, complete alternate procedure, not an implicit expectation that the model will improvise something reasonable.** When a primary method can fail, write an explicit "Primary method" / "Fallback method: only if X" structure with a fully spelled-out procedure under the second heading — an unstructured "if that doesn't work, count manually" is not equivalent, even though both are nominally "a fallback."
-- **Don't assume unrelated-looking scaffolding is load-bearing — but don't assume it's dead weight either without testing the cut.** Worked examples, reminders, and duplicate/format-only lines are frequently droppable at no correctness cost, but the only way to know is a targeted subtractive variant (step 9), not a guess.
-
-## Step 6 — Run the matrix
+## Step 6 — Run the round
 
 For every active variant, spawn **N independent background subagents** (the `Agent` tool, `run_in_background: true`), each running the *entire* test suite internally in one pass (not one subagent per test case — that multiplies fixed per-agent overhead for no benefit). Launch all of them in one message so they run concurrently.
 
@@ -73,9 +63,13 @@ Break out **per-row miss frequency** across the N runs for any variant with fail
 
 **Ranking rule**: correctness (average, then failure rate, then min) is primary. Brevity (lower char count) is used only as a tiebreaker between variants with equal correctness — including when both are equally low-scoring.
 
+**Hard rule — no "final" or "reliable" language below N=20.** Never describe a variant as final, reliable, or recommended for shipping in this table or any summary unless it has been run at N≥20 with zero failures. A clean run at lower N is reported as exactly that — "clean at N=5" — never rounded up to a reliability claim.
+
 ## Step 8 — Hypotheses
 
 Compare higher- vs. lower-ranked variants (by the rule above) and write plain-language hypotheses about what caused the difference — on correctness, on brevity, or both. Ground each hypothesis in a specific **component** from the `COMPONENTS.md` table (not just "variant A vs variant B" — if two variants differ by more than one component, the table tells you which components are actually in play, and the hypothesis should isolate one) or a specific textual difference. Cross-reference the atomic-component consistency numbers across variants that share a component to see whether a pattern is really tied to that component or just to one variant's overall text.
+
+Before drawing conclusions, spot-check that `COMPONENTS.md`'s table still matches the actual `SKILL.md` text of the variants being compared (a quick grep for each component's characteristic phrase is enough) — correct any drift found before hypothesizing from it.
 
 ## Step 9 — Next-gen proposals
 
@@ -104,7 +98,12 @@ Leave `Result` and `Lesson` blank until the next run's data comes in, then fill 
 
 ## Step 11 — Confirm before re-running, and propose retirement
 
-Before spending more tokens on another full matrix run:
-- **Never re-run the matrix with the same variant set and same N as a prior round.** Every re-run must either include at least one new variant from step 9/10, or be a deliberate depth escalation on an existing variant (more runs to firm up a reliability estimate) — state explicitly which of the two a new round is for.
-- Recommend retiring the oldest/weakest variants when a newer variant clearly dominates them on both correctness and brevity — keep the active set within the 3–5 target (never above 6). "Retire" means excluding from future run matrices, not deleting the files — leave them in the repo/git history for audit purposes unless the user explicitly asks to delete.
-- Ask the user to confirm the new variant set and the retirement list before launching the next matrix run.
+Before spending more tokens on another round:
+- **Never re-run with the same variant set and same N as a prior round.** Every re-run must either include at least one new variant from step 9/10, or be a deliberate depth escalation on an existing variant (more runs to firm up a reliability estimate) — state explicitly which of the two a new round is for.
+- Recommend retiring the oldest/weakest variants when a newer variant clearly dominates them on both correctness and brevity — keep the active set within the 3–5 target (never above 6). "Retire" means excluding from future rounds, not deleting the files — leave them in the repo/git history for audit purposes unless the user explicitly asks to delete.
+- Ask the user to confirm the new variant set and the retirement list before launching the next round.
+- **Every third round, or whenever the total variant count across the whole lineage exceeds ~15**, summarize total rounds run so far and the rough token spend, and ask the user whether to continue, narrow scope, or wrap up with the current best candidate.
+
+## Step 12 — Real-world validation
+
+Once a variant clears the N≥20 zero-failure bar from step 7, and if the skill's real deployment surface differs from this lab's testing environment (e.g. claude.ai chat vs. Claude Code, where bundled-asset availability and trust context can differ), package it and test it there before calling it done. Log the result in `HYPOTHESES.md` under a "Real-world spot check" heading, the same way as any other round's results. If the deployment surface is unknown or identical to the testing environment, note that explicitly rather than skipping the step silently.
