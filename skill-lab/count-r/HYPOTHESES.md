@@ -215,7 +215,23 @@ Lesson: as expected, a format-only instruction with no bearing on correctness in
 ## count-r-v17 (parent: count-r-v9, stacks all 6 round-5 cuts)
 Hypothesis: if v11–v16's individual cuts are each independently safe, stacking all of them onto v9 simultaneously should still score well while cutting v9's 896 chars substantially — a genuine test of whether v9's load-bearing core is much smaller than its full text.
 Change made: applied all six cuts to v9 at once — dropped the worked example (v11, which also subsumes v13's narrower punctuation-only cut, since v11 removes the whole parenthetical v13's clause lives in), dropped the corrective "redo from scratch" clause (v12), condensed the verification sentence's phrasing (v15), dropped the duplicate invocation line (v14), and dropped the closing output-format line (v16). Net effect on the verification step: v12 and v15 combine into a single terse sentence, "confirm the sequence length equals the input length," with no corrective instruction. 580 chars (vs v9's 896 — a 35% reduction).
-Result: pending — round 6.
-Lesson: pending.
+Result: CONFIRMED on round 6. 12/12 on its very first run — including the punctuation-heavy stress cases (r,r.r!r?r, R2D2/purrrring) that the removed corrective clause and punctuation reminder were most directly hypothesized to protect.
+Lesson: v9's load-bearing core is genuinely smaller than its full text — stacking all six cuts did not visibly cost anything on this suite. Same caution as always: this is v17's first data point, one round is not a track record, and 580 chars is a fairly aggressive cut relative to a mechanism (length-check verification) whose whole value proposition was catching transcription errors — worth confirming the corrective clause truly isn't needed before treating this as final.
+
+## Round 6 results summary (v11–v17 — v9 dropped from rotation, 12-case suite)
+
+| Variant | Chars | R5 | R6 | Note |
+|---|---:|---:|---:|---|
+| v11 | 810 | 12/12 | 12/12 | dropped worked example |
+| v12 | 811 | 12/12 | 12/12 | dropped corrective clause |
+| v13 | 845 | 12/12 | 12/12 | dropped punctuation reminder only |
+| v14 | 864 | 12/12 | 12/12 | dropped duplicate invocation line |
+| v15 | 825 | 12/12 | 12/12 | condensed verification phrasing |
+| v16 | 857 | 12/12 | 12/12 | dropped output-format line |
+| v17 | **580** | — | **12/12** | all 6 cuts stacked (new this round) |
+
+**Two rounds running, every active variant has swept the suite.** v11–v16 now each have two independent 12/12 runs (rounds 5 and 6) — a genuinely different evidentiary position than round 5's single-data-point results, and comparable to what it took to call v9 "replicated" after rounds 3–4. v17, the maximally-cut 580-char stack, matched them on its first try, including on the exact stress cases (Rrrrr, purrrring, the punctuation-only test) most likely to expose a problem if the corrective/punctuation clauses actually mattered. Round 6 total: 7 agents, 309,457 tokens — essentially identical to round 5's 309,562, confirming the batched-agent cost is stable and reproducible, not a fluke of round 5's specific inputs.
+
+The natural open question now: is 580 chars (v17) actually the floor, or would a third replication round, or a harder test suite, start exposing gaps the current 12 cases don't stress? v13's specific bet — that the punctuation reminder is redundant because spelling character-by-character naturally puts punctuation in its own slot — has now survived two rounds including the cases built to stress exactly that. Same for v12's corrective-clause removal. Both are looking more like genuine findings than lucky rounds at this point, though a third confirmation (especially on v17, which only has one run so far) would still be the strongest next step before considering v9 fully supplanted.
 
 **All 7 variants scored a perfect 12/12** — the first round in the whole experiment where every active variant swept the suite. This is a genuinely unusual result and should be read with the same caution consistently applied elsewhere in this log: v9 now has three replications behind its clean sweep, which is real evidence; v11–v16 each have exactly **one**, which is not yet enough to call any of them "confirmed" in the same sense. It's plausible some of these cuts (particularly v12's dropped corrective clause and v13's dropped punctuation reminder, the two most directly tied to previously-observed failure modes in the v6/v8 lineage) will show cracks on a harder or larger test suite, or simply on a second independent run, the way v4 and v6 did after early perfect rounds. The clean sweep across the board is nonetheless a positive signal that v9's true load-bearing core is smaller than its full 896-char text — the open question is exactly how small, which the next round (repeating v11–v16, or trying a combined variant that stacks multiple safe-looking cuts) would help answer.
