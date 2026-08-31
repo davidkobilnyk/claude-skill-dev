@@ -50,7 +50,19 @@ All three component-isolation hypotheses were CONFIRMED: v1b (662 chars) fixed e
 
 v2 was also escalated to N=20 fresh runs (on top of Round 1's N=5) and scored 102/102 on every single run — 25/25 clean, clearing the N≥20 zero-failure bar from the intake's zero-tolerance requirement.
 
-**Updated ranking**: v2b now leads (matches v2's perfect record at 267 fewer characters), followed by v2 (now depth-validated), then v4, v3, v5, with v1/v1b/v1c serving as diagnostic baselines rather than shipping candidates.
+**Updated ranking (post-Round 2)**: v2b now leads (matches v2's perfect record at 267 fewer characters), followed by v2 (now depth-validated), then v4, v3, v5, with v1/v1b/v1c serving as diagnostic baselines rather than shipping candidates.
+
+## Round 3 results (N=20 each, see HYPOTHESES.md for full writeup)
+
+At the user's request, `v1d` (v1 + both v1b's and v1c's rules, combined) was run against `v3` and `v5` at N=20 each, with average per-run token counts tracked for the first time. All three scored a perfect 102/102 across all 20 runs (0% failure rate) — genuinely reliable at depth. But size and cost diverged sharply:
+
+| Variant | Chars | Avg tokens/run |
+|---|---|---|
+| v1d | 863 | 47,527 |
+| v5 | 7,163 | 53,666 |
+| v3 | 6,606 | 54,349 |
+
+**Updated ranking (post-Round 3)**: **v1d now leads the entire lineage** — it matches the top-tier reliability of every other 102/102 candidate (including v2b at 2,527 chars) while being roughly 3x smaller than v2b and ~8x smaller than v3/v5, and consuming ~13% fewer tokens per run than v3/v5. The heavier mechanisms in v2-v5 (comprehensive rule text, code-execution, primary/fallback duplication) bought no measurable correctness benefit over v1d's two small, precisely-targeted fixes on v1's minimal base.
 
 v1 is the minimal baseline (no explicit rules beyond the no-expression fallback) to establish how much the explicit components in v2-v5 actually buy over letting the model wing it. v3/v5 mark `order-of-ops-rule` / `sign-handling-rule` / `precision-preservation-rule` / `repeating-decimal-format-rule` as "via script" since `eval_expr.py` enforces these mechanically rather than through instructed text — the model only needs to normalize the input, not apply precedence or precision rules itself.
 

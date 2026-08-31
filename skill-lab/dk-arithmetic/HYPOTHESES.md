@@ -33,11 +33,11 @@ Lesson: not every plausible-sounding safety rule is actually load-bearing for a 
 Note: this variant deliberately combines two components (`repeating-decimal-format-rule` + `bare-number-rule`) in one step, at the user's explicit request, rather than following the lab's default one-hypothesis-per-variant rule. The user is specifically interested in how far a very short SKILL.md (v1's minimal style, extended with just the two smallest fixes) can go on correctness.
 Hypothesis: since v1b and v1c each independently and fully fixed their respective miss cluster with no side effects on the other rows, combining both additions onto v1 should fix both miss clusters simultaneously and produce a 102/102 result, while staying far shorter than v2/v2b (662 + 670 - v1's base ≈ 865 bytes expected, vs. v2b's 2,527).
 Change made: v1's text plus both the `repeating-decimal-format-rule` sentence (from v1b) and the `bare-number-rule` sentence (from v1c). No other changes — no `parse-then-eval-split`, no other v2-style rules.
-Result: (fill in after this round)
-Lesson: (fill in after this round)
+Result: CONFIRMED, and decisively. At N=20, v1d scored 102/102 on every single run (0% failure rate) at only 863 characters — matching the top-tier reliability of v3 (6,606 chars) and v5 (7,163 chars) at roughly 13% of the file size, and using ~13% fewer tokens per run (47,527 avg vs. 54,349 for v3 and 53,666 for v5).
+Lesson: for this task, two small targeted rules were sufficient to reach the same reliability ceiling as much heavier designs (code-execution, primary/fallback duplication, or the full v2-style rule set). Neither `parse-then-eval-split`'s structural scaffolding nor `code-execution`'s mechanical precision guarantee bought any measurable correctness benefit over v1d's minimal-plus-two-fixes approach on this test suite — brevity was essentially free here. v1d is now the overall lineage leader, ahead of v2b (2,527 chars).
 
-## Round 3 plan: v1d vs. v3 vs. v5 at N=20, with token-count tracking
-At the user's request: run the new `v1d` combination variant against `v3` (code-execution) and `v5` (primary/fallback) at N=20 each (60 runs total), and add average per-run token consumption to the Step 7 results table this round (not tracked in Rounds 1-2).
+## Round 3: v1d vs. v3 vs. v5 at N=20, with token-count tracking
+At the user's request: ran the new `v1d` combination variant against `v3` (code-execution) and `v5` (primary/fallback) at N=20 each (60 runs total), with average per-run token consumption added to the Step 7 results table (not tracked in Rounds 1-2). Result: all three variants scored a perfect 102/102 across all 20 runs each — see the `v1d` entry above for the comparative token/size analysis.
 
 ## Depth escalation: dk-arithmetic-v2 to N=20
 Per the Step 7 hard rule, no variant can be called "final" or "reliable" below N=20 zero-failure. v2 is the current top-ranked candidate (tied-best correctness, lowest char count) — escalating it to N=20 fresh runs to test whether its clean N=5 record holds at depth, per the project's zero-tolerance failure bar from intake.
