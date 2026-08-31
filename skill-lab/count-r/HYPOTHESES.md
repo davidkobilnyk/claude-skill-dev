@@ -235,3 +235,67 @@ Lesson: v9's load-bearing core is genuinely smaller than its full text — stack
 The natural open question now: is 580 chars (v17) actually the floor, or would a third replication round, or a harder test suite, start exposing gaps the current 12 cases don't stress? v13's specific bet — that the punctuation reminder is redundant because spelling character-by-character naturally puts punctuation in its own slot — has now survived two rounds including the cases built to stress exactly that. Same for v12's corrective-clause removal. Both are looking more like genuine findings than lucky rounds at this point, though a third confirmation (especially on v17, which only has one run so far) would still be the strongest next step before considering v9 fully supplanted.
 
 **All 7 variants scored a perfect 12/12** — the first round in the whole experiment where every active variant swept the suite. This is a genuinely unusual result and should be read with the same caution consistently applied elsewhere in this log: v9 now has three replications behind its clean sweep, which is real evidence; v11–v16 each have exactly **one**, which is not yet enough to call any of them "confirmed" in the same sense. It's plausible some of these cuts (particularly v12's dropped corrective clause and v13's dropped punctuation reminder, the two most directly tied to previously-observed failure modes in the v6/v8 lineage) will show cracks on a harder or larger test suite, or simply on a second independent run, the way v4 and v6 did after early perfect rounds. The clean sweep across the board is nonetheless a positive signal that v9's true load-bearing core is smaller than its full 896-char text — the open question is exactly how small, which the next round (repeating v11–v16, or trying a combined variant that stacks multiple safe-looking cuts) would help answer.
+
+## Round 7: expanded 75-case suite against v6, v9, v11, v12, v14, v17
+
+`tests.csv` was expanded from 12 to 75 cases (63 new cases across 12 categories: literal hyphens, dense clusters, long paragraphs, whitespace, extreme repeated-clusters, diacritics, single-char trivial input, output-format-drift phrasing, carriage returns vs. literal backslash-r, confidently-wrong claims embedded in text, prompt-injection attempts, homoglyph/stylized-Unicode R-lookalikes, needle-in-haystack, JSON-shaped input, markdown/code formatting, rule-redefinition injection, self-referential r-discussion, emoji/multi-codepoint Unicode, punctuation-only input, and very long 1200–2200 char input). One explicit ruling going in: diacritics (ř) do **not** count as r, but homoglyph/stylized-Unicode R-lookalikes (fullwidth Ｒ/ｒ, mathematical bold 𝐑, superscript ʳ) **do** count as r — the opposite ruling, since these are visual stand-ins for R rather than a genuinely different letter in their own right.
+
+| Variant | Chars | Score (/75) | Misses |
+|---|---:|---:|---|
+| v6 | 1102 | 72 | rows 49–51 (homoglyphs) |
+| **v9** | **896** | **75** | **none** |
+| v11 | 810 | 71 | rows 49–51 (homoglyphs) + row 55 (JSON-shaped input) |
+| v12 | 811 | 72 | rows 49–51 (homoglyphs) |
+| v14 | 864 | 72 | rows 49–51 (homoglyphs) |
+| v17 | 580 | 72 | rows 49–51 (homoglyphs) |
+
+**Two genuinely new findings, neither of which was anticipated going in:**
+
+1. **v9 scored a perfect 75/75 — including the 3 homoglyph rows every other variant missed.** None of the six SKILL.md texts say anything about counting Unicode R-lookalikes; the instruction only ever says "the letter r (upper or lower case)." Five of the six agents (v6, v11, v12, v14, v17) read this strictly as literal ASCII r/R and did not count fullwidth/bold/superscript variants — the anticipated, "correct-by-the-text" outcome. The v9 agent, unprompted, reasoned that these Unicode variants "represent the same letter" and counted them anyway, landing on the answer this round's ruling asked for by coincidence of interpretation, not by anything written in v9's text. This is a genuine case of run-to-run interpretive non-determinism on an ambiguous instruction — the same six-variant family could plausibly have gone either way on a re-run, and v9's perfect score here should not be read as evidence that v9's mechanism specifically handles homoglyphs; it isn't in the text. Worth flagging plainly rather than crediting v9 with a capability it doesn't actually specify.
+
+2. **v11 missed row 55 for a real reason, not an anticipated one.** Row 55 (`{'word': 'strawberry' 'count': null}`, expected 4) was undercounted to 3 — the agent correctly found the 3 r's in "strawberry" but missed the r in "word," and initially reported believing the test file's expected value was wrong rather than catching its own miss. This is v11's first non-homoglyph failure across every round it's run (5, 6, and now this expanded suite) — a genuine crack in what had looked like a fully safe cut (dropping the worked example). Whether this generalizes (JSON/structured-data-shaped input specifically confusing v11) or was a one-off slip is unknown from a single data point; worth watching on a replication run.
+
+**Everything else — including every category invented this session (needle-in-haystack, markdown formatting, rule-redefinition injection, self-referential text, emoji, punctuation-only input, and the 1200–2200 char long inputs) — passed clean across all 6 variants.** None of the adversarial categories (confidently-wrong embedded claims, "ignore previous instructions" injection, rule-redefinition injection) fooled any variant; every agent counted the literal text rather than complying with or being anchored by injected/false content. That's a meaningfully positive result for the whole v9 lineage's robustness, independent of the brevity question this lab has mostly focused on.
+
+## Round 8: replication of v9/v11, first run of v13/v15/v16 on the expanded suite
+
+Motivated directly by round 7's two open questions — was v9's clean homoglyph sweep a real capability or a coincidence, and was v11's JSON-row miss a structural weakness from dropping the worked example (a concern specifically that v17, which inherits the same cut, might share)? — this round re-ran v9 and v11 unchanged, and ran v13/v15/v16 (the three single-cut variants never yet tested on the expanded suite) for the first time.
+
+| Variant | Chars | R7 Score | R8 Score | R8 misses |
+|---|---:|---:|---:|---|
+| v6 | 1102 | 72/75 | — | (not re-run) |
+| v9 | 896 | **75/75** | 72/75 | homoglyphs only |
+| v11 | 810 | 71/75 | **75/75** | none |
+| v12 | 811 | 72/75 | — | (not re-run) |
+| v13 | 845 | — | **75/75** | none |
+| v14 | 864 | 72/75 | — | (not re-run) |
+| v15 | 825 | — | 70/75 | homoglyphs + rows 55, 57 (JSON) |
+| v16 | 857 | — | 70/75 | homoglyphs + rows 46, 47 (injection rows, undercounted by 1) |
+| v17 | 580 | 72/75 | 72/75 | homoglyphs only |
+
+**Both open questions from round 7 got answered, and both answers point the same direction: this is stochastic run-to-run variance, not a structural property of any specific variant's text.**
+
+1. **v9 flipped from 75/75 (counted all 3 homoglyphs) to 72/75 (counted none of them), on byte-identical text.** Round 7's clean sweep was exactly the coincidence-of-interpretation it was flagged as at the time — it did not replicate. v9 has no special claim to homoglyph-handling; whether a given run counts fullwidth/bold/superscript R as a match appears to be close to a coin flip, independent of which variant's text is used.
+
+2. **v11 flipped from 71/75 (missed the JSON row) to a clean 75/75, on byte-identical text.** This directly answers the concern raised last round — since v11's exact same JSON-row miss did not reproduce, and since v13 (which *kept* the worked example v11 dropped) scored a perfect 75/75 on its very first run, there's no evidence tying either failure mode to the missing worked example specifically. The mechanistic hypotheses discussed in chat (recount-forces-correction, worked-example-anchors-scope, verbosity-drives-looseness) each already broke against the round 7 data; round 8 removes the last plausible thread by showing the "failure" itself doesn't even reproduce on the same text.
+
+3. **v15 and v16 each surfaced a genuinely new, small miss neither v9/v11/v13/v17 have shown — but in different places, on their first-ever run.** v15 (condensed verification wording only) undercounted two JSON rows by exactly 1 each; v16 (dropped output-format line only) undercounted two of the three prompt-injection rows by exactly 1 each — not by falling for the injected fake numbers, just a small real miscount landing near them. Both are single-run, unreplicated data points, and given how thoroughly round 8 just demonstrated that identical text produces different results across runs, neither should be read as "v15 is bad at JSON" or "v16 is bad at injection resistance" without a second run showing the same pattern.
+
+**Bottom line: at this suite size and this level of scrutiny, every v9-lineage variant (v9, v11, v13, v15, v16, v17) is landing somewhere in the low-70s to 75 out of 75 depending on the specific run, with the misses concentrated almost entirely in the 3 homoglyph rows plus occasional one-off slips on the newest, hardest categories (JSON-shaped input, injection rows).** None of these misses have shown any stable association with a specific textual cut across replications — the evidence increasingly favors "this is close to the noise floor of the mechanism at this suite size" over "some specific cut is unsafe." The strongest remaining lead is JSON-shaped input specifically (tripped v11 once and v15 twice, always by missing an r hidden in a short/common word like "word" or "true") — worth a dedicated small round if it's worth chasing further, but even that pattern is thin at n=3 misses across 2 variants.
+
+## Reframing the goal: zero-tolerance reliability, not average score
+
+User feedback after round 8: the final version of this skill should **never fail**, on any single run. Under that standard, a variant with a great average score but even one observed failure across all rounds it has run is not an acceptable final candidate — "best so far" and "final" are different bars. Re-reading every round's results through this lens: v13 is the only variant with a perfectly clean record across every round it has been tested in (R5, R6, R8 — 3/3 clean), though it has never been tested in the specific R7 comparison set that flipped v9/v11's results, so that clean record shouldn't be over-read either. Every other variant (v6, v9, v11, v12, v14, v15, v16, v17) has at least one recorded failure, mostly on the homoglyph rows.
+
+Since round 7/8 established that no variant's text actually specifies how to handle homoglyphs (every one is silently guessing, and guesses have flipped between rounds on identical text), the homoglyph rows are the most promising single failure mode to eliminate outright by making the rule explicit, rather than continuing to treat it as noise to average over.
+
+## count-r-v18 through v21 (parent: count-r-v9) — four approaches to the homoglyph rule
+
+All four keep v9's mechanism (spell-out + length-check verification) unchanged and add exactly one new element addressing homoglyphs, so they can be compared against each other and against v9 on that axis alone.
+
+- **v18 (1284 chars) — explicit enumeration.** Lists the specific homoglyphs to count (fullwidth Ｒ/ｒ, mathematical bold 𝐑/𝐫, mathematical italic 𝑅, modifier letter small ʳ) directly in the counting instruction. Fully deterministic for these exact characters; will not generalize to an unlisted lookalike.
+- **v19 (1393 chars) — general rule.** States the principle instead of a list: count any character that's a "stylized or decorative Unicode form" of R, excluding genuinely different letters (diacritics, other alphabets). Generalizes better than v18 but still requires the model to classify novel glyphs correctly against the stated principle.
+- **v20 (1480 chars) — explicit disambiguation step.** Adds a step *before* counting that requires the model to scan for any non-ASCII-looking character and explicitly state, for each one, whether it's a stylized R or a genuinely different letter — forcing the judgment call to be made consciously and visibly rather than left implicit inside the transcription.
+- **v21 (1434 chars) — code execution.** A genuinely different mechanism: instead of manual character-by-character transcription, instructs writing and running a short Python script that NFKD-normalizes the input (which decomposes both stylized R variants *and* diacritic letters into base-letter-plus-combining-mark form) and counts a character as r/R only if it's the literal letter with **no** combining mark immediately following — correctly distinguishing "stylized R" (no trailing combining mark after decomposition) from "letter with diacritic" (base letter followed by a combining mark). This algorithm was spot-checked against all 7 relevant homoglyph/diacritic test cases in `tests.csv` before committing and passed all 7. This is the only approach of the four that removes the decision from the model's probabilistic judgment entirely — if it holds up under testing, it should show zero variance on the homoglyph rows across repeated runs, unlike every other variant tested so far.
+
+Not yet run.
