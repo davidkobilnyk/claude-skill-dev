@@ -371,4 +371,25 @@ Spot-checked against strawberry, the CR-vs-backslash-r rows, punctuation-heavy r
 
 Same relationship as v22 is to v21: v23 has the agent write out the grep/wc command inline every invocation; v27 ships that exact command as a pre-written, executable, pre-verified `count_r.sh` (728 chars) and has the SKILL.md (948 chars) instruct calling it rather than authoring the command fresh. The script bakes in the `LC_ALL=C.UTF-8` locale requirement and the homoglyph character class internally, so the caller doesn't need to remember either — a real advantage over v23, where an agent could in principle drop the locale prefix or mistype the character class on some future invocation. Made executable (`chmod +x`) and re-verified against all 8 of v23's spot-check cases by calling the script directly (not just the inline command) — all 8 passed.
 
-Not yet run.
+Result: CONFIRMED, 3/3 clean — see Round 11 below.
+Lesson: see Round 11.
+
+## Round 11: v23–v27, each run 3 independent times
+
+| Variant | Mechanism | Run 1 | Run 2 | Run 3 |
+|---|---|---:|---:|---:|
+| v23 | grep one-liner (inline) | 75 | 75 | 75 |
+| v24 | character-frequency histogram | 75 | 73 | 73 |
+| v25 | concise v19 | 75 | 75 | 75 |
+| v26 | v22 + "do not read the script" | 75 | 75 | 75 |
+| v27 | grep one-liner (bundled script) | 75 | 75 | 75 |
+
+**Four of five variants went a clean 3-for-3, including both new shell-based mechanisms.** v23's inline grep command and v27's bundled `count_r.sh` both scored perfectly on every run, extending the code-execution family's zero-failure record from Python (v21/v22) to shell as well — the underlying algorithm (grep with an explicit UTF-8 locale and an explicit homoglyph character class) is just as reliable as the Python NFKD approach once its two non-obvious gotchas (locale, explicit character class) are handled correctly.
+
+**v26 confirms the explicit "do not read the script" instruction worked as intended** — all three runs explicitly reported not reading `count_r.py`'s source, unlike several of v22's round-9/10 runs which read it unprompted. (Token comparison against v22 is a natural follow-up once we're ready to revisit the efficiency question.)
+
+**v24 (histogram) is the one real finding of this round, and it's a negative result worth taking seriously.** It was purpose-built to eliminate the "missed r hidden in a short, unremarkable word" failure mode (seen in v11, v15, v20, all on JSON-shaped input) by forcing exhaustive character-by-character accounting instead of selective scanning. Two of its three runs still missed — and the misses were the *same two failure types* already cataloged elsewhere in this log:
+- Run 2 missed row 20 (a long paragraph, undercounted by 2) and row 30 (missed the r in "otherwise") — the paragraph miss is the identical row v20 also missed in round 10.
+- Run 3 missed rows 55 and 57 (JSON rows), missing the r in "word" and "true" respectively — the exact failure mode the histogram approach was designed to fix.
+
+**This is a genuinely informative negative result: reframing the counting task (histogram vs. selective scan) did not eliminate either recurring failure mode.** That's evidence these misses aren't really about *how* the model decides to look for r's — they're closer to a general small-probability attention slip that shows up regardless of mechanism, on the hardest/longest/most-unusual rows in the suite. Combined with round 9/10's demonstration that the exact same slips don't reproduce on identical re-runs, this continues to point toward "residual noise floor of reasoning-based counting on this suite's hardest rows" rather than any mechanism-specific weakness — which in turn is the strongest argument yet for the code-execution variants (v21/v22/v23/v26/v27), all of which have now gone a combined 30-for-30 clean runs across rounds 9–11 with zero exceptions (v21: 13/13 across rounds 9–10; v22: 8/8 in round 10; v23, v26, v27: 3/3 each in round 11).
