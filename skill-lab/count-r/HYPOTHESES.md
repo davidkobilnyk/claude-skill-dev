@@ -55,17 +55,30 @@ Active going into round 3: v4, v6, v7, plus v8/v9/v10 below (6 total, at cap).
 ## count-r-v8 (parent: count-r-v6)
 Hypothesis: v6's verification block has two separable sub-steps — a length-check (transcribed sequence length == original input length) and an independent second recount. The recount alone may already be doing most of the work of catching counting-after-correct-spelling slips (like "irregular"), independent of the length-check, which more specifically targets transcription drift (like "Rrrrr"/"purrrring"). Removing the length-check should reveal whether v6's 12/12 score depends on it or not.
 Change made: deleted the length-check sentence from v6; kept only the independent-recount instruction.
-Result: (fill in after the next run: confirmed / refuted / inconclusive)
-Lesson: (fill in after the next run)
+Result: REFUTED. Scored 9/12. Removing the length-check reintroduced exactly the transcription errors it was meant to catch: mis-transcribed "Rrrrr" as 6 characters and dropped an r from "purrrring" — the same failure modes v3 originally had, before v6 fixed them. Also picked up an unrelated new miscount on the plain sentence test.
+Lesson: the recount alone is not sufficient to prevent transcription drift on inputs with repeated-letter runs. The length-check specifically targets that failure mode and the recount does not substitute for it.
 
 ## count-r-v9 (parent: count-r-v6)
 Hypothesis: conversely, the length-check may be the more load-bearing of the two sub-steps — confirming the transcribed sequence's length matches the input's length forces careful re-transcription and may already catch most errors, making the separate independent recount redundant.
 Change made: deleted the independent-recount instruction from v6; kept only the length-check.
-Result: (fill in after the next run: confirmed / refuted / inconclusive)
-Lesson: (fill in after the next run)
+Result: CONFIRMED, strongly. Scored 12/12 — a clean sweep, including correctly transcribing both "Rrrrr" and "purrrring" (the exact cases v8 got wrong without the length-check). Achieved this at 896 chars, beating v6's own 1102 chars for equal-or-better correctness in this round.
+Lesson: the length-check is the load-bearing half of v6's verification step; the independent recount was largely redundant. v9 is now the strongest correctness/brevity combination found in the experiment — pending replication, since no variant (including v6 and v4, both perfect in round 2) has scored perfectly on two consecutive rounds yet.
 
 ## count-r-v10 (parent: count-r-v7)
 Hypothesis: v7 (877 chars, 11/12 in round 2) still fails "hello" — a hallucinated r on a zero-r word, the one failure mode its cluster-warning fix didn't target. A lightweight final re-scan (re-run the character-by-character count a second time and use majority agreement) might catch this hallucination without inheriting v6/v8/v9's heavier spell-out-and-verify mechanism.
 Change made: added a re-scan-and-compare step (scan twice; on disagreement, scan a third time and take the majority) to v7's existing character-scanning instructions.
-Result: (fill in after the next run: confirmed / refuted / inconclusive)
-Lesson: (fill in after the next run)
+Result: REFUTED. Scored 9/12, no better than v7's own 9/12 this round, and still failed "hello". Also failed "Mirror" (reasoned to 3, reported final answer as 2 — a transcription-to-final-answer slip, not a counting error) and "irregular" (new failure, got 2 instead of 3).
+Lesson: a bare re-scan-and-majority-vote, without externalizing the character sequence first (as v6/v9's spell-out step does), does not reliably catch the hallucination-type miscount on very short/simple inputs. The "reasoned correctly but reported the wrong final number" failure mode (also seen in v7 this round) suggests the last-step transcription from reasoning to final answer is itself an error-prone point worth targeting directly in a future hypothesis.
+
+## Round 3 results summary (v4, v6, v7, v8, v9, v10 — 12-case suite)
+
+| Variant | Chars | Score |
+|---|---:|---:|
+| v4 | 613 | 9/12 |
+| v6 | 1102 | 11/12 |
+| v7 | 877 | 9/12 |
+| v8 | 852 | 9/12 |
+| **v9** | **896** | **12/12** |
+| v10 | 1049 | 9/12 |
+
+**v9 is the new correctness/brevity leader.** v4 and v6, both perfect in round 2, each picked up new failures this round (v4: hello, R2D2 stress, and a brand-new failure on the "eighteenth symbol" indirect-0 test; v6: R2D2 stress only). v7 and v10 both picked up a new failure on the same indirect-0 test that v4 also newly failed. No variant has scored perfectly on two consecutive rounds — v9's clean sweep is a first data point, not yet a proven track record, and should be treated as such until replicated.
