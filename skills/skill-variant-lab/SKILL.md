@@ -9,9 +9,11 @@ Orchestrates an experimental loop for developing a simple, deterministic-ish ski
 
 ## File layout
 
-- `skills/<name>-v<N>/SKILL.md` — each variant, one per folder.
-- `tests/<name>.csv` — shared test suite, columns `input,expected_output`.
-- `tests/<name>-HYPOTHESES.md` — lineage/lessons log (see step 7). Created on the first hypothesis round and appended to every round after.
+Everything for one variant set lives together in `skill-lab/<name>/`, next to (not inside) `skills/`:
+
+- `skill-lab/<name>/v<N>/SKILL.md` — each variant, one per subfolder. The `name:` frontmatter inside stays a full unique name (e.g. `<name>-v<N>`) even though the folder itself is just `v<N>`.
+- `skill-lab/<name>/tests.csv` — shared test suite, columns `input,expected_output`.
+- `skill-lab/<name>/HYPOTHESES.md` — lineage/lessons log (see step 7). Created on the first hypothesis round and appended to every round after.
 
 ## Step 1 — Intake
 
@@ -19,17 +21,17 @@ Ask the user what the target skill should do: a short name/prefix, the core beha
 
 ## Step 2 — Test case generation
 
-Propose `input,expected_output` pairs covering: the plain/normal case, phrasing variety if relevant (natural language vs. symbolic), edge cases suggested by the intake, and at least one stress case that probes a likely failure mode. Show the full table to the user. Wait for explicit confirmation or edits before writing `tests/<name>.csv`. Only loop again if the user explicitly asks for changes — don't force multiple rounds.
+Propose `input,expected_output` pairs covering: the plain/normal case, phrasing variety if relevant (natural language vs. symbolic), edge cases suggested by the intake, and at least one stress case that probes a likely failure mode. Show the full table to the user. Wait for explicit confirmation or edits before writing `skill-lab/<name>/tests.csv`. Only loop again if the user explicitly asks for changes — don't force multiple rounds.
 
 ## Step 3 — Initial variants
 
-Generate 3–5 variants (never exceed 6 active at once — see the cap rule below) that take genuinely different approaches to the same instruction, not just paraphrases of each other. Write each to `skills/<name>-v<N>/SKILL.md`.
+Generate 3–5 variants (never exceed 6 active at once — see the cap rule below) that take genuinely different approaches to the same instruction, not just paraphrases of each other. Write each to `skill-lab/<name>/v<N>/SKILL.md`.
 
 ## Step 4 — Run the matrix
 
 For every (active variant × test case) pair, spawn an independent background subagent (the `Agent` tool, `run_in_background: true`), all launched in parallel in one message.
 
-**Hard rule — read the file, do not invoke the skill by name.** Each subagent's prompt must tell it to `Read` the specific `skills/<name>-v<N>/SKILL.md` file and follow its instructions directly, applying them to the given input, then report only the raw final output. Never instruct a subagent to invoke the skill via the `Skill` tool by name. Freshly created skills are frequently invisible to a fresh subagent's own skill listing (observed roughly 1 success in 44 attempts in practice) — invoking by name silently wastes most of the run on "Unknown skill" errors instead of real results.
+**Hard rule — read the file, do not invoke the skill by name.** Each subagent's prompt must tell it to `Read` the specific `skill-lab/<name>/v<N>/SKILL.md` file and follow its instructions directly, applying them to the given input, then report only the raw final output. Never instruct a subagent to invoke the skill via the `Skill` tool by name. Freshly created skills are frequently invisible to a fresh subagent's own skill listing (observed roughly 1 success in 44 attempts in practice) — invoking by name silently wastes most of the run on "Unknown skill" errors instead of real results.
 
 Wait for all task-notifications before compiling results; do not guess or predict outcomes ahead of the notifications arriving.
 
@@ -56,7 +58,7 @@ Present this plan to the user before writing any files.
 
 ## Step 8 — Create files + log
 
-Write the new `SKILL.md` files per the approved plan. Then update `tests/<name>-HYPOTHESES.md`, appending one entry per new variant:
+Write the new `SKILL.md` files per the approved plan. Then update `skill-lab/<name>/HYPOTHESES.md`, appending one entry per new variant:
 
 ```
 ## <name>-v<N> (parent: <name>-v<M>)
