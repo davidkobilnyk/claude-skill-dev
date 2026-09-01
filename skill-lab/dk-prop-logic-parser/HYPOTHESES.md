@@ -12,6 +12,18 @@
 
 **Status:** Logged for the Step 13 retrospective. Applying it now, going forward: Round 1 and Round 2's reconstructed scores will be written to `RESULTS.md` once the current re-grading pass finishes, and future rounds will write to it directly at Step 7 instead of reconstructing after the fact.
 
+## Process note (Round 2, row-153 grading correction)
+
+**Observation:** When re-grading all 45 runs (Round 1 + Round 2) against `tests.csv` via 10 background grading agents, every agent that graded a variant with 3+ misses elsewhere still under-counted row 153 specifically — several agents didn't flag it as a miss even when the run reused Case 1's symbol for Case 2. Direct inspection of all 45 raw run outputs on row 153 found the true miss counts were higher than reported for v1, v4, v6, v7, v8, and v9 (v2, v3, v5, v10's grading was already correct on this row). See `RESULTS.md` for the corrected scores.
+
+**Root cause:** the grading instructions given to each agent stated the general tolerance rule ("symbol letters are never scored literally — any consistent relabeling counts as correct") without calling out that row 153 (and its `multiple-independent-example-blocks` siblings, 151-152) is a targeted exception: the row's whole purpose is to test whether a variant *avoids* reusing a symbol across independent scopes, so a run that reuses `P` for both Case 1 and Case 2 is wrong regardless of what letter is used — the general tolerance rule and this row's actual scoring criterion point in opposite directions, and the agents defaulted to the general rule.
+
+**Fix for future labs:** when a test suite contains rows whose entire point is to check for symbol *non-reuse* (scope-boundary/independent-block scenarios), grading instructions must state this as an explicit exception to the general relabeling-tolerance rule, not assume the general rule's absence of counter-example is enough. More broadly: any row where the general scoring tolerance and the row's specific intent could conflict should be called out by name in grading instructions, not left for the grader to infer.
+
+**Candidate patch to `skill-variant-lab` for Step 13:** Step 6/7's grading instructions (whether given to a human, to Claude directly, or to a grading subagent) should include a short "exceptions to the general tolerance rules" list, populated from the test suite's own scoring-methodology notes (see `COMPONENTS.md`'s scoring section) — specifically calling out any row category where a general tolerance (symbol relabeling, phrasing variance, etc.) would produce a false negative on the row's actual diagnostic intent.
+
+**Status:** Logged for the Step 13 retrospective; applied as a correction to this round's results directly (see `RESULTS.md`).
+
 ## Process note (Round 1, Step 6)
 
 **Observation:** With 5 initial variants at the lab's default N=5 runs/variant, Step 6 needed 25 concurrent subagents, but the harness caps concurrent subagents at 20. The first launch batch got 20 through and the last 5 (v5's runs) failed with "concurrent subagent limit reached," requiring a second launch once slots freed up — an avoidable extra round-trip.
