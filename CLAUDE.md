@@ -14,6 +14,8 @@ or the equivalent `mcp__github__list_pull_requests` / `pull_request_read` call. 
 
 **Subscribe to activity on any PR you open.** Immediately after creating a pull request, call `subscribe_pr_activity` (or the equivalent GitHub MCP tool) for it. This turns a merge into a pushed notification instead of something that depends on remembering to re-poll — the check above is still required before every push regardless, but the subscription is what catches a merge in the gap between pushes rather than relying purely on manual discipline.
 
-## PR creation on a per-project basis
+## PR creation on every commit
 
-Don't open a PR unless the user explicitly asks — that's the default, and it holds until they do. Once a user has explicitly asked for a PR on a given branch/project **twice** in the same conversation, treat that as durable permission to keep opening/reusing PRs for that same branch's remaining work without re-asking each time — but say so out loud the first time this kicks in (e.g. "I'll keep opening PRs on this branch as work continues, since you've asked twice now — let me know if you'd rather confirm each one"), rather than silently inferring the permission and never mentioning it. This durable permission is scoped to that one branch/project; a different branch or a new project starts the default over.
+The default is to open a PR after every commit that gets pushed — no need to wait for the user to ask. Before opening one, check for an already-open, unmerged PR from the same branch that this commit reasonably belongs to (the same check as the "Before committing/pushing to an existing branch" section above already surfaces this); if one exists, the push lands in it automatically and no new PR is needed. Only open a fresh PR when there is no open unmerged PR that makes sense to add the commit to — e.g. the branch has never had a PR, or its prior PR was merged/closed and this is new work continuing on the same branch name.
+
+Immediately after opening any PR, call `subscribe_pr_activity` for it per the section above.
