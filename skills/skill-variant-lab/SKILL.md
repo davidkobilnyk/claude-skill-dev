@@ -89,6 +89,8 @@ For each proposed variant, record before building it:
 - the single hypothesis being tested
 - the specific change being made (named against the component ID it adds/removes/swaps, per `COMPONENTS.md`)
 
+**Required deferred-candidates log.** Alongside the proposed variants, list every hypothesis or merge candidate that was *considered this round and not proposed*, with one line naming why (e.g. "ranked below the tied leaders — deferred," "no rule blocks it, but this round's budget went to other tests," "components not yet independently confirmed"). This is not optional: a plan that only records what's included is invisible to a later check on what's being systematically passed over, and reasons that seemed sufficient in the moment (a ranking rule, a budget call, an unconfirmed component) can stop applying a round or two later without anyone noticing unless the reason itself was written down where it can be re-read. Append this log to `HYPOTHESES.md` under a `## Deferred — Round <N>` heading.
+
 Present this plan to the user before writing any files.
 
 ## Step 10 — Create files + log
@@ -113,6 +115,7 @@ Before spending more tokens on another round:
 - Recommend retiring the oldest/weakest variants when a newer variant clearly dominates them on both correctness and brevity — keep the active set within the 3–5 target (never above 6). "Retire" means excluding from future rounds, not deleting the files — leave them in the repo/git history for audit purposes unless the user explicitly asks to delete.
 - Ask the user to confirm the new variant set and the retirement list before launching the next round.
 - **Every third round, or whenever the total variant count across the whole lineage exceeds ~15**, summarize total rounds run so far and the rough token spend, and ask the user whether to continue, narrow scope, or wrap up with the current best candidate.
+- **At that same checkpoint, re-read every entry in the deferred-candidates log accumulated so far** and ask, for each: does its stated reason still hold given what's landed since? A reason of "components not yet independently confirmed" that both since confirmed cleanly means the deferral has expired — surface it as a proposal now rather than leaving it logged-but-dormant. A reason of "ranked below the tied leaders" is worth rechecking against Step 11's near-miss guidance above, not just re-stated. Report which deferred items are still validly deferred and which should move into this round's plan.
 
 ## Step 12 — Real-world validation
 
