@@ -75,18 +75,18 @@ add("nested-conditional", [
 add("paraphrase-consistency", [
     ("It is raining outside. If the rain continues, the streets will flood.", "P=it is raining; Q=the streets will flood => P; P→Q"),
     ("The store is closed today. The store being closed means deliveries are delayed.", "P=the store is closed; Q=deliveries are delayed => P; P→Q"),
-    ("Ana finished the report. Because Ana completed the report, she can submit it.", "P=Ana finished the report; Q=she can submit it => P; P→Q"),
+    ("Ana finished the report. Once the report is finished, she can submit it.", "P=Ana finished the report; Q=she can submit it => P; P→Q"),
 ])
 
 add("negated-paraphrase", [
     ("It is not raining. The streets are dry.", "P=it is raining; Q=the streets are dry => ¬P; Q [flag: dryness and non-rain are correlated but not logically identical — keep as distinct atoms, do not merge]"),
-    ("The lights are off. The room is not lit.", "P=the lights are on => ¬P [flag: \"off\" and \"not lit\" are treated as the same proposition restated — merge into one symbol]"),
-    ("He is not asleep. He is awake.", "P=he is asleep => ¬P [flag: \"not asleep\" and \"awake\" treated as the same proposition by convention — merge into one symbol]"),
+    ("The lights are off. The room is not lit.", "P=the lights are on => ¬P; ¬P [flag: \"off\" and \"not lit\" are treated as the same proposition restated — both sentences merge into the same symbol]"),
+    ("He is not asleep. He is awake.", "P=he is asleep => ¬P; ¬P [flag: \"not asleep\" and \"awake\" treated as the same proposition by convention — both sentences merge into the same symbol]"),
 ])
 
 add("pronoun-back-reference", [
     ("If the fire alarm activates, the building will be evacuated. It also triggers a call to the fire department.", "P=the fire alarm activates; Q=the building will be evacuated; R=a call is triggered to the fire department => P→Q; P→R"),
-    ("The engine overheated. It caused the car to stall.", "P=the engine overheated; Q=the car stalled => P; P→Q"),
+    ("The engine overheated. It caused the car to stall.", "P=the engine overheated; Q=the car stalled => P; Q [flag: sentence 2 (\"It caused the car to stall\") reports a completed causal event, not a hypothetical — both P and Q are asserted true; rendered as Q here (P already asserted by sentence 1), not P→Q, consistent with the causal-vs-conditional distinction tested in causal-conditional-ambiguity]"),
     ("If the tank ruptures, chemicals will leak. It also triggers an emergency shutdown.", "P=the tank ruptures; Q=chemicals will leak; R=an emergency shutdown is triggered => P→Q; P→R"),
 ])
 
@@ -160,7 +160,7 @@ add("empty-input", [
 ])
 
 add("single-word-fragment", [
-    ("Rain.", "INVALID: sentence fragment — not a complete declarative proposition with clear logical structure"),
+    ("Rain.", "INVALID: sentence fragment — not a complete declarative proposition with clear logical structure [flag: a lenient reading treating it as an elliptical atomic claim (P=it is raining => P) is also accepted]"),
     ("Yes.", "INVALID: sentence fragment, not a proposition"),
     ("Maybe.", "INVALID: sentence fragment / hedge, not a proposition"),
 ])
@@ -316,9 +316,9 @@ add("multiple-independent-example-blocks", [
 ])
 
 add("just-in-case-biconditional-idiom", [
-    ("It will rain just in case the barometer drops.", "P=it will rain; Q=the barometer drops => P↔Q [flag: \"just in case\" here is the formal-logic idiom for \"if and only if,\" not the colloquial \"in the event that\"]"),
-    ("The alarm triggers just in case a sensor is breached.", "P=the alarm triggers; Q=a sensor is breached => P↔Q"),
-    ("The contract is void just in case a payment is missed.", "P=the contract is void; Q=a payment is missed => P↔Q"),
+    ("It will rain just in case the barometer drops.", "P=it will rain; Q=the barometer drops => P↔Q [flag: \"just in case\" genuinely admits two readings — the formal-logic idiom for \"if and only if\" (P↔Q) and the colloquial \"in the event that\" (P→Q); both accepted if used consistently]"),
+    ("The alarm triggers just in case a sensor is breached.", "P=the alarm triggers; Q=a sensor is breached => P↔Q [flag: P→Q also accepted under the colloquial reading]"),
+    ("The contract is void just in case a payment is missed.", "P=the contract is void; Q=a payment is missed => P↔Q [flag: P→Q also accepted under the colloquial reading]"),
 ])
 
 add("explicit-exclusive-or", [

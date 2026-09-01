@@ -33,7 +33,7 @@
 33. 'If the budget is approved, then if the contractor is available, construction begins.'
 34. 'It is raining outside. If the rain continues, the streets will flood.'
 35. 'The store is closed today. The store being closed means deliveries are delayed.'
-36. 'Ana finished the report. Because Ana completed the report, she can submit it.'
+36. 'Ana finished the report. Once the report is finished, she can submit it.'
 37. 'It is not raining. The streets are dry.'
 38. 'The lights are off. The room is not lit.'
 39. 'He is not asleep. He is awake.'
