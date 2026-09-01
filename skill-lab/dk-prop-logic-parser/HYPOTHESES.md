@@ -11,6 +11,14 @@ Generating a fresh 20-hypothesis backlog after Round 4 surfaced three hypotheses
 
 **Lesson for future skill labs:** treat "does a confirmed fix generalize beyond its own teaching example" and "does a rule's boundary condition hold under varied input *shape* (distance, format, novelty), not just varied input *content*" as their own explicit category to sweep for during Step 2 scenario brainstorming — not something to discover only after a fix has already shipped and a later hypothesis-generation pass runs into a suite wall. Per the user's explicit instruction (2026-09-01), no new rows are being added to this project's locked suite now; this is logged for the next lab's Step 2, not as a to-do for this one.
 
+## Process note (post-Round-4, H48 scored despite being untestable)
+
+H48 ("does verify-step add latency without a matching accuracy gain") was written with the confound correctly flagged in its own text: "isolating verify-step alone... would need a fresh variant, since no existing variant differs from v1 by only verify-step" (verify-step exists only in v2, v4, and v14 — none of which differ from v1 by *just* that one component). Despite writing that caveat, the same hypothesis was then given a full scoring-table row (`rows=165`, `U=3`, `D=4`, score 61.34 — the *highest* of the batch) as if usable comparison data existed for it. It doesn't: the only full-suite data comparing v1 to a verify-step-carrying variant (v2, v4) is confounded by those variants' other simultaneous differences (principle-based framing, kitchen-sink coverage), so no clean answer to H48 is currently derivable from existing data at all.
+
+**Root cause:** table-generation momentum. Seventeen hypotheses were scored in one pass, computing `U × D × ln(rows+1)` mechanically for each, without re-running the same "is this actually testable with what exists" check that had just been applied carefully to H41-H43 a few turns earlier. That check was applied to one failure mode (missing test rows) but not generalized to a second, equally real one (missing an isolated variant) — so a hypothesis's own already-stated caveat got dropped simply because it was several turns behind the scoring pass, rather than being carried forward.
+
+**Lesson:** before assigning a hypothesis a score (not just before generating it), re-verify testability against *both* known failure modes — insufficient test-row coverage, and no variant that isolates the changed component from everything else that differs from baseline. A hypothesis that flags its own confound in its own text should never receive a score built on data that confound rules out.
+
 ## Round 4 — H25 result (no new variant needed)
 
 **H25 — is v12's extra generation time visible answer bloat, or invisible reasoning overhead?** Resolved by direct comparison of already-collected data, no new subagent runs: v1's (Round 1) and v12's (Round 3) raw response text on the target rows (34 primary; 109-111 check) and in full.
