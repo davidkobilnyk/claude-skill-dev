@@ -24,7 +24,7 @@ Scored once a hypothesis resolves (same moment its Result/Rival-explanation/Less
 ### IV — Information Value
 How much did the actual result update our beliefs, relative to what we expected going in?
 
-| Score | Meaning | Anchor |
+| Score | Meaning | Illustrative example (not tracking-table data — see note below) |
 |---|---|---|
 | 0 | No update — matched a near-certain prior, doesn't even add meaningful sample size. | — |
 | 1 | Mild confirmation — expected direction and magnitude, adds a data point, teaches nothing new. | — |
@@ -36,7 +36,7 @@ How much did the actual result update our beliefs, relative to what we expected 
 ### AV — Action Value
 Did this change, or is it likely to change, what ships?
 
-| Score | Meaning | Anchor |
+| Score | Meaning | Illustrative example (not tracking-table data — see note below) |
 |---|---|---|
 | 0 | Dead end — no action taken or anticipated. | — |
 | 1 | Logged only — filed as a process note/backlog item, no concrete next step yet. | — |
@@ -45,22 +45,22 @@ Did this change, or is it likely to change, what ships?
 | 4 | Confirmed fix, not yet folded into the leading variant. | H22 (fix confirmed 5/5, not yet consolidated into v1) |
 | 5 | Shipped to the leading/production variant, measurably moving its performance. | — (none yet as of this writing) |
 
+**Important — these examples are illustrations of the scale, not tracking-table entries, and the distinction matters more than it sounds.** H18/H22/H25/H27/H29 were generated the normal ad hoc way (whatever process actually produced them at the time) and only afterward labeled with a principle they happened to resemble. That's a different mechanism than *deliberately generating a hypothesis by applying a chosen principle as the seed* — the thing this file is actually trying to measure the value of. A hypothesis that was never generated *via* a principle can't provide valid evidence about that principle's productivity, no matter how it's scored — the causal link the tracking table is supposed to capture (principle → hypothesis → outcome) simply isn't present for a hypothesis produced first and labeled second. So these five stay in the rubric purely to calibrate what "IV=4" or "AV=3" *feel like*, and must never be copied into the tracking table below as if they were real principle-generation samples.
+
 ## Workflow
 
-1. **At proposal time:** tag each hypothesis with its generating principle(s) (P1-P6, or a new one if the taxonomy needs extending) in the project's own `HYPOTHESES.md` entry.
-2. **At result-write time:** score IV and AV (0-5 each) in the same entry, using the anchors above as calibration.
-3. **In this file:** append a row to the tracking table below for each resolved hypothesis, so principle-level patterns can be read off across all projects without re-parsing every project's `HYPOTHESES.md`.
-4. **Aggregation/analysis** (average IV/AV per principle, etc.) is deliberately not built yet — deferred until there's enough rows to design it against real data rather than guesswork. Revisit once this table has meaningfully more entries.
+The generative order matters and cannot be reversed: a hypothesis only counts as data about a principle if the principle was chosen and applied *before* the hypothesis existed, as the actual seed/constraint used to produce it. Labeling an already-generated hypothesis with a principle it resembles in hindsight is not the same act and does not belong in the tracking table (see note above) — at most it's a description, never evidence.
+
+1. **Before generating:** pick a principle (P1-P6, or propose a new one if the taxonomy needs extending) and hold it as the explicit generating constraint.
+2. **Generate the hypothesis using that principle as the seed** — e.g. for P6 (structured coverage sweep), literally start from the component × failure-mode grid and let the grid produce the candidate, rather than free-associating and checking afterward whether it happens to fit a grid cell.
+3. **At result-write time:** score IV and AV (0-5 each) in the project's own `HYPOTHESES.md` entry, using the rubric anchors above purely for calibration.
+4. **In this file:** append a row to the tracking table below — but only for hypotheses that actually went through steps 1-2 in that order. A hypothesis generated the ordinary ad hoc way, even a valuable one, does not get a row here just because a principle can be attached to it after the fact.
+5. **Aggregation/analysis** (average IV/AV per principle, etc.) is deliberately not built yet — deferred until there's enough rows to design it against real data rather than guesswork.
 
 ## Tracking table
 
-| Hypothesis | Project | Principle(s) | IV | AV | Note |
-|---|---|---|---|---|---|
-| H18 | dk-prop-logic-parser | P1 | 4 | 3 | v13's causal-vs-cond tightening regressed rows 40/42; directly motivated H22/v16. |
-| H22 | dk-prop-logic-parser | P1, P2 | 3 | 4 | Re-qualifying by completedness (not keyword) confirmed 5/5; fix ready, not yet folded into v1. |
-| H25 | dk-prop-logic-parser | P1 | 5 | 1 | Resolved via re-analysis, no new run. Revealed invisible-deliberation-cost pattern, generalizable to future timing outliers; no shipped action yet. |
-| H27 | dk-prop-logic-parser | P6 | 3 | 2 | Structure-preservation step confirmed load-bearing (4/5 regression without it); informs keeping it in any future consolidated variant, not yet itself a shipped change. |
-| H29 | dk-prop-logic-parser | P6 | 4 | 1 | Subjective-inclusion bullet found fully redundant; logged, no trim shipped yet. |
-| H48 | dk-prop-logic-parser | P1 | 2 | 1 | Scored despite an unresolved confound (no variant isolates verify-step) — the finding here is about our own process, not the skill; logged as a process lesson, not yet actionable on the skill itself. |
+Empty as of this writing — by design. No prior hypothesis in this project was generated principle-first, so none qualifies as valid data under the workflow above; backfilling would only reintroduce the exact problem this file exists to avoid. The first real rows should come from Round 5 onward, generated principle-first per the workflow.
 
-Backfilled only for the hypotheses already used as calibration anchors above, plus H48 (the process-lapse case). The rest of this project's H1-H47/H49 backlog is not yet backfilled — apply this workflow going forward from Round 5 onward, and backfill earlier entries opportunistically rather than as a blocking task.
+| Hypothesis | Project | Principle applied (chosen before generation) | IV | AV | Note |
+|---|---|---|---|---|---|
+| *(none yet)* | | | | | |
