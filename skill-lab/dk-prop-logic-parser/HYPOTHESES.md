@@ -24,37 +24,49 @@ Picked via the `U × D × ln(rows+1)` formula over a fresh 20-hypothesis list; t
 Hypothesis: H29 — removing the "subjective or vague claims are still valid" bullet will cause false-INVALID rejection of subjective declarative content, since nothing else in v1 addresses this distinction.
 Change made: removed one line from Step 1's "A sentence IS valid even if" list: `- It's subjective or vague ("the weather is nice") — still a declarative, truth-apt claim.` Nothing else changed from v1.
 Target rows: 70-72 ("the weather is nice," "this is the best restaurant in town," "that movie was pretty good").
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: **REFUTED, 5/5 runs.** All three target rows were treated as valid declarative propositions (`P`) in every one of the five runs — no false-INVALID rejection appeared, despite the explicit permission bullet being gone.
+Rival explanation considered: could the model simply be reusing memorized answers rather than re-deriving validity from Step 1's remaining rules? Unlikely — Step 1's "NOT valid" list has no entry that would even suggest excluding these rows (no quantifier, modal, temporal, question, or command language present), so there's no rule left in the skill actively pointing the model toward INVALID; the correct behavior falls out from the absence of a disqualifying condition, not from a remembered example.
+Lesson: this bullet is redundant with the rest of Step 1 — general declarative-sentence competence (recognizing "the weather is nice" as a truth-apt claim) doesn't require an explicit carve-out once the disqualifying categories are exhaustively listed elsewhere. Matches the same "does fine without the rule" pattern seen with H6/H9 in earlier rounds: not every clarifying example earns its keep once the actual boundary conditions are already specified.
 
 ### dk-prop-logic-parser-v16 (parent: v1)
 Hypothesis: H22 — fixing v13's regression by qualifying causal-vs-cond to completed-event framing (rather than naming bare trigger verbs) will close the rows 40/42 false-positive gap without weakening row 41's reliability.
 Change made: replaced v1's causal-vs-cond bullet in Step 3 with a version qualified by completedness rather than keyword: "A report that two things have already happened, where one is described as causing or triggering the other... This applies only when both events are stated as already having occurred; a causal-sounding word describing a future or conditional consequence... is still a conditional, not a completed causal report." Nothing else changed from v1. (Kept as a separate new variant from v13 so v13's own tested Round 3 history stays intact.)
 Target rows: 41 (must stay correct), 40 and 42 (must now also stay correct — these are exactly the rows v13's tightened wording broke). Check: 67-69 (should stay correct, not the stress test).
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: **CONFIRMED, 5/5 runs.** Rows 40 and 42 (fire alarm / tank rupture — a single triggering event with two independent consequences) were correctly rendered as two separate conditionals (`P→Q; P→R`) in every run, never collapsed into a false-positive conjunction. Row 41 (engine overheated → car stalled, a genuine completed causal report) was correctly rendered as a conjunction (`P∧Q`) in every run. Rows 67-69 (the non-stress-test causal-conjunction rows) also stayed correct in every run.
+Rival explanation considered: could v13's regression (seen in Round 3, 2/5 runs) simply have been noise that wouldn't have reproduced even with v13's own wording? Possible in principle, but the fix's logic (distinguishing by completedness/tense rather than by a keyword like "triggered") directly targets the mechanism that plausibly caused the false positive — rows 40/42 use "triggered" in a conditional (not-yet-happened) sense, which is exactly the ambiguity the completedness qualifier resolves. 5/5 clean runs here is stronger and more consistent evidence than v13's 3/5 clean runs, which is what a genuine fix (vs. lucky variance) would predict.
+Lesson: when a keyword-based rule causes a false positive, the fix isn't to drop the keyword example — it's to state the actual underlying distinction (here, completed-fact vs. hypothetical-consequence) so the rule generalizes correctly instead of pattern-matching on surface vocabulary.
 
 ### dk-prop-logic-parser-v17 (parent: v1)
 Hypothesis: H27 — removing the premise/conclusion structure-preservation rule (Step 4) will cause the model to flatten labeled arguments into an undifferentiated formula list, or it will preserve the structure by default from general capability (mirroring H6/H9's "does fine without the rule" pattern).
 Change made: removed Step 4 ("Preserve structure") entirely; renumbered the former Step 5 (Output) to Step 4. Nothing else changed from v1.
 Target rows: 163-165 (Premise 1/Premise 2/Conclusion labeled arguments).
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: **CONFIRMED, 4/5 runs.** Four of five runs dropped the "Premise 1/Premise 2/Conclusion" labels entirely, outputting the three formulas as an undifferentiated list (e.g. `P→Q; P; Q`) with no indication of which formula was the premise vs. the conclusion. One run (run 2) preserved the labels despite the rule's removal.
+Rival explanation considered: could the 1/5 exception mean this isn't really rule-dependent, i.e. the model sometimes preserves structure "for free" regardless? The majority result (4/5) argues against that as the dominant behavior — losing the explicit instruction measurably increases the rate of flattening even though it doesn't make it universal. This is a genuine, if imperfect, regression, not pure noise in either direction.
+Lesson: unlike H29 (a redundant clarifying example) and unlike some prior "does fine without the rule" findings, this rule is carrying real, non-redundant instructional weight — general formula-translation competence does not reliably preserve labeled argument structure without being told to. Keep Step 4 in the shipped skill; the 1/5 exception is not enough to justify removing it.
 
 ### dk-prop-logic-parser-v18 (parent: v1)
 Hypothesis: H28 — removing the explicit "continue with P1, P2... past Z" instruction will cause errors on the 27+/28+/30-proposition symbol-exhaustion scenarios (letter reuse, a malformed or inconsistent legend), or the model will handle overflow correctly by default.
 Change made: trimmed Step 2's opening sentence to remove the "continuing past Z with P1, P2, ... if you exceed 26 distinct propositions" clause, leaving just "(P, Q, R, ...)". Nothing else changed from v1.
 Target rows: 160-162 (27, 28, and 30-proposition symbol-exhaustion scenarios).
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: **REFUTED, 5/5 runs (no errors, but a consistent format change).** No run produced letter reuse, a malformed legend, or an inconsistent formula. All 27/28/30 propositions in every run got distinct symbols correctly combined into the final conjunction→lockdown formula. However, every run also abandoned the single-letter-then-P1/P2 continuation scheme entirely — instead of following the P,Q,R,...,Z,P1,P2,... pattern used by the baseline (and by v15/v16/v17, which all retained the explicit clause), all 5 runs invented their own directly-numbered scheme (`P1...P27` or `S1...S27`) from the very first symbol.
+Rival explanation considered: is the format change itself a failure (just a different kind than the hypothesis predicted)? It doesn't create any of the specific error modes the hypothesis named (no reuse, no malformed legend, no broken formula) — every symbol stays distinct and correctly used, so functionally the output is still correct propositional logic. It is a real behavioral change worth noting, but not the falsifiable failure the hypothesis staked out.
+Lesson: the model doesn't need to be told a specific overflow *format* to handle 27+ distinct propositions correctly — it reliably invents its own consistent numbering scheme instead. But it also won't spontaneously reproduce the *specific* P,Q,R,...,Z,P1,P2,... convention without being told, so if consistent formula-legend styling across the skill's outputs matters for downstream consumers (not tested here), the explicit clause is still doing real (stylistic, not correctness) work.
 
 ## Round 4 — Active set
 
 v15, v16, v17, v18 (4 new variants, testing H29/H22/H27/H28 respectively) plus H25 (resolved via re-analysis, no new variant). v1 and prior rounds' winners are not re-run — none of these four hypotheses touch content outside what's already isolated in the new variants.
+
+## Round 4 — Summary
+
+| Variant | Hypothesis | Result | Verdict |
+|---|---|---|---|
+| v15 | H29 (drop "subjective/vague still valid" bullet) | 5/5 runs still correctly treat rows 70-72 as valid | REFUTED |
+| v16 | H22 (fix v13's causal-vs-cond regression by completedness, not keyword) | 5/5 runs correct on rows 40/41/42/67-69 | CONFIRMED |
+| v17 | H27 (drop premise/conclusion structure-preservation rule) | 4/5 runs flatten the labeled structure | CONFIRMED |
+| v18 | H28 (drop explicit 26-letter-then-P1,P2 overflow instruction) | 5/5 runs stay correct but invent their own numbering scheme | REFUTED (correctness); format changes |
+| (n/a) | H25 (is v12's extra generation time visible bloat?) | resolved via re-analysis, no bloat found | REFUTED |
+
+Two of four new-variant hypotheses confirmed real, keep-worthy rules (v16's causal-vs-cond fix, v17's structure-preservation step). Two were refuted as either redundant (v15's dropped bullet) or non-error-causing but stylistically consequential (v18's dropped overflow clause).
 
 ## Process note (Round 3, tracking per-run generation time)
 

@@ -50,6 +50,30 @@ Tracked starting this round (see the "tracking per-run generation time" process 
 
 Not simply a function of file size — v14 is the largest document by far but ran faster on average than v12 or v13. v12 (the paraphrase-merge bullet) was the slowest and had the widest spread, consistent with a rule that invites more per-row justification across the whole response rather than only on its target row.
 
+## Round 4 (N=5 per variant) — target-row pass rates, not full-suite scores
+
+All four Round 4 variants are single-hypothesis diagnostic tests, each changing one narrow, isolated thing from v1 (same rationale as Round 3). H25 (a fifth Round 4 hypothesis, about v12's extra generation time) was resolved via re-analysis of already-collected Round 1/3 data — no new variant or run needed; see `HYPOTHESES.md`.
+
+| Variant | Parent | Hypothesis | Target rows | Pass rate (N=5) |
+|---|---|---|---|---|
+| v15 | v1 (−"subjective/vague still valid" bullet) | H29 | 70-72 | 5/5 still correctly valid — **REFUTED** |
+| v16 | v1 (causal-vs-cond fix, completedness not keyword) | H22 | 41 (primary); 40/42 (regression check); 67-69 (check) | 5/5 clean on all target rows — **CONFIRMED** |
+| v17 | v1 (−premise/conclusion structure-preservation step) | H27 | 163-165 | 4/5 structure flattened, labels dropped — **CONFIRMED** |
+| v18 | v1 (−explicit 26-letter-then-P1,P2 overflow instruction) | H28 | 160-162 | 5/5 no errors, but all 5 abandon the letter-then-number scheme for a direct numbered scheme — **REFUTED** (correctness), format changed |
+
+See `HYPOTHESES.md`'s Round 4 entries for full Result/Rival-explanation/Lesson writeups.
+
+### Round 4 — per-run generation time
+
+| Variant | Size (chars) | Avg duration (N=5) | Min | Max |
+|---|---|---|---|---|
+| v15 | 5,972 | 4.63 min | 4.45 min | 5.17 min |
+| v16 | 6,340 | 4.81 min (N=4; one run's exact duration not captured) | 4.50 min | 5.44 min |
+| v17 | 5,838 | 4.61 min | 4.06 min | 5.71 min |
+| v18 | 5,991 | 4.65 min | 3.98 min | 5.41 min |
+
+All four Round 4 variants cluster tightly around 4.6-4.8 minutes despite being close in size (~5.8-6.3K chars) — a much narrower spread than Round 3 (3.26-4.95 min across a similar size range), consistent with these being smaller, single-clause edits rather than Round 3's mix of added examples/bullets vs. a large compound merge (v14).
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.
