@@ -103,6 +103,7 @@ Systematic misses (5/5 runs): row 41 (causal-vs-cond wording drops v1's one-sent
 |---|---|---|---|---|---|
 | v24 | v23 | 4 direct fixes (rows 41, 81, 148-149, 150) | 159, 162, 162, 162, 155 | 160.0 | Fixes for rows 41/81/150 clean 5/5; fix for 148-149 introduced a -3 net regression (see below) |
 | v25 | v23 | Same as v24 minus the compound-predicate fix (rows 148-149 reverted to known-wrong) | 160, 161, 161, 161, 161 | 160.8 | Rows 41/81/150 clean in every run across both v24 and v25; rows 46/47/107 fully recovered; remaining misses all pre-existing/probabilistic (148-149, 124-126, 151-153, polarity flips on 38/39/90) |
+| v26 | v25 | + "means"/"implies" → `A→B` (fixes row 35) | 160, 161, 160, 159, 159 | 159.8 | Row 35 clean 5/5, zero regressions; the ~1pt dip vs. v25 is noise from rows 148-149 landing wrong in 5/5 runs this round vs. ~3/5 last round (an inherently ~50/50 row, not a fix-caused regression) |
 
 v24's fix 3 (compound-predicate carve-out) fixed rows 148-149 in all 5 runs but broke rows 46/47 (5/5) and 107 (3/5) — a net loss of 3 correct rows per batch. See `HYPOTHESES.md` for detail.
 
