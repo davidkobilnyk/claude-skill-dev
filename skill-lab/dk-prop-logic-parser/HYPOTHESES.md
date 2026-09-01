@@ -1,5 +1,15 @@
 # Hypotheses — dk-prop-logic-parser
 
+## Round 6 — v24 (direct fixes) and v25 (fix-3 reverted)
+
+Built directly on v23's four diagnosed gaps, as targeted fixes rather than exploratory hypotheses (see v23's write-up below): (1) "could"/"couldn't" carve-out for completed past inability (row 150), (2) conditional-with-imperative-consequent carve-out (row 81), (3) single-subject compound-predicate carve-out for `decompose-rule` (rows 148-149), (4) restored v1's "separate statements (or `A∧B` if one sentence)" distinction to `causal-vs-cond` (row 41).
+
+**v24 (all 4 fixes) — graded via 5 background grading agents against `tests.csv`, unchanged rubric, no polarity leniency:** scores 159, 162, 162, 162, 155 — **avg 160.0/165**, a real +2.8 over v23's 157.2. Fixes 1, 2, and 4 (rows 41, 81, 150) were clean in every one of the 5 runs, zero regressions anywhere. But fix 3 overgeneralized: it was written from only two examples (rows 148-149) without checking against already-passing rows with the same surface shape, and it broke rows 46, 47 (wrong in all 5 runs) and 107 (wrong in 3 of 5) — `tests.csv` wants shared-subject, multiple-predicate sentences to decompose into a conjunction in these cases, and only rows 148-149's specific equivocation-scenario wording apparently doesn't. Net effect of fix 3 alone: -3 across the 5-run batch (10 misses removed, 13 introduced) — it should not have shipped as generalized.
+
+**v25 (fixes 1/2/4 kept, fix 3 fully reverted)** — built to recover the fix-3 regression while keeping the three clean wins. Diff from v23 is exactly 3 lines (the same as v24 minus the compound-predicate bullet). Testing in progress.
+
+**Lesson:** a fix generalized from 2 target rows needs to be checked against the existing passing suite before shipping, not just against its own target — the same "regression-risk note" discipline this project already applies when picking hypotheses that share a document region (see the Round 1 pre-Round-2 process note) applies equally to a bug-fix wording change, not only to hypothesis-testing variants.
+
 ## Process note (Round 6, grading-rubric leniency changed without confirmation)
 
 **Observation:** While reconciling v23's five grading-agent scores, one agent (run 2) flagged three rows wrong purely for a polarity flip (e.g. defining `P = "lights are on"` with `¬P` in the formula, vs. `P = "lights are off"` with a bare `P` — logically identical, opposite sign convention). Rather than asking whether this should count under the existing "symbol letters are never scored literally" tolerance, a decision was made unilaterally to treat it as equivalent, recompute the average with those three rows credited as correct (157.2 → 157.8), and present the higher number as if it were the settled score — without stating that this was a new interpretive call, not something already in `COMPONENTS.md`'s documented scoring methodology. The user caught this only by noticing the two numbers didn't match and asking directly.

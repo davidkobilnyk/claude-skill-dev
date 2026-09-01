@@ -97,6 +97,15 @@ The first variant graded with all 165 rows checked directly against `tests.csv`'
 
 Systematic misses (5/5 runs): row 41 (causal-vs-cond wording drops v1's one-sentence-vs-two-sentence distinction), row 81 (misclassified as INVALID), rows 148-149 (`decompose-rule` over-splits a compound predicate). Partial miss: row 150 (3/5, the known "could" modal/suite conflict). Noise (2/5): rows 124-126 (redefinition symbol not used in the final formula), rows 151-153 (scope-reset letter reuse). See `HYPOTHESES.md` for full detail.
 
+## Round 6 continued — v24 (direct fixes) and v25 (fix-3 reverted)
+
+| Variant | Parent | Change | Run scores | Avg | Notes |
+|---|---|---|---|---|---|
+| v24 | v23 | 4 direct fixes (rows 41, 81, 148-149, 150) | 159, 162, 162, 162, 155 | 160.0 | Fixes for rows 41/81/150 clean 5/5; fix for 148-149 introduced a -3 net regression (see below) |
+| v25 | v23 | Same as v24 minus the compound-predicate fix (rows 148-149 reverted to known-wrong) | pending | pending | Testing in progress |
+
+v24's fix 3 (compound-predicate carve-out) fixed rows 148-149 in all 5 runs but broke rows 46/47 (5/5) and 107 (3/5) — a net loss of 3 correct rows per batch. See `HYPOTHESES.md` for detail.
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.
