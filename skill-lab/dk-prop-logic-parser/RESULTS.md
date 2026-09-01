@@ -24,6 +24,19 @@ Full-suite scores (out of 165) for every variant run so far, across both rounds.
 | v9 | v1 (−scope-boundary) | 5,838 | 158, 159, 162, 161 | 160.0 | 158 | 162 | 4 | 1.83 |
 | v10 | v5 (+inconsistency-detect) | 1,936 | 136, 132, 131, 131 | 132.5 | 131 | 136 | 5 | 2.38 |
 
+## Round 3 (N=5 per variant) — target-row pass rates, not full-suite scores
+
+Round 3's four variants are single-hypothesis diagnostic tests (v11, v12, v13 each change one narrow, well-isolated thing; v14 is a compound-hypothesis test), so — consistent with how Round 2's hypothesis verdicts were actually established — the informative number is the target-row pass rate, not a full 165-row grade. A clean full-suite score wouldn't add diagnostic power here and wasn't computed this round.
+
+| Variant | Parent | Hypothesis | Target rows | Pass rate (N=5) |
+|---|---|---|---|---|
+| v11 | v3 (+5th worked example) | H3 | 91-93, 100-105 (9 rows) | 5/5 clean; adjacent row 81 (79-80 family) correct in 4/5 |
+| v12 | v1 (+paraphrase-merge bullet) | H11 | 34 (primary); 109-111 (check) | 5/5 row 34 fixed; 5/5 no over-merge on 109-111 |
+| v13 | v1 (tightened causal-vs-cond) | H18 | 41 (primary); 67-69, 40/42 (check) | 5/5 row 41 held; 5/5 rows 67-69 held; **2/5 new regression on rows 40/42** |
+| v14 | v2 × v3 (compound) | H21 | 91-93, 100-105 (primary); 94-96 (side effect); 81 (predicted miss) | 5/5 primary family (matches v2 alone, no lift from the merge); 5/5 rows 94-96 fixed; 4/5 row 81 still wrong as predicted |
+
+See `HYPOTHESES.md`'s Round 3 entries for the full Result/Rival-explanation/Lesson writeups, including the v13 regression's likely mechanism (the tightened rule's "triggered" keyword false-triggering on rows 40/42's unrelated conditional use of the same word) and v14's sharpened reading of what the compound merge actually demonstrated.
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.
