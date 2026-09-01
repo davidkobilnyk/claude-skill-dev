@@ -7,6 +7,8 @@ description: run only when explicitly called; drives the full iterative loop of 
 
 Orchestrates an experimental loop for developing a simple, deterministic-ish skill (like "add these numbers") through competing variants scored against a fixed test suite. Use only when the user explicitly invokes this process — this is not a general skill-authoring tool (see `skill-creator`/`skill-dev-orchestrator` for that); it's specifically for the "generate variants, test them, learn, iterate" loop.
 
+**Standing discipline — cite the rule's purpose, not just its name.** This skill contains several hard rules (no-bundling, ranking-primary-on-correctness, N≥20-before-"reliable", and others below). Whenever one of them is the stated reason for *not* doing something — deferring a proposal, holding off an escalation, declining a merge — name the rule's underlying purpose in the same sentence, not just its label, and check whether that purpose still applies right now. "Not proposing X because of the no-bundling rule" is a name-check; "not proposing X because neither half is independently verified yet, which is what the no-bundling rule protects against" is a live check — and it's the live check that catches the moment a rule's letter has outlived its reason, instead of quietly following it past that point.
+
 ## File layout
 
 Everything for one variant set lives together in `skill-lab/<name>/`, next to (not inside) `skills/`:
@@ -60,7 +62,11 @@ Wait for all task-notifications before compiling results; do not guess or predic
 
 ## Step 7 — Results table
 
+**Required scoring-methodology note, written the first time any row needs interpretive judgment.** Scoring means comparing a subagent's computed output against `tests.csv`'s `expected_output` — but for many tasks more than one string can be a legitimate answer to the same row (formatting variants, equivalent-but-differently-rounded numbers, alternate valid phrasings). The moment scoring requires anything beyond exact string equality, write down the matching rule being used (e.g. "numeric answers compared with tolerance 1e-6," "repeating-decimal answers accepted if the leading digits or the reduced fraction match") in `COMPONENTS.md`, before scoring the round. This is a real methodology choice that shapes which runs count as failures — leaving it as an unwritten default means no one, including a later re-read of this project, can tell whether "102/102" reflects the variant's behavior or a lenient grader.
+
 For each variant, across its N runs, report: per-run score, **avg, min, range (max−min), and stddev**, plus the variant's character count (`wc -c` on the whole `SKILL.md` file, frontmatter included, plus any bundled asset files) and its **average per-run token count** (each subagent's completion notification carries a `subagent_tokens` figure in its usage stats — average that across the N runs; report it starting from the very first round, not deferred until cost becomes a question). Also report **failure rate** (fraction of runs with zero misses) as its own number alongside the average — a high average can still hide a meaningful nonzero failure rate, which matters most once the project's bar is "never fails" rather than "best on average."
+
+**"Too-clean" flag.** If three or more variants tie at a perfect or near-perfect score in the same round, treat that as a signal to check, not just a comfortable result: either the variants are all genuinely sound, or the test suite/depth isn't yet discriminating between meaningfully different designs. Note explicitly which it looks like — e.g. "ties look genuine, suite has enough adversarial coverage" vs. "ties may reflect N too shallow or the suite not stressing the differences between these designs; consider escalating depth or the scenario coverage before trusting the tie."
 
 **Token-cost note**: don't attribute token-cost differences to `SKILL.md` size alone. A variant that makes extra tool calls (e.g. running a bundled script per test item) pays a per-call overhead — the command text and its captured output re-entering context — that dwarfs what the instruction text itself costs. Before crediting a token gap to brevity, check whether the compared variants differ in tool-call count; if they do, that's the more likely driver, and the comparison should be framed as "size effect" vs. "tool-call effect" rather than collapsed into one number.
 
@@ -75,6 +81,8 @@ Break out **per-row miss frequency** across the N runs for any variant with fail
 Compare higher- vs. lower-ranked variants (by the rule above) and write plain-language hypotheses about what caused the difference — on correctness, on brevity, or both. Ground each hypothesis in a specific **component** from the `COMPONENTS.md` table (not just "variant A vs variant B" — if two variants differ by more than one component, the table tells you which components are actually in play, and the hypothesis should isolate one) or a specific textual difference. Cross-reference the atomic-component consistency numbers across variants that share a component to see whether a pattern is really tied to that component or just to one variant's overall text.
 
 Before drawing conclusions, spot-check that `COMPONENTS.md`'s table still matches the actual `SKILL.md` text of the variants being compared (a quick grep for each component's characteristic phrase is enough) — correct any drift found before hypothesizing from it.
+
+**Required rival-explanation check whenever a hypothesis is marked CONFIRMED.** A hypothesis being "confirmed" means the predicted pattern showed up — it doesn't rule out a different cause producing the same pattern (a lucky sample at this N, an unrelated fix that happened to cover the same rows, noise). Before marking `Result: CONFIRMED` in `HYPOTHESES.md`, name the most likely rival explanation and the specific piece of evidence that rules it out. If no piece of evidence actually rules it out, the honest status is `CONFIRMED (tentative)`, not `CONFIRMED` — say so, and note what additional data (usually depth) would settle it.
 
 **Required merge-opportunity scan.** After writing this round's hypotheses, explicitly list every pair (or set) of variants from this round whose miss clusters are disjoint — no overlapping rows, no evidence either variant's fix touches the other's failure mode. For each such pair, note in `HYPOTHESES.md` whether a merge is a candidate for the next round. This is not optional bookkeeping: a variant that's cheap but not yet top-ranked is easy to under-value once Step 7's correctness-primary ranking has already sorted it below the perfect scorers, even when it's one already-diagnosed fix away from matching them. Naming the merge opportunity here, in the same round its evidence appears, is what keeps it from being silently skipped in favor of escalating an already-passing incumbent.
 
@@ -101,7 +109,8 @@ Write the new `SKILL.md` files per the approved plan. Update `skill-lab/<name>/C
 ## <name>-v<N> (parent: <name>-v<M>)
 Hypothesis: <what we believed and why>
 Change made: <the single concrete change, named against its component ID>
-Result: (fill in after the next run: confirmed / refuted / inconclusive)
+Result: (fill in after the next run: confirmed / confirmed (tentative) / refuted / inconclusive)
+Rival explanation considered: (required if Result is confirmed — the most likely alternative cause and the evidence that rules it out, or "none available" if it's only confirmed-tentative)
 Lesson: (fill in after the next run)
 ```
 
@@ -115,6 +124,7 @@ Before spending more tokens on another round:
 - Recommend retiring the oldest/weakest variants when a newer variant clearly dominates them on both correctness and brevity — keep the active set within the 3–5 target (never above 6). "Retire" means excluding from future rounds, not deleting the files — leave them in the repo/git history for audit purposes unless the user explicitly asks to delete.
 - Ask the user to confirm the new variant set and the retirement list before launching the next round.
 - **Every third round, or whenever the total variant count across the whole lineage exceeds ~15**, summarize total rounds run so far and the rough token spend, and ask the user whether to continue, narrow scope, or wrap up with the current best candidate.
+- **At that same checkpoint, reconsider whether Step 1's original framing still fits what's been learned**, not just which variant is winning. In particular: does the failure-tolerance bar (best-average vs. zero-tolerance) chosen in Step 1 still match what the data has shown to be achievable? A zero-tolerance bar set before anyone knew a clean N=20+ record was reachable, or a best-average bar chosen when zero-tolerance now looks within reach cheaply, are both worth surfacing to the user rather than silently carrying the original framing forward.
 - **At that same checkpoint, re-read every entry in the deferred-candidates log accumulated so far** and ask, for each: does its stated reason still hold given what's landed since? A reason of "components not yet independently confirmed" that both since confirmed cleanly means the deferral has expired — surface it as a proposal now rather than leaving it logged-but-dormant. A reason of "ranked below the tied leaders" is worth rechecking against Step 11's near-miss guidance above, not just re-stated. Report which deferred items are still validly deferred and which should move into this round's plan.
 
 ## Step 12 — Real-world validation
