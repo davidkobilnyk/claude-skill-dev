@@ -8,7 +8,11 @@ This repo's workflow creates a lot of short-lived branches, each usually tracked
 gh pr list --head <branch-name> --state all
 ```
 
-or the equivalent `mcp__github__list_pull_requests` / `pull_request_read` call. If the PR is already merged or closed, a new commit pushed to that branch name will **not** land in that PR (it's already finished) — it needs a **new PR**, opened fresh from the current head. Don't assume a branch's PR is still open just because you opened it earlier in the same conversation; PRs can merge in the background (the user merging manually, another session, etc.) between when you last checked and now.
+or the equivalent `mcp__github__list_pull_requests` / `pull_request_read` call. If the PR is already merged or closed, a new commit pushed to that branch name will **not** land in that PR (it's already finished) — it needs a **new PR**, opened fresh from the current head.
+
+**This check is per-push, not per-branch.** Don't treat "I already verified this branch's PR is open" as a fact that stays true for the rest of the conversation — re-run the check before *every* push, including the second, fifth, and twentieth commit in a row on a branch whose PR you personally opened ten minutes ago. A PR can merge the instant after you check it (the user merging manually, another session, a merge queue), and "I checked earlier in this session" is exactly the assumption that's failed here more than once — most recently a PR that merged 2 minutes after being opened, with half a dozen further commits pushed to the same branch afterward before anyone noticed. Skipping the recheck because it "was just confirmed a moment ago" is not a shortcut, it's the failure mode.
+
+**Subscribe to activity on any PR you open.** Immediately after creating a pull request, call `subscribe_pr_activity` (or the equivalent GitHub MCP tool) for it. This turns a merge into a pushed notification instead of something that depends on remembering to re-poll — the check above is still required before every push regardless, but the subscription is what catches a merge in the gap between pushes rather than relying purely on manual discipline.
 
 ## PR creation on a per-project basis
 
