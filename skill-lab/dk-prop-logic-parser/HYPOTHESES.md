@@ -160,8 +160,54 @@ v1, v6, v7, v8, v9, v10 (6, at the cap). v2, v3, v4, v5 retired from the active 
 
 **Round 2 run note:** v1 dropped from the actual test launch — it tests none of this round's 5 hypotheses and already has a solid N=5 baseline from Round 1 to compare v6-v9 against, so re-running it would spend budget for no new information. That leaves 5 variants (v6-v10); to fit the 20-subagent concurrency cap in one launch batch, N=4 (not the usual default N=5) is used for this round's exploratory pass.
 
+## Process note (Round 3, hypothesis-prioritization formula adopted)
+
+**Decision:** future rounds prioritize the hypothesis backlog with `Score = Uncertainty × Diagnosticity × ln(rows + 1)`, comparing candidate hypotheses on this score rather than picking by feel. The `rows + 1` (not bare `rows`) is deliberate: `ln(1) = 0` would otherwise zero out every 1-row hypothesis regardless of how uncertain or diagnostic it is, which is exactly the bug caught mid-session (see the "intuition vs. explicit rules" process note above) when H8 and H13 — two of the highest-uncertainty items in the backlog — landed tied with the most-already-certain items purely because they each touch only 1 row.
+
+**Flagged for future exploration, not yet resolved:** the Low/Low-Medium/Medium/Medium-High/High labels feeding U and D are currently mapped to an evenly-spaced 0-5 ordinal scale with no stated justification for why, say, "Medium-High" should sit at exactly 4 rather than 3.5, or why the spacing should be even at all rather than compressed at one end. This conversion is itself an unexamined judgment call sitting underneath an otherwise-explicit formula — worth a dedicated look in a future round rather than deciding it implicitly by leaving the current mapping unquestioned.
+
+**Round 3 picks:** applying the formula to the 15-item backlog (H3, H4, H5, H8, H11-H21), the top 4 by score are H21 (26.4), H11 (22.2), H3 (24.0), and H18 (12.5, tied closely with H12) — selected as this round's active hypotheses.
+
+## Round 3 — New variants
+
+### dk-prop-logic-parser-v11 (parent: v3)
+Hypothesis: H3 — a worked example demonstrating extraction of the valid sentence from an input mixing a question/command/modal clause with a declarative one will raise v3's accuracy on that row family above its Round 1 baseline (1/5 correct) without degrading its other example-taught behaviors.
+Change made: added a 5th worked example ("Example E — partial validity") after v3's existing Examples A-D, using fresh (non-suite) wording that pairs a valid declarative sentence with a rhetorical question, a command, and a modal sentence in sequence, demonstrating exclude-but-don't-invalidate for each — nothing else changed from v3.
+Target rows: 79-80, 91-93, 100-105 (11 rows). Check: no regression on v3's existing correctly-handled rows.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v12 (parent: v1)
+Hypothesis: H11 — a rule instructing that an elaborated restatement of an already-described ongoing event should merge into the same symbol (while genuinely different facts sharing vocabulary stay separate) will fix row 34 without causing false merges on rows 109-111.
+Change made: added one bullet to Step 2, directly after the existing "reuse only on near-certain sameness" bullet, addressing event-continuation merging specifically — nothing else changed from v1.
+Target row: 34 (universal miss across every variant tested in both rounds so far). Check: rows 109-111 (the "shared vocabulary, different facts" trap this bullet explicitly warns against over-merging into).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v13 (parent: v1)
+Hypothesis: H18 — rewording `causal-vs-cond` to specifically flag the causal-verb sub-case ("caused," "triggered," "led to") as highest-risk, per v7's finding that row 41 is more fragile than rows 67-69, will preserve row 41's reliability while shrinking the rule's prose.
+Change made: replaced v1's full `causal-vs-cond` bullet in Step 3 with a shorter version naming the causal-verb pattern explicitly — nothing else changed from v1.
+Target row: 41 (must stay correct — the fragile case per v7's data). Check: rows 67-69 (already fairly resilient without the rule at all, so not the stress test); character-count comparison against v1's original bullet to confirm the shrink is real.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v14 (parent: v2 × v3, compound hypothesis)
+Hypothesis: H21 — merging v2's principle-based framing with v3's worked examples will fix more of each variant's individual gaps than either alone. Sharpened before building: v2's Round 1 data already gets the 79-105 family right except row 81 specifically (its H5/exclusive-or/equivocation gaps are the actual Round 1 misses) — v2 already states the exact principle v3 lacks everywhere ("if only part of the input is valid, convert the valid parts and note what was excluded"). So the predicted mechanism is specifically "v3 gains v2's already-proven exclusion principle," not "worked examples generically help v2." Row 81 is explicitly predicted to remain wrong in the merge, since neither parent solves it — a miss there should not be read as a failed merge.
+Change made: v2's full document structure (validity principle, symbol-consistency principles, connective-translation principles, before-finalizing self-check) as the base, with v3's 4 worked examples (A-D) inserted as a new "Worked examples" section between the connective-translation principles and the before-finalizing check. v3's validity clause already names non-English input explicitly, which v2's did not — importing v2's structure alongside v3's content pulled that phrase in as a side effect (added "or content that isn't in English" to the Validity paragraph), incidentally covering H5's gap too, though that's not the primary test.
+Target rows: 79-80, 91-93, 100-105 (11 rows, H3's family — testing whether examples add anything on top of v2's principle, which already handles this alone). Secondary/incidental: 94-96 (expected to fix as a side effect of the structural merge). Explicitly predicted to remain wrong: row 81. Check: v2's and v3's individually-correct rows don't regress from the merge.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+## Round 3 — Active set
+
+v11, v12, v13, v14 (4 new variants, testing H3/H11/H18/H21 respectively). v1 and the Round 2 winners are not re-run this round — none of the four new hypotheses touch their content, and their Round 1/2 baselines already stand for comparison.
+
 ## Deferred — Round 1
 
-- **v2×v3 merge** (H5 + H3 are disjoint) — deferred: neither variant currently leads; depth-confirming v1/v4 first, and pruning v1, is higher-value this round.
+- **v2×v3 merge** (H5 + H3 are disjoint) — no longer deferred: built as v14 (Round 3), see above.
 - **Symbol-exhaustion labeling scheme** variance (pure `P1..Pn` vs. domain-prefixed vs. letter-then-subscript) — not a hypothesis worth testing; suite accepts any consistent scheme.
 - **v4's bundled-vs-split formula** (`P→(Q∧R)` vs. `P→Q;P→R` on scenarios 40/42) — logically equivalent, not scored as a miss.
