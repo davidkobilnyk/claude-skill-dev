@@ -30,6 +30,16 @@
 
 **Merge-opportunity scan:** v2's H5 gap and v3's H3 gap are disjoint from each other — a v2×v3 merge is a candidate, but deferred (see below) since neither currently leads. v1 and v4's misses overlap (both hit H4) — not a merge candidate.
 
+## Process note (Round 1, pre-Round-2 hypothesis selection)
+
+**Observation:** When selecting H6/H7/H9/H10 (four subtractive tests, each removing one different component from v1) for the same round, a mutual-informativeness check surfaced two distinct correlations the lab's process doesn't currently prompt for:
+1. A shared meta-question — each result also updates the prior on "is v1 over-specified in general," not just on that one component, so the four aren't fully independent bits of evidence even though each targets a genuinely different sub-skill.
+2. A shared structural confound — all four remove one bullet from the same list in the same document; if removing *any* bullet changes how the model weighs the remaining ones (a recency/attention effect independent of content), a uniform "no regression" result across all four would be ambiguous between "none of these rules were load-bearing" and "the confound, not the content, explains the null result."
+
+**Candidate patch to `skill-variant-lab` for Step 13:** Add a mutual-informativeness/structural-confound check as part of Step 9's next-gen proposal step whenever multiple subtractive variants share the same parent and document region — and, when a batch of same-parent subtractive tests comes back uniformly null, flag that as ambiguous (confound vs. genuine non-necessity) rather than treating it as a clean confirmation that the components were unnecessary.
+
+**Status:** Logged for Step 13; not yet applied as a mitigation this round (accepted as a known interpretive risk for the current H6/H7/H9/H10 batch rather than redesigned around).
+
 ## Deferred — Round 1
 
 - **v2×v3 merge** (H5 + H3 are disjoint) — deferred: neither variant currently leads; depth-confirming v1/v4 first, and pruning v1, is higher-value this round.
