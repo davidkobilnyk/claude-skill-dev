@@ -1,5 +1,61 @@
 # Hypotheses — dk-prop-logic-parser
 
+## Round 4 — H25 result (no new variant needed)
+
+**H25 — is v12's extra generation time visible answer bloat, or invisible reasoning overhead?** Resolved by direct comparison of already-collected data, no new subagent runs: v1's (Round 1) and v12's (Round 3) raw response text on the target rows (34 primary; 109-111 check) and in full.
+
+| | v1 (Round 1 baseline, N=5) | v12 (Round 3, N=5) |
+|---|---|---|
+| Full response avg | 16,357 chars | 15,944 chars |
+| Row 34 avg | 102 chars | 92 chars |
+| Rows 109-111 avg | 284 chars | 273 chars |
+
+**Result: REFUTED.** v12's delivered answer text is not longer than v1's baseline on the target rows or overall — if anything it's slightly shorter. This rules out the leading hypothesis (visible bloat in the final answer).
+
+**Rival explanation considered:** could v1 (Round 1, different session/date) and v12 (Round 3) not be a fair apples-to-apples comparison? The prompt template, grading target, and model are identical across both; the only difference relevant here is the SKILL.md content itself (v12 = v1 + one bullet), which is exactly what's being tested. A confound would need something external to have changed between rounds in a way that happens to exactly offset a real verbosity increase — implausible given the consistent, if modest, direction (v12 shorter, not longer, on every measured slice).
+
+**Lesson:** v12's extra generation time (identified in the Round 3 timing process note as the slowest variant that round, ~4.95 min avg vs. 3.3-4.6 min for v11/v13/v14) is not accompanied by a visible symptom in the delivered text. The added judgment call ("is this the same event continuing, or a genuinely separate fact?") appears to cost internal deliberation time that never surfaces as extra output — the user pays in wait time with no visible cue that anything is slower. Arguably worse for UX than if the cost showed up as bloat, since there's nothing in the response itself to explain or justify the longer wait. Worth checking for this pattern specifically (rules that ask for an active per-row judgment call) on any future timing outlier, rather than assuming length and duration move together.
+
+## Round 4 — New variants (in progress)
+
+Picked via the `U × D × ln(rows+1)` formula over a fresh 20-hypothesis list; top 4 by score (with H25 resolved separately, above): H29 (27.7), H22 (23.4), H27 (20.8), H28 (20.8, tied with H27).
+
+### dk-prop-logic-parser-v15 (parent: v1)
+Hypothesis: H29 — removing the "subjective or vague claims are still valid" bullet will cause false-INVALID rejection of subjective declarative content, since nothing else in v1 addresses this distinction.
+Change made: removed one line from Step 1's "A sentence IS valid even if" list: `- It's subjective or vague ("the weather is nice") — still a declarative, truth-apt claim.` Nothing else changed from v1.
+Target rows: 70-72 ("the weather is nice," "this is the best restaurant in town," "that movie was pretty good").
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v16 (parent: v1)
+Hypothesis: H22 — fixing v13's regression by qualifying causal-vs-cond to completed-event framing (rather than naming bare trigger verbs) will close the rows 40/42 false-positive gap without weakening row 41's reliability.
+Change made: replaced v1's causal-vs-cond bullet in Step 3 with a version qualified by completedness rather than keyword: "A report that two things have already happened, where one is described as causing or triggering the other... This applies only when both events are stated as already having occurred; a causal-sounding word describing a future or conditional consequence... is still a conditional, not a completed causal report." Nothing else changed from v1. (Kept as a separate new variant from v13 so v13's own tested Round 3 history stays intact.)
+Target rows: 41 (must stay correct), 40 and 42 (must now also stay correct — these are exactly the rows v13's tightened wording broke). Check: 67-69 (should stay correct, not the stress test).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v17 (parent: v1)
+Hypothesis: H27 — removing the premise/conclusion structure-preservation rule (Step 4) will cause the model to flatten labeled arguments into an undifferentiated formula list, or it will preserve the structure by default from general capability (mirroring H6/H9's "does fine without the rule" pattern).
+Change made: removed Step 4 ("Preserve structure") entirely; renumbered the former Step 5 (Output) to Step 4. Nothing else changed from v1.
+Target rows: 163-165 (Premise 1/Premise 2/Conclusion labeled arguments).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v18 (parent: v1)
+Hypothesis: H28 — removing the explicit "continue with P1, P2... past Z" instruction will cause errors on the 27+/28+/30-proposition symbol-exhaustion scenarios (letter reuse, a malformed or inconsistent legend), or the model will handle overflow correctly by default.
+Change made: trimmed Step 2's opening sentence to remove the "continuing past Z with P1, P2, ... if you exceed 26 distinct propositions" clause, leaving just "(P, Q, R, ...)". Nothing else changed from v1.
+Target rows: 160-162 (27, 28, and 30-proposition symbol-exhaustion scenarios).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+## Round 4 — Active set
+
+v15, v16, v17, v18 (4 new variants, testing H29/H22/H27/H28 respectively) plus H25 (resolved via re-analysis, no new variant). v1 and prior rounds' winners are not re-run — none of these four hypotheses touch content outside what's already isolated in the new variants.
+
 ## Process note (Round 3, tracking per-run generation time)
 
 **Why this matters (the primary reason, not a secondary one):** the project's goal is optimization, and a real-world user invoking this skill spends their own clock time waiting for it to finish. That waiting time is pure cost with no offsetting benefit — it either sits idle (wasted outright) or the user context-switches to something else while waiting, which has its own real cost (refocusing back afterward isn't free, and the two tasks can interfere with each other). Generation time is therefore not a secondary quality signal alongside correctness — it's a direct optimization target on the same footing as correctness, because it measures a cost imposed on the person using the tool, not just a property of the lab's own process. A rule that's more correct and even more concise in its own instruction text can still make the tool worse to use if it costs the user more waiting time to get an answer back.
