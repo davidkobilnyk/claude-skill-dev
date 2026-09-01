@@ -24,25 +24,45 @@ Atomic, named building blocks that a variant's `SKILL.md` text or design can mix
 
 Filled in as each variant is created (Step 5 onward).
 
-| Component | v1 | v1b | v1c | v2 | v2b | v3 | v4 | v5 |
-|---|---|---|---|---|---|---|---|---|
-| `order-of-ops-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `parse-then-eval-split` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `word-number-mapping` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `implicit-mult-rule` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `sign-handling-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `percent-fraction-rule` | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `no-expression-fallback` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `injection-immunity-rule` | | | | ✓ | | ✓ | ✓ | ✓ |
-| `precision-preservation-rule` | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `repeating-decimal-format-rule` | | ✓ | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
-| `code-execution` | | | | | | ✓ | | ✓ (primary) |
-| `verification-recompute` | | | | | | | ✓ | |
-| `worked-example` | | | | | | | ✓ | |
-| `primary-fallback-split` | | | | | | | | ✓ |
-| `bare-number-rule` | | | ✓ | | | | | |
+| Component | v1 | v1b | v1c | v1d | v2 | v2b | v3 | v4 | v5 |
+|---|---|---|---|---|---|---|---|---|---|
+| `order-of-ops-rule` | | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `parse-then-eval-split` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `word-number-mapping` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `implicit-mult-rule` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `sign-handling-rule` | | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `percent-fraction-rule` | | | | | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `no-expression-fallback` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `injection-immunity-rule` | | | | | ✓ | | ✓ | ✓ | ✓ |
+| `precision-preservation-rule` | | | | | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `repeating-decimal-format-rule` | | ✓ | | ✓ | ✓ | ✓ | (via script) | ✓ | (via script + ✓ fallback) |
+| `code-execution` | | | | | | | ✓ | | ✓ (primary) |
+| `verification-recompute` | | | | | | | | ✓ | |
+| `worked-example` | | | | | | | | ✓ | |
+| `primary-fallback-split` | | | | | | | | | ✓ |
+| `bare-number-rule` | | | ✓ | ✓ | | | | | |
 
-v1b = v1 + `repeating-decimal-format-rule` only (parent: v1). v1c = v1 + `bare-number-rule` only (parent: v1). v2b = v2 minus `injection-immunity-rule` (parent: v2). See `HYPOTHESES.md` for the hypothesis each is testing.
+v1b = v1 + `repeating-decimal-format-rule` only (parent: v1). v1c = v1 + `bare-number-rule` only (parent: v1). v1d = v1 + both `repeating-decimal-format-rule` and `bare-number-rule` (parent: v1b + v1c combined, at the user's explicit request — this deliberately combines two components in one variant, departing from the lab's usual one-hypothesis-per-variant default). v2b = v2 minus `injection-immunity-rule` (parent: v2). See `HYPOTHESES.md` for the hypothesis each is testing.
+
+## Round 2 results (see HYPOTHESES.md for full writeup)
+
+All three component-isolation hypotheses were CONFIRMED: v1b (662 chars) fixed exactly the repeating-decimal rows (99.0 avg) and nothing else; v1c (670 chars) fixed exactly the bare-number rows (99.6 avg) and nothing else; v2b (2,527 chars) matched v2's perfect 102/102 with `injection-immunity-rule` removed, proving that component is not load-bearing for this model/task.
+
+v2 was also escalated to N=20 fresh runs (on top of Round 1's N=5) and scored 102/102 on every single run — 25/25 clean, clearing the N≥20 zero-failure bar from the intake's zero-tolerance requirement.
+
+**Updated ranking (post-Round 2)**: v2b now leads (matches v2's perfect record at 267 fewer characters), followed by v2 (now depth-validated), then v4, v3, v5, with v1/v1b/v1c serving as diagnostic baselines rather than shipping candidates.
+
+## Round 3 results (N=20 each, see HYPOTHESES.md for full writeup)
+
+At the user's request, `v1d` (v1 + both v1b's and v1c's rules, combined) was run against `v3` and `v5` at N=20 each, with average per-run token counts tracked for the first time. All three scored a perfect 102/102 across all 20 runs (0% failure rate) — genuinely reliable at depth. But size and cost diverged sharply:
+
+| Variant | Chars | Avg tokens/run |
+|---|---|---|
+| v1d | 863 | 47,527 |
+| v5 | 7,163 | 53,666 |
+| v3 | 6,606 | 54,349 |
+
+**Updated ranking (post-Round 3)**: **v1d now leads the entire lineage** — it matches the top-tier reliability of every other 102/102 candidate (including v2b at 2,527 chars) while being roughly 3x smaller than v2b and ~8x smaller than v3/v5, and consuming ~13% fewer tokens per run than v3/v5. The heavier mechanisms in v2-v5 (comprehensive rule text, code-execution, primary/fallback duplication) bought no measurable correctness benefit over v1d's two small, precisely-targeted fixes on v1's minimal base.
 
 v1 is the minimal baseline (no explicit rules beyond the no-expression fallback) to establish how much the explicit components in v2-v5 actually buy over letting the model wing it. v3/v5 mark `order-of-ops-rule` / `sign-handling-rule` / `precision-preservation-rule` / `repeating-decimal-format-rule` as "via script" since `eval_expr.py` enforces these mechanically rather than through instructed text — the model only needs to normalize the input, not apply precedence or precision rules itself.
 
