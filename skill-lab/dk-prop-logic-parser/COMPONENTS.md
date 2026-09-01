@@ -26,28 +26,28 @@ Atomic building blocks a variant's instruction text can include. Each gets a sho
 
 ## Components × variants
 
-| Component | v1 | v2 | v3 | v4 | v5 | v6 | v7 | v8 | v9 | v10 | v11 | v12 | v13 | v14 | v15 | v16 | v17 | v18 | v19 | v20 | v21 | v22 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `validity-checklist` | ✓ | | | ✓ | | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `validity-principle` | | ✓ | | | ✓ | | | | | ✓ | | | | ✓ | | | | | | | | |
-| `symtable-track` | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via examples) | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `paraphrase-merge-rule` | ✓ | ✓ | ✓ (via example C) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via example C) | **strengthened (H11)** | ✓ | ✓ (via example C) | ✓ | ✓ | ✓ | ✓ | ✓ | **near-certain-equivalence bullet removed (H58)** | **polysemy clause removed (H60)** | ✓ |
-| `connective-map` | ✓ (table) | ✓ (prose) | ✓ (via examples) | ✓ (table) | ✓ (brief prose) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (brief prose) | ✓ (via examples) | ✓ (table) | ✓ (table) | ✓ (prose + examples) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) |
-| `necsuff-rule` | ✓ | ✓ | ✓ (via example A) | ✓ | ✓ (brief) | removed (H6) | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via example A) | ✓ | ✓ | ✓ (via example A) | ✓ | ✓ | ✓ | ✓ | **weakened, merged into one vaguer bullet (H69)** | ✓ | ✓ | ✓ |
-| `negscope-rule` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via example B) | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `causal-vs-cond` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) | ✓ | removed (H7) | ✓ | ✓ | ✓ (brief) | ✓ (via example B) | ✓ | **tightened (H18)** | ✓ (via example B) | ✓ | **re-qualified by completedness, not keyword (H22)** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `decompose-rule` | ✓ | ✓ | ✓ (via examples B, D) | ✓ | ✓ (brief) | ✓ | ✓ | removed (H9) | ✓ | ✓ (brief) | ✓ (via examples B, D) | ✓ | ✓ | ✓ (via examples B, D) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `scope-boundary` | ✓ | ✓ | | ✓ | | ✓ | ✓ | ✓ | removed (H10) | | | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `symbolic-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | | ✓ | ✓ | ✓ | ✓ | | ✓ (via example D) | ✓ | ✓ | ✓ (via example D) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `inconsistency-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | | ✓ | ✓ | ✓ | ✓ | added, more concrete (H2) | ✓ (via example D) | ✓ | ✓ | ✓ (via example D) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `injection-note` | ✓ (in checklist) | ✓ (in principle) | ✓ (in intro line) | ✓ (dedicated callout) | | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | | ✓ (in intro line) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in principle) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) |
-| `worked-example` | | | ✓ (4 examples) | ✓ (1 example) | | | | | | | **✓ (5 examples, H3)** | | | **✓ (4 examples, H21)** | | | | | | | | |
-| `output-template` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `verify-step` | | ✓ | | ✓ | | | | | | | | | | ✓ | | | | | | | | |
-| `subjective-inclusion-rule` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | removed (H29) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `alphabet-exhaustion-rule` | ✓ | ✓ | | | | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | ✓ | ✓ | ✓ | removed (H28) | ✓ | ✓ | ✓ | ✓ |
-| `argument-preserve` | ✓ | ✓ | | ✓ | | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | ✓ | ✓ | removed (H27) | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `explicit-label-precedence` | ✓ (bullet in Step 2) | ✓ (implicit in symtable-track) | ✓ (via examples) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via examples) | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | removed (H61) |
+| Component | v1 | v2 | v3 | v4 | v5 | v6 | v7 | v8 | v9 | v10 | v11 | v12 | v13 | v14 | v15 | v16 | v17 | v18 | v19 | v20 | v21 | v22 | v23 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `validity-checklist` | ✓ | | | ✓ | | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `validity-principle` | | ✓ | | | ✓ | | | | | ✓ | | | | ✓ | | | | | | | | | |
+| `symtable-track` | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via examples) | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `paraphrase-merge-rule` | ✓ | ✓ | ✓ (via example C) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via example C) | **strengthened (H11)** | ✓ | ✓ (via example C) | ✓ | ✓ | ✓ | ✓ | ✓ | **near-certain-equivalence bullet removed (H58)** | **polysemy clause removed (H60)** | ✓ | ✓ (near-certain-equivalence bullet kept; polysemy clause trimmed) |
+| `connective-map` | ✓ (table) | ✓ (prose) | ✓ (via examples) | ✓ (table) | ✓ (brief prose) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (brief prose) | ✓ (via examples) | ✓ (table) | ✓ (table) | ✓ (prose + examples) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) |
+| `necsuff-rule` | ✓ | ✓ | ✓ (via example A) | ✓ | ✓ (brief) | removed (H6) | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via example A) | ✓ | ✓ | ✓ (via example A) | ✓ | ✓ | ✓ | ✓ | **weakened, merged into one vaguer bullet (H69)** | ✓ | ✓ | ✓ | removed (H6+H69) |
+| `negscope-rule` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via example B) | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `causal-vs-cond` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) | ✓ | removed (H7) | ✓ | ✓ | ✓ (brief) | ✓ (via example B) | ✓ | **tightened (H18)** | ✓ (via example B) | ✓ | **re-qualified by completedness, not keyword (H22)** | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | **re-qualified by completedness (H22 wording)** |
+| `decompose-rule` | ✓ | ✓ | ✓ (via examples B, D) | ✓ | ✓ (brief) | ✓ | ✓ | removed (H9) | ✓ | ✓ (brief) | ✓ (via examples B, D) | ✓ | ✓ | ✓ (via examples B, D) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ (kept conservatively, H9 caveat) |
+| `scope-boundary` | ✓ | ✓ | | ✓ | | ✓ | ✓ | ✓ | removed (H10) | | | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `symbolic-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | | ✓ | ✓ | ✓ | ✓ | | ✓ (via example D) | ✓ | ✓ | ✓ (via example D) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `inconsistency-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | | ✓ | ✓ | ✓ | ✓ | added, more concrete (H2) | ✓ (via example D) | ✓ | ✓ | ✓ (via example D) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `injection-note` | ✓ (in checklist) | ✓ (in principle) | ✓ (in intro line) | ✓ (dedicated callout) | | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | | ✓ (in intro line) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in principle) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) |
+| `worked-example` | | | ✓ (4 examples) | ✓ (1 example) | | | | | | | **✓ (5 examples, H3)** | | | **✓ (4 examples, H21)** | | | | | | | | |  |
+| `output-template` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `verify-step` | | ✓ | | ✓ | | | | | | | | | | ✓ | | | | | | | | |  |
+| `subjective-inclusion-rule` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | removed (H29) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | removed (H29) |
+| `alphabet-exhaustion-rule` | ✓ | ✓ | | | | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | ✓ | ✓ | ✓ | removed (H28) | ✓ | ✓ | ✓ | ✓ | removed (H28) |
+| `argument-preserve` | ✓ | ✓ | | ✓ | | ✓ | ✓ | ✓ | ✓ | | | ✓ | ✓ | | ✓ | ✓ | removed (H27) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `explicit-label-precedence` | ✓ (bullet in Step 2) | ✓ (implicit in symtable-track) | ✓ (via examples) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ (via examples) | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | removed (H61) | removed (H61) |
 
 **Design axes Round 1 targeted:** checklist (v1) vs. principle (v2, v5) framing for validity; worked-examples-carry-the-rules (v3) vs. explicit-rules-stated-directly (v1, v2, v4); verify-step present (v2, v4) vs. absent (v1, v3, v5); maximal component coverage (v4) vs. minimal/lean (v5) as a brevity floor test.
 

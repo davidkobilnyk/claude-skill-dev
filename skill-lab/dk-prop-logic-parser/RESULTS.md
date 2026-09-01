@@ -87,6 +87,16 @@ All four Round 5 variants are single-hypothesis diagnostic tests, each changing 
 
 See `HYPOTHESES.md`'s Round 5 entries for full Result/Rival-explanation/Lesson writeups.
 
+## Round 6 (N=5) — v23, consolidation variant, full-suite score
+
+The first variant graded with all 165 rows checked directly against `tests.csv`'s expected_output by dedicated grading agents (previous full-suite scores were not verified this literally — see `HYPOTHESES.md`'s Round 6 process note and write-up).
+
+| Variant | Parent | Size (chars) | Run scores | Avg | Min | Max | Avg duration (N=5) | Min | Max |
+|---|---|---|---|---|---|---|---|---|---|
+| v23 | v1 (consolidation of all confirmed Round 2-5 fixes) | ~5,600 | 157, 158, 160, 155, 156 | 157.2 | 155 | 160 | 4.33 min | 3.89 min | 5.08 min |
+
+Systematic misses (5/5 runs): row 41 (causal-vs-cond wording drops v1's one-sentence-vs-two-sentence distinction), row 81 (misclassified as INVALID), rows 148-149 (`decompose-rule` over-splits a compound predicate). Partial miss: row 150 (3/5, the known "could" modal/suite conflict). Noise (2/5): rows 124-126 (redefinition symbol not used in the final formula), rows 151-153 (scope-reset letter reuse). See `HYPOTHESES.md` for full detail.
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.
