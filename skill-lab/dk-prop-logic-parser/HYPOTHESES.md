@@ -1,5 +1,99 @@
 # Hypotheses — dk-prop-logic-parser
 
+## Round 4 — H25 result (no new variant needed)
+
+**H25 — is v12's extra generation time visible answer bloat, or invisible reasoning overhead?** Resolved by direct comparison of already-collected data, no new subagent runs: v1's (Round 1) and v12's (Round 3) raw response text on the target rows (34 primary; 109-111 check) and in full.
+
+| | v1 (Round 1 baseline, N=5) | v12 (Round 3, N=5) |
+|---|---|---|
+| Full response avg | 16,357 chars | 15,944 chars |
+| Row 34 avg | 102 chars | 92 chars |
+| Rows 109-111 avg | 284 chars | 273 chars |
+
+**Result: REFUTED.** v12's delivered answer text is not longer than v1's baseline on the target rows or overall — if anything it's slightly shorter. This rules out the leading hypothesis (visible bloat in the final answer).
+
+**Rival explanation considered:** could v1 (Round 1, different session/date) and v12 (Round 3) not be a fair apples-to-apples comparison? The prompt template, grading target, and model are identical across both; the only difference relevant here is the SKILL.md content itself (v12 = v1 + one bullet), which is exactly what's being tested. A confound would need something external to have changed between rounds in a way that happens to exactly offset a real verbosity increase — implausible given the consistent, if modest, direction (v12 shorter, not longer, on every measured slice).
+
+**Lesson:** v12's extra generation time (identified in the Round 3 timing process note as the slowest variant that round, ~4.95 min avg vs. 3.3-4.6 min for v11/v13/v14) is not accompanied by a visible symptom in the delivered text. The added judgment call ("is this the same event continuing, or a genuinely separate fact?") appears to cost internal deliberation time that never surfaces as extra output — the user pays in wait time with no visible cue that anything is slower. Arguably worse for UX than if the cost showed up as bloat, since there's nothing in the response itself to explain or justify the longer wait. Worth checking for this pattern specifically (rules that ask for an active per-row judgment call) on any future timing outlier, rather than assuming length and duration move together.
+
+## Round 4 — New variants (in progress)
+
+Picked via the `U × D × ln(rows+1)` formula over a fresh 20-hypothesis list; top 4 by score (with H25 resolved separately, above): H29 (27.7), H22 (23.4), H27 (20.8), H28 (20.8, tied with H27).
+
+### dk-prop-logic-parser-v15 (parent: v1)
+Hypothesis: H29 — removing the "subjective or vague claims are still valid" bullet will cause false-INVALID rejection of subjective declarative content, since nothing else in v1 addresses this distinction.
+Change made: removed one line from Step 1's "A sentence IS valid even if" list: `- It's subjective or vague ("the weather is nice") — still a declarative, truth-apt claim.` Nothing else changed from v1.
+Target rows: 70-72 ("the weather is nice," "this is the best restaurant in town," "that movie was pretty good").
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v16 (parent: v1)
+Hypothesis: H22 — fixing v13's regression by qualifying causal-vs-cond to completed-event framing (rather than naming bare trigger verbs) will close the rows 40/42 false-positive gap without weakening row 41's reliability.
+Change made: replaced v1's causal-vs-cond bullet in Step 3 with a version qualified by completedness rather than keyword: "A report that two things have already happened, where one is described as causing or triggering the other... This applies only when both events are stated as already having occurred; a causal-sounding word describing a future or conditional consequence... is still a conditional, not a completed causal report." Nothing else changed from v1. (Kept as a separate new variant from v13 so v13's own tested Round 3 history stays intact.)
+Target rows: 41 (must stay correct), 40 and 42 (must now also stay correct — these are exactly the rows v13's tightened wording broke). Check: 67-69 (should stay correct, not the stress test).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v17 (parent: v1)
+Hypothesis: H27 — removing the premise/conclusion structure-preservation rule (Step 4) will cause the model to flatten labeled arguments into an undifferentiated formula list, or it will preserve the structure by default from general capability (mirroring H6/H9's "does fine without the rule" pattern).
+Change made: removed Step 4 ("Preserve structure") entirely; renumbered the former Step 5 (Output) to Step 4. Nothing else changed from v1.
+Target rows: 163-165 (Premise 1/Premise 2/Conclusion labeled arguments).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v18 (parent: v1)
+Hypothesis: H28 — removing the explicit "continue with P1, P2... past Z" instruction will cause errors on the 27+/28+/30-proposition symbol-exhaustion scenarios (letter reuse, a malformed or inconsistent legend), or the model will handle overflow correctly by default.
+Change made: trimmed Step 2's opening sentence to remove the "continuing past Z with P1, P2, ... if you exceed 26 distinct propositions" clause, leaving just "(P, Q, R, ...)". Nothing else changed from v1.
+Target rows: 160-162 (27, 28, and 30-proposition symbol-exhaustion scenarios).
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+## Round 4 — Active set
+
+v15, v16, v17, v18 (4 new variants, testing H29/H22/H27/H28 respectively) plus H25 (resolved via re-analysis, no new variant). v1 and prior rounds' winners are not re-run — none of these four hypotheses touch content outside what's already isolated in the new variants.
+
+## Process note (Round 3, tracking per-run generation time)
+
+**Why this matters (the primary reason, not a secondary one):** the project's goal is optimization, and a real-world user invoking this skill spends their own clock time waiting for it to finish. That waiting time is pure cost with no offsetting benefit — it either sits idle (wasted outright) or the user context-switches to something else while waiting, which has its own real cost (refocusing back afterward isn't free, and the two tasks can interfere with each other). Generation time is therefore not a secondary quality signal alongside correctness — it's a direct optimization target on the same footing as correctness, because it measures a cost imposed on the person using the tool, not just a property of the lab's own process. A rule that's more correct and even more concise in its own instruction text can still make the tool worse to use if it costs the user more waiting time to get an answer back.
+
+**Observation:** Round 3's 20 subagent runs showed a real, non-trivial spread in individual duration (~2.9 to ~5.9 minutes) that clusters by variant, not just by chance:
+
+| Variant | Avg duration (N=5) | Range | SKILL.md size |
+|---|---|---|---|
+| v11 | 3.26 min | 2.9-3.5 min | 5,372 chars |
+| v14 | 4.02 min | 3.5-4.7 min | 8,950 chars |
+| v13 | 4.57 min | 3.6-5.3 min | 6,031 chars |
+| v12 | 4.95 min | 4.0-5.9 min | 6,489 chars |
+
+Two things stand out: it isn't simply file size (v14 has the largest `SKILL.md` by far but ran faster on average than v12/v13), and v12 — which added one bullet asking the model to actively judge "is this the same event continuing, or a genuinely separate fact sharing vocabulary?" — was the slowest, nearly 50% above v11's average, meaning it's the variant that made a real user wait longest for every single conversion, not just in this lab's own test runs. The leading hypothesis (untested) is that some rules invite more per-row justification/hedging in the response itself, inflating output length across the whole 165-row response, not just on the rows they target.
+
+**Decision:** track per-run duration going forward as a standing metric, the same way per-run correctness scores are tracked. At minimum, record each run's `duration_ms` (from the subagent's `usage` block) when saving results, and report per-variant avg/min/max in `RESULTS.md` alongside the pass-rate/score table, not just reconstructed after the fact when someone asks. Because rounds already isolate one change per variant (or a compound test with its own labeled name), this makes it possible to attribute a time increase or decrease to a specific rule change the same way a correctness change is attributed — e.g. "this hypothesis's fix cost N seconds of extra user-facing wait per run" becomes a first-class, comparable data point across rounds, not just a one-off observation.
+
+**Candidate patch to `skill-variant-lab` for Step 13:** Step 6 (running variants) or Step 7 (compiling results) should explicitly instruct capturing and reporting per-run duration alongside correctness, framed explicitly as user-facing wait time — not just a lab-process convenience — since it's a direct cost the eventual user of the skill pays on every invocation. Not yet formalized as its own scored dimension (like generalizability/uncertainty/diagnosticity) with a weight in the prioritization formula, but worth tracking as raw data now so a future round has enough history to decide whether it should be, and possibly to fold into the hypothesis-scoring formula as an explicit cost term.
+
+**Status:** Logged as a going-forward practice, applied starting now. Round 3's numbers above are the first data point; not yet enough rounds to draw a firm conclusion about which specific kinds of rule changes reliably cost more generation time.
+
+## Process note (Round 2, intuition vs. explicit rules for prioritization)
+
+**Observation:** While building a hypothesis-prioritization score (Uncertainty × Diagnosticity × f(rows)) for the 15-item backlog (H3, H4, H5, H8, H11-H21), the user articulated a general principle for when to use intuition versus explicit, evidence-based rules: intuition is fine for generating ideas and making one-off judgment calls, but for decisions worth getting right repeatedly, explicit rules are preferable *because they're correctable* — "if things go wrong based on intuition, there's nothing concrete to correct. if a rule's application ends up being wrong, then we have specific things to check for where the problem occurred: the rule or the way the rule was applied."
+
+**Why this held up under scrutiny:** the session had just lived through a direct example. The first version of the scoring formula used `log(row_count)`, which silently zeroed out every 1-row hypothesis (`log(1) = 0`) — including H8 and H13, two of the highest-uncertainty items on the list. The error was found and fixed (`log(row_count + 1)`) because the formula decomposes into separately-checkable parts (the U estimate, the D estimate, the row count, the combining function) — the bad output could be traced to one specific joint. Had the ranking instead come from gut feel, a "H8 seems underrated" reaction would have had nowhere concrete to attach: no sub-judgment to inspect, no reusable fix, nothing that would prevent the same failure mode from recurring on a different hypothesis later.
+
+**The general lesson, generalized beyond this one scoring formula:**
+- **Decomposability enables error-location.** An explicit rule splits into separately-checkable inputs and a combining step; when an outcome surprises you, you can ask which specific piece was wrong instead of only "recalibrate somehow."
+- **Explicit rules separate process quality from outcome luck.** A good process can still produce a bad-luck outcome, and a bad process can still get lucky; without an externalized process to audit, those two cases are indistinguishable after the fact.
+- **Corrections to a rule transfer across future instances; intuitive corrections don't.** Fixing `log(rows)` → `log(rows+1)` fixes every future 1-row hypothesis, not just the two that exposed the bug. A gut adjustment ("H8 seems more important than that") would need to be re-made by hand every time a similar case came up.
+- **Rules are inspectable and arguable in advance**, not just correctable after the fact — a specific premise (e.g. "why `log` instead of `sqrt`") can be challenged before it's ever applied, the way `log` vs. `sqrt` vs. `(rows+1)^0.3` were compared directly against each other.
+- **This doesn't eliminate intuition — it relocates it.** Noticing that a rule's output looks wrong still takes judgment (nothing flags itself as broken); what changes is that the judgment gets spent on diagnosing *which mechanism* produced a bad result, and that diagnosis becomes a durable, reusable fix — rather than being spent once, invisibly, on a final answer that can't be interrogated later. This mirrors the lab's own existing arc: every hypothesis starts as an intuitive "this seems worth testing" before being written into a falsifiable, checkable statement — intuition originates candidates, explicit structure is what makes them correctable.
+
+**Candidate patch to `skill-variant-lab` for Step 13:** worth stating explicitly somewhere in the lab's guiding principles (`text-principles.md` or similar): prefer an explicit, stated rule over an intuitive call whenever a decision will recur across rounds or across labs, specifically because the rule's error surface is inspectable and its fixes are reusable — intuition should be reserved for idea generation and genuinely novel judgment calls where no rule has been derived yet, not for decisions the lab will make repeatedly.
+
+**Status:** Logged as a session lesson. Not yet applied as a skill patch — flagged for the Step 13 retrospective alongside the other candidate patches in this file.
+
 ## Process note (Round 2, post-Round-2 discussion — consolidation rounds)
 
 **Observation:** After Round 2, the user found the aggregate score movement from one-hypothesis-per-variant testing (v6-v9 vs. v1: deltas of 1-3 points on a 165-row suite) unsatisfying, and asked whether stacking many changes into one variant and bisecting would learn faster. Discussion surfaced that this is a real technique (delta-debugging / bisection minimization) but its efficiency depends on two assumptions this project has direct evidence against: monotonicity (more components never hurts — doubtful, given the already-logged shared-structural-confound risk of attention/recency effects from denser instruction lists) and no interactions (already false in miniature — H7 and H10 were both independently confirmed necessary in the same round, and a naive bisection split could easily land both in one half, obscuring that two separate things mattered). Separately, v4 (Round 1's kitchen-sink variant) already tested "stack most known changes" and landed at 162.4/165, not ceiling — meaning a clean bisection starting point isn't freely available; the persistent misses (rows 34, 81, 140, 150 across nearly every variant) are open hypothesis-generation gaps, not omissions from a checklist already known how to write.
@@ -143,8 +237,54 @@ v1, v6, v7, v8, v9, v10 (6, at the cap). v2, v3, v4, v5 retired from the active 
 
 **Round 2 run note:** v1 dropped from the actual test launch — it tests none of this round's 5 hypotheses and already has a solid N=5 baseline from Round 1 to compare v6-v9 against, so re-running it would spend budget for no new information. That leaves 5 variants (v6-v10); to fit the 20-subagent concurrency cap in one launch batch, N=4 (not the usual default N=5) is used for this round's exploratory pass.
 
+## Process note (Round 3, hypothesis-prioritization formula adopted)
+
+**Decision:** future rounds prioritize the hypothesis backlog with `Score = Uncertainty × Diagnosticity × ln(rows + 1)`, comparing candidate hypotheses on this score rather than picking by feel. The `rows + 1` (not bare `rows`) is deliberate: `ln(1) = 0` would otherwise zero out every 1-row hypothesis regardless of how uncertain or diagnostic it is, which is exactly the bug caught mid-session (see the "intuition vs. explicit rules" process note above) when H8 and H13 — two of the highest-uncertainty items in the backlog — landed tied with the most-already-certain items purely because they each touch only 1 row.
+
+**Flagged for future exploration, not yet resolved:** the Low/Low-Medium/Medium/Medium-High/High labels feeding U and D are currently mapped to an evenly-spaced 0-5 ordinal scale with no stated justification for why, say, "Medium-High" should sit at exactly 4 rather than 3.5, or why the spacing should be even at all rather than compressed at one end. This conversion is itself an unexamined judgment call sitting underneath an otherwise-explicit formula — worth a dedicated look in a future round rather than deciding it implicitly by leaving the current mapping unquestioned.
+
+**Round 3 picks:** applying the formula to the 15-item backlog (H3, H4, H5, H8, H11-H21), the top 4 by score are H21 (26.4), H11 (22.2), H3 (24.0), and H18 (12.5, tied closely with H12) — selected as this round's active hypotheses.
+
+## Round 3 — New variants
+
+### dk-prop-logic-parser-v11 (parent: v3)
+Hypothesis: H3 — a worked example demonstrating extraction of the valid sentence from an input mixing a question/command/modal clause with a declarative one will raise v3's accuracy on that row family above its Round 1 baseline (1/5 correct) without degrading its other example-taught behaviors.
+Change made: added a 5th worked example ("Example E — partial validity") after v3's existing Examples A-D, using fresh (non-suite) wording that pairs a valid declarative sentence with a rhetorical question, a command, and a modal sentence in sequence, demonstrating exclude-but-don't-invalidate for each — nothing else changed from v3.
+Target rows: 79-80, 91-93, 100-105 (11 rows). Check: no regression on v3's existing correctly-handled rows.
+Result: CONFIRMED, clean. 5/5 runs at N=5 correctly extracted the valid sentence with a stated exclusion reason across the whole target family (91-93, 100-105, plus 79-80), a dramatic jump from v3's Round 1 baseline of 1/5. The adjacent row 81 (injection-shaped, not a core H3 target but part of the originally-framed family) came back correct in 4/5 runs, with only run 4 marking the whole input INVALID.
+Rival explanation considered: could the new example be teaching memorized answers to these specific rows rather than the general pattern? No — Example E's own content (museum/rhetorical-question/command/modal, paired sentences) shares no wording with any of the target rows' actual sentences, and the target rows span three different scenario categories (mixed-valid-invalid-set, near-miss-ambiguous-pronoun, near-miss-rhetorical-question) that Example E only demonstrates in combined, generic form — a clean 5/5 across genuinely different phrasings is better explained by the example teaching the underlying exclude-don't-invalidate move than by rote pattern-matching.
+Lesson: a single worked example that demonstrates the *general move* (exclude the disqualifying sentence, keep and report the valid one, state why) rather than one specific case generalizes well across a whole family of near-miss scenarios. This is a useful contrast with H21/v14's finding below: an explicit principle statement and a well-chosen worked example can independently produce the same fix, which is itself informative about how redundant these two teaching styles can be for a well-scoped failure mode.
+
+### dk-prop-logic-parser-v12 (parent: v1)
+Hypothesis: H11 — a rule instructing that an elaborated restatement of an already-described ongoing event should merge into the same symbol (while genuinely different facts sharing vocabulary stay separate) will fix row 34 without causing false merges on rows 109-111.
+Change made: added one bullet to Step 2, directly after the existing "reuse only on near-certain sameness" bullet, addressing event-continuation merging specifically — nothing else changed from v1.
+Target row: 34 (universal miss across every variant tested in both rounds so far). Check: rows 109-111 (the "shared vocabulary, different facts" trap this bullet explicitly warns against over-merging into).
+Result: CONFIRMED, clean. 5/5 runs at N=5 correctly merged "it is raining outside" and "the rain continues" into the same symbol, giving the expected `P; P→Q` — a full reversal of row 34's status as a universal miss across every prior variant in both rounds. Rows 109-111 stayed correctly separate (no over-merging) in all 5 runs.
+Rival explanation considered: could the fix have accidentally taught blanket over-merging that just happens not to trigger on 109-111's specific wording? Checked all 5 runs' full outputs on 109-111 and the other paraphrase/equivocation-trap rows (38-39, 148-150) — all remained correctly non-merged or merged exactly as the suite's own logic requires, with no drift toward over-merging anywhere else in the suite. The two-sided design (a positive target plus a negative check in the same rows the rule explicitly warns about) rules out the most obvious false-positive story.
+Lesson: row 34 was one of the most stubborn, universal misses in the entire project — present in every Round 1 and Round 2 variant including the kitchen-sink v4 — and it turned out to need exactly one explicit bullet naming the specific trap (elaboration-of-an-ongoing-event vs. distinct-fact-sharing-vocabulary) rather than a deeper structural fix. Worth remembering for future "universal miss" rows: before assuming a gap is hard to close, check whether it's simply never been named as its own explicit rule.
+
+### dk-prop-logic-parser-v13 (parent: v1)
+Hypothesis: H18 — rewording `causal-vs-cond` to specifically flag the causal-verb sub-case ("caused," "triggered," "led to") as highest-risk, per v7's finding that row 41 is more fragile than rows 67-69, will preserve row 41's reliability while shrinking the rule's prose.
+Change made: replaced v1's full `causal-vs-cond` bullet in Step 3 with a shorter version naming the causal-verb pattern explicitly — nothing else changed from v1.
+Target row: 41 (must stay correct — the fragile case per v7's data). Check: rows 67-69 (already fairly resilient without the rule at all, so not the stress test); character-count comparison against v1's original bullet to confirm the shrink is real.
+Result: CONFIRMED on the primary target, but with a genuine new regression surfaced. Row 41 stayed correctly rendered as a conjunction (not a conditional) in 5/5 runs, confirming the shortened rule preserves what v7's data showed actually matters. Rows 67-69 also stayed correct across all 5 runs. However, rows 40 and 42 — which use the word "triggered" in a hypothetical/conditional sense ("a call to the fire department is triggered", "an emergency shutdown is triggered"), not a completed-causal sense — were wrongly converted from the correct `P→Q`/`P→R` to an incorrect `P∧R` conjunction in 2/5 runs (run1, run2). Run3 got both correct.
+Rival explanation considered: is the 40/42 regression really caused by the tightened wording, or just ordinary noise? The tightened rule explicitly names "triggered" as an example causal verb ("caused," "triggered," "led to") to sharpen row 41's reliability — and rows 40/42 are the only other rows in the suite containing that exact word, in a different (conditional-consequence) grammatical role. That's a specific, mechanistically plausible link, not a generic noise story: v1's original (untightened) wording never named "triggered" as a keyword and v1's Round 1 runs never showed this failure mode on 40/42. The 2/5 (not 5/5) rate is consistent with a real but not fully deterministic false-positive trigger, not proof of pure chance.
+Lesson: tightening a rule to name a specific trigger word can create a new false-positive surface on other rows that happen to contain the same word in an unrelated sense — the exact risk flagged as a structural blind spot for H18/H19 in the pre-round metrics review (rewrites can lose or corrupt coverage the suite doesn't fully test around). The fix for a future revision: qualify the tightened rule to the *completed-event* sense specifically (e.g. "already happened" framing) rather than naming bare trigger words, so it doesn't collide with the same words used in a hypothetical/future sense.
+
+### dk-prop-logic-parser-v14 (parent: v2 × v3, compound hypothesis)
+Hypothesis: H21 — merging v2's principle-based framing with v3's worked examples will fix more of each variant's individual gaps than either alone. Sharpened before building: v2's Round 1 data already gets the 79-105 family right except row 81 specifically (its H5/exclusive-or/equivocation gaps are the actual Round 1 misses) — v2 already states the exact principle v3 lacks everywhere ("if only part of the input is valid, convert the valid parts and note what was excluded"). So the predicted mechanism is specifically "v3 gains v2's already-proven exclusion principle," not "worked examples generically help v2." Row 81 is explicitly predicted to remain wrong in the merge, since neither parent solves it — a miss there should not be read as a failed merge.
+Change made: v2's full document structure (validity principle, symbol-consistency principles, connective-translation principles, before-finalizing self-check) as the base, with v3's 4 worked examples (A-D) inserted as a new "Worked examples" section between the connective-translation principles and the before-finalizing check. v3's validity clause already names non-English input explicitly, which v2's did not — importing v2's structure alongside v3's content pulled that phrase in as a side effect (added "or content that isn't in English" to the Validity paragraph), incidentally covering H5's gap too, though that's not the primary test.
+Target rows: 79-80, 91-93, 100-105 (11 rows, H3's family — testing whether examples add anything on top of v2's principle, which already handles this alone). Secondary/incidental: 94-96 (expected to fix as a side effect of the structural merge). Explicitly predicted to remain wrong: row 81. Check: v2's and v3's individually-correct rows don't regress from the merge.
+Result: Predictions confirmed precisely, including the explicitly-predicted failure. 91-93 and 100-105 came back correct in 5/5 runs (matching v2's already-strong Round 1 performance on this family, not adding anything new — consistent with the sharpened mechanism). Rows 94-96 came back correctly INVALID in 5/5 runs, the predicted incidental fix from importing v3's non-English clause into v2's structure. Row 81 was wrong in 4/5 runs (marked wholly INVALID) and correct in only 1/5 (run 3) — matching the explicit prediction that neither parent solves it, with the single success read as noise rather than a real fix.
+Rival explanation considered: since 91-105 was already correct in v2 alone, does v14's result actually confirm anything about the *merge*, or just show v2's principle carried through unchanged? This is the sharpened hypothesis's whole point, not a weakness: the original H21 wording predicted the *combination* would out-perform either parent on this family, and it didn't — it matched v2's performance exactly, neither better nor worse. That's a real, informative result: it shows v3's worked examples added nothing on top of v2's principle for this specific failure mode, which directly supports the "v3 gains v2's already-proven principle" mechanism over the vaguer "examples generically help" story, since if examples were doing independent work here, the combined variant should have shown a difference (positive or negative) from v2 alone, and it didn't.
+Lesson: this is a genuine, if modest, resolution of the compound hypothesis — not "combining helps," but specifically "a stated principle a variant is missing fixes what worked examples alone couldn't (v3's H3 gap), while worked examples add no further benefit once the principle is present (v2's own strength on this family already exhausted the available gain)." That's a more precise and more useful finding than the original broad framing, and it argues that comparing two design philosophies by merging them is more informative when the merge's outcome is analyzed against each parent's individual strengths and gaps rather than judged as a single combined pass/fail. The one open thread: this doesn't yet tell us whether worked examples ever add value *on top of* a correct principle for some other failure mode — that would need a case where v2's principle alone is known to be insufficient, which 91-105 wasn't.
+
+## Round 3 — Active set
+
+v11, v12, v13, v14 (4 new variants, testing H3/H11/H18/H21 respectively). v1 and the Round 2 winners are not re-run this round — none of the four new hypotheses touch their content, and their Round 1/2 baselines already stand for comparison.
+
 ## Deferred — Round 1
 
-- **v2×v3 merge** (H5 + H3 are disjoint) — deferred: neither variant currently leads; depth-confirming v1/v4 first, and pruning v1, is higher-value this round.
+- **v2×v3 merge** (H5 + H3 are disjoint) — no longer deferred: built as v14 (Round 3), see above.
 - **Symbol-exhaustion labeling scheme** variance (pure `P1..Pn` vs. domain-prefixed vs. letter-then-subscript) — not a hypothesis worth testing; suite accepts any consistent scheme.
 - **v4's bundled-vs-split formula** (`P→(Q∧R)` vs. `P→Q;P→R` on scenarios 40/42) — logically equivalent, not scored as a miss.
