@@ -144,3 +144,10 @@ Once a variant clears the N≥20 zero-failure bar from step 7, and if the skill'
 ## Step 13 — Process retrospective (required close-out, not optional)
 
 Before considering the lab finished, review every `## Process note` entry logged in `HYPOTHESES.md` over the course of the project (per the standing discipline in the intro). For each one that points at a gap in `skill-variant-lab` itself — not just a one-off mistake in this particular lab — proactively draft a suggested patch to this skill file and present it to the user for approval, the same way Step 12's real-world check is a required action rather than something that waits to be asked for. If no process notes were logged, or none of them implicate the lab's own process, say so explicitly rather than skipping the step silently.
+
+In addition to the process-note review above, look back over the whole conversation and answer these two questions explicitly, even if nothing was logged as a formal process note along the way:
+
+- **What did I have to figure out this time that wasn't explicit in this skill or its supporting docs (`text-principles.md`, etc.), and might be worth adding?** Scoring/matching logic, subagent prompt engineering details, technical bugs caught by trial rather than by instruction, and similar gap-filling all count — even when they were handled well, naming them is what turns tacit know-how into something the next lab doesn't have to rediscover from scratch.
+- **What did the user have to explicitly ask for that I didn't do on my own?** Include things skipped because a hard rule discouraged them, things not proposed because they hadn't separately out-ranked an incumbent yet, and habits (like logging a lesson, or proposing a skill patch) that only happened once asked. Each one is a candidate for a standing discipline, a required check, or a rule adjustment — the same way earlier answers to this exact question produced several of the steps and standing disciplines already in this file.
+
+Report the answers to both questions to the user, and treat anything found as material for this step's proactive patch-drafting above rather than a one-off answer to file away.
