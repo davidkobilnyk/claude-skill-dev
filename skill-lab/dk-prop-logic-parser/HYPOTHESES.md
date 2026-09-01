@@ -19,6 +19,8 @@ H48 ("does verify-step add latency without a matching accuracy gain") was writte
 
 **Lesson:** before assigning a hypothesis a score (not just before generating it), re-verify testability against *both* known failure modes — insufficient test-row coverage, and no variant that isolates the changed component from everything else that differs from baseline. A hypothesis that flags its own confound in its own text should never receive a score built on data that confound rules out.
 
+**Status:** Logged for the Step 13 retrospective; not yet applied as a skill patch — this lab has not reached Step 13.
+
 ## Round 4 — H25 result (no new variant needed)
 
 **H25 — is v12's extra generation time visible answer bloat, or invisible reasoning overhead?** Resolved by direct comparison of already-collected data, no new subagent runs: v1's (Round 1) and v12's (Round 3) raw response text on the target rows (34 primary; 109-111 check) and in full.
