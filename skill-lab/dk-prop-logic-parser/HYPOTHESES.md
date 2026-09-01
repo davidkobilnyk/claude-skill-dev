@@ -40,6 +40,52 @@
 
 **Status:** Logged for Step 13; not yet applied as a mitigation this round (accepted as a known interpretive risk for the current H6/H7/H9/H10 batch rather than redesigned around).
 
+## Round 2 — Regression risk notes (pre-run)
+
+- **v7 (H7):** the causal-vs-conditional bullet's blast radius is wider than its 4 "home" rows (scenario 41, 67–69) suggest — scenario 94 (the French non-English row, "il pleut, donc...") also depends on the same causal-claim logic in several Round 1 runs. Watch row 94 in v7's results, not just its named target rows.
+- **v8 (H9):** even with the decomposition rule present, Round 1 data (v4's runs) showed some models default to a bundled `P→(Q∧R)` form on scenario 40/42-shaped sentences regardless. A clean result on v8's target rows (46–48, 106–108) may not cleanly confirm or refute the rule's necessity if the underlying tendency is partly rule-independent.
+
+## Round 2 — New variants
+
+### dk-prop-logic-parser-v6 (parent: v1)
+Hypothesis: H4 was not selected for this round — v6 instead tests H6 (see Step 8 findings above): the model needs no explicit rule to get necessary/sufficient-condition direction right, since this is a very commonly-taught construction it may already handle from general capability.
+Change made: removed the `necsuff-rule` component (the "A is necessary for B" / "A is sufficient for B" bullets in Step 3) — nothing else changed from v1.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v7 (parent: v1)
+Hypothesis: H7 — the model needs no explicit rule to avoid treating a completed causal claim ("because X, Y") as a hypothetical conditional.
+Change made: removed the `causal-vs-cond` component (the "Because A, B" / "A caused B" bullet in Step 3) — nothing else changed from v1.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v8 (parent: v1)
+Hypothesis: H9 — the model needs no explicit rule to decompose a sentence bundling multiple independent claims into separate atomic propositions.
+Change made: removed the `decompose-rule` component (the bundling bullet in Step 3) — nothing else changed from v1.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v9 (parent: v1)
+Hypothesis: H10 — the model needs no explicit rule to reset symbol scope across independent labeled blocks (e.g. "Example 1: ... Example 2: ...").
+Change made: removed the `scope-boundary` component (the block-boundary bullet in Step 2) — nothing else changed from v1.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+### dk-prop-logic-parser-v10 (parent: v5)
+Hypothesis: H2 — v5's unreliable handling of mid-input symbol redefinition (passed 2/5 runs, failed 3/5 on the identical scenario in Round 1) can be made deterministic with a more concrete rule, without meaningfully eroding v5's brevity advantage.
+Change made: added one sentence to v5 stating the `inconsistency-detect` rule explicitly (keep the first meaning of a redefined symbol, mint a new symbol for the second) — nothing else changed from v5.
+Result: (fill in after the next run)
+Rival explanation considered: (fill in after the next run)
+Lesson: (fill in after the next run)
+
+## Round 2 — Active set
+
+v1, v6, v7, v8, v9, v10 (6, at the cap). v2, v3, v4, v5 retired from the active set this round — their Round 1 data stays on record above; H3 (v3) and H5 (v2) remain deferred, not abandoned, and can return in a future round once budget allows.
+
 ## Deferred — Round 1
 
 - **v2×v3 merge** (H5 + H3 are disjoint) — deferred: neither variant currently leads; depth-confirming v1/v4 first, and pruning v1, is higher-value this round.
