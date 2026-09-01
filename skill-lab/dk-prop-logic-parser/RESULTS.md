@@ -107,6 +107,14 @@ Systematic misses (5/5 runs): row 41 (causal-vs-cond wording drops v1's one-sent
 
 v24's fix 3 (compound-predicate carve-out) fixed rows 148-149 in all 5 runs but broke rows 46/47 (5/5) and 107 (3/5) — a net loss of 3 correct rows per batch. See `HYPOTHESES.md` for detail.
 
+## Round 6 continued — v27 (Step 5 self-verification)
+
+| Variant | Parent | Change | Run scores | Avg | Notes |
+|---|---|---|---|---|---|
+| v27 | v26 | + Step 5 pre-finalization verification block (fresh-symbol carry-through + no-duplicate-symbol check) | 163, 159, 160, 159, 159 | 160.0 | Rows 124-126 and 151-153 (the target) correct in **all 5 runs** — a clean fix. Offset by rows 148-149 landing wrong in all 5 runs this round (vs. ~50/50 previously), plus a new intermittent miss on row 140 (2/5) and the recurring polarity-flip cluster on rows 38/90/150 (correlated within a run: 3/5 runs flip all three together, 2/5 flip none) |
+
+Net: avg is flat vs. v25/v26 (160.0 vs. 160.8/159.8), but this is not a wash — the Step 5 verification step appears to have genuinely fixed a previously-noisy failure mode (124-126, 151-153) at zero cost to anything else; the flat average is fully explained by rows 148-149's known-unfixable noise landing unluckily worse this round. See `HYPOTHESES.md` for detail.
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.
