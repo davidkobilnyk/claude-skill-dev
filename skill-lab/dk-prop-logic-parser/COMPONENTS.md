@@ -26,29 +26,31 @@ Atomic building blocks a variant's instruction text can include. Each gets a sho
 
 ## Components × variants
 
-| Component | v1 | v2 | v3 | v4 | v5 |
-|---|---|---|---|---|---|
-| `validity-checklist` | ✓ | | | ✓ | |
-| `validity-principle` | | ✓ | | | ✓ |
-| `symtable-track` | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ (brief) |
-| `paraphrase-merge-rule` | ✓ | ✓ | ✓ (via example C) | ✓ | ✓ (brief) |
-| `connective-map` | ✓ (table) | ✓ (prose) | ✓ (via examples) | ✓ (table) | ✓ (brief prose) |
-| `necsuff-rule` | ✓ | ✓ | ✓ (via example A) | ✓ | ✓ (brief) |
-| `negscope-rule` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) |
-| `causal-vs-cond` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) |
-| `decompose-rule` | ✓ | ✓ | ✓ (via examples B, D) | ✓ | ✓ (brief) |
-| `scope-boundary` | ✓ | ✓ | | ✓ | |
-| `symbolic-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | |
-| `inconsistency-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | |
-| `injection-note` | ✓ (in checklist) | ✓ (in principle) | ✓ (in intro line) | ✓ (dedicated callout) | |
-| `worked-example` | | | ✓ (4 examples) | ✓ (1 example) | |
-| `output-template` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
-| `verify-step` | | ✓ | | ✓ | |
-| `subjective-inclusion-rule` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
-| `alphabet-exhaustion-rule` | ✓ | ✓ | | | |
-| `argument-preserve` | ✓ | ✓ | | ✓ | |
+| Component | v1 | v2 | v3 | v4 | v5 | v6 | v7 | v8 | v9 | v10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `validity-checklist` | ✓ | | | ✓ | | ✓ | ✓ | ✓ | ✓ | |
+| `validity-principle` | | ✓ | | | ✓ | | | | | ✓ |
+| `symtable-track` | ✓ | ✓ | ✓ (via examples) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
+| `paraphrase-merge-rule` | ✓ | ✓ | ✓ (via example C) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
+| `connective-map` | ✓ (table) | ✓ (prose) | ✓ (via examples) | ✓ (table) | ✓ (brief prose) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (table) | ✓ (brief prose) |
+| `necsuff-rule` | ✓ | ✓ | ✓ (via example A) | ✓ | ✓ (brief) | **removed (H6)** | ✓ | ✓ | ✓ | ✓ (brief) |
+| `negscope-rule` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
+| `causal-vs-cond` | ✓ | ✓ | ✓ (via example B) | ✓ | ✓ (brief) | ✓ | **removed (H7)** | ✓ | ✓ | ✓ (brief) |
+| `decompose-rule` | ✓ | ✓ | ✓ (via examples B, D) | ✓ | ✓ (brief) | ✓ | ✓ | **removed (H9)** | ✓ | ✓ (brief) |
+| `scope-boundary` | ✓ | ✓ | | ✓ | | ✓ | ✓ | ✓ | **removed (H10)** | |
+| `symbolic-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | | ✓ | ✓ | ✓ | ✓ | |
+| `inconsistency-detect` | ✓ | ✓ | ✓ (via example D) | ✓ | | ✓ | ✓ | ✓ | ✓ | **added, more concrete (H2)** |
+| `injection-note` | ✓ (in checklist) | ✓ (in principle) | ✓ (in intro line) | ✓ (dedicated callout) | | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | ✓ (in checklist) | |
+| `worked-example` | | | ✓ (4 examples) | ✓ (1 example) | | | | | | |
+| `output-template` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
+| `verify-step` | | ✓ | | ✓ | | | | | | |
+| `subjective-inclusion-rule` | ✓ | ✓ | ✓ | ✓ | ✓ (brief) | ✓ | ✓ | ✓ | ✓ | ✓ (brief) |
+| `alphabet-exhaustion-rule` | ✓ | ✓ | | | | ✓ | ✓ | ✓ | ✓ | |
+| `argument-preserve` | ✓ | ✓ | | ✓ | | ✓ | ✓ | ✓ | ✓ | |
 
-**Design axes this round targets:** checklist (v1) vs. principle (v2, v5) framing for validity; worked-examples-carry-the-rules (v3) vs. explicit-rules-stated-directly (v1, v2, v4); verify-step present (v2, v4) vs. absent (v1, v3, v5); maximal component coverage (v4) vs. minimal/lean (v5) as a brevity floor test.
+**Design axes Round 1 targeted:** checklist (v1) vs. principle (v2, v5) framing for validity; worked-examples-carry-the-rules (v3) vs. explicit-rules-stated-directly (v1, v2, v4); verify-step present (v2, v4) vs. absent (v1, v3, v5); maximal component coverage (v4) vs. minimal/lean (v5) as a brevity floor test.
+
+**Round 2 targets:** each of v6/v7/v8/v9 is v1 with exactly one component removed (testing H6/H7/H9/H10 — is that component actually load-bearing, or is v1 over-specified?); v10 is v5 with one component strengthened (testing H2 — can v5's unreliable `inconsistency-detect` be made deterministic without losing its brevity edge?). v2, v3, v4, v5 are retired from the active set this round to fit the 6-variant cap (their Round 1 data stays on record; H3/H5, their diagnosed fixes, remain deferred, not abandoned).
 
 ## Scoring methodology notes
 
