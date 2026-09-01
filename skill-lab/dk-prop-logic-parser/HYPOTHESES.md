@@ -1,5 +1,87 @@
 # Hypotheses — dk-prop-logic-parser
 
+## Round 5 — fresh 20-hypothesis backlog (H50-H69), principle-first generation
+
+Generated per `skill-lab/HYPOTHESIS-PRINCIPLES.md`'s P1-P6 taxonomy: for each principle, the principle was chosen and applied *before* the corresponding hypotheses were drafted (not tagged onto hypotheses generated the ordinary way afterward). P5 (organic count) is a process discipline rather than a content lens, so it produced only 3 hypotheses rather than being padded to 4.
+
+- **P1 — Evidence-anchored (4):** H50 (naming-scheme tied to prefix noun, from v18's finding), H51 (v16's mixed-clause edge case), H52 (v17's lone success attributed to keyword-matching), H53 (remaining redundant exception bullets — later split into H53a/H53b, see below).
+- **P2 — Mechanism-first (3):** H54 (exclusive-or via grammatical parallelism, not semantics), H55 (necessary/sufficient via keyword-matching, breaks under negation), H56 (subordinate-clause ordering vs. an implicit main-clause bias).
+- **P3 — Testability-verified (3):** H57 (object-conjunction bullet removal), H58 (paraphrase-merge-rule full removal, antonym rows), H59 (remove win/lose worked example from exclusive-or rule).
+- **P4 — Non-redundant (3):** H60 (polysemy distinct-symbol guidance, isolated from general paraphrase-merging for the first time), H61 (explicit-label precedence, never tested alone before), H62 (positional decay in long causal chains).
+- **P5 — Organic count (3, not padded to 4):** H63 (ASCII-normalization on unconventional spacing/capitalization), H64 (reversed-nesting bundled-consequent rule), H65 (three-way disjunction grouping consistency).
+- **P6 — Structured coverage sweep (4):** H66 (connective-map × archaic/formal register), H67 (symbolic-detect × mixed ASCII/English blocks), H68 (injection-note × undelimited injection), H69 (necsuff-rule × never-tested-weakened — a sharper follow-up to Round 2's H6, which only tested full removal).
+
+**Testability audit (before scoring):** direct inspection of `tests_inputs_only.txt` found 10 of the resulting 21 hypotheses (H53 split into H53a/H53b for bundling two independent bullet removals into one hypothesis, violating the one-hypothesis-per-variant discipline) untestable against the locked suite as worded: H51, H52, H54, H55, H63, H64, H65, H66, H67, H68 all need constructions the suite doesn't have. Per the user's standing instruction, no new rows are being added — these are logged as untestable-as-worded rather than scored. H56 turned out to be answerable via reanalysis of already-collected data (rows 67-69 already contain the exact fronted-subordinate-clause construction).
+
+**Scores (`U × D × ln(rows+1)`) for the 11 testable hypotheses**, reasoned qualitatively (uncertainty/diagnosticity discussed in the open, without any verdict, before any number was assigned — per the user's standing instruction to reason before scoring):
+
+| Hypothesis | Rows | U | D | Score |
+|---|---|---|---|---|
+| H69 — necsuff-rule weakened, not removed | 9 | 4 | 4 | 36.84 |
+| H58 — paraphrase-merge-rule full removal, antonym rows | 3 | 4 | 4 | 22.18 |
+| H60 — polysemy distinct-symbol rule removal | 3 | 4 | 4 | 22.18 |
+| H61 — explicit-label precedence removal | 3 | 4 | 4 | 22.18 |
+| H59 — remove win/lose example from exclusive-or rule | 4 | 3 | 4 | 19.31 |
+| H53b — injection-note exception removal | 3 | 3 | 4 | 16.63 |
+| H53a — named-individual exception removal | 3 | 2 | 4 | 11.09 |
+| H57 — object-conjunction bullet removal | 3 | 2 | 4 | 11.09 |
+| H50 — naming-scheme tied to prefix (reanalysis) | 3 | 4 | 1 | 5.55 |
+| H56 — subordinate-clause ordering (reanalysis) | 3 | 2 | 2 | 5.55 |
+| H62 — positional decay in long chains | 3 | 4 | 1 | 5.55 |
+
+H50, H56, and H62 score low despite real uncertainty (H50, H62) or a strong existing signal (H56): their diagnosticity is capped low because none of them point at a fixable rule even when resolved — informative-but-not-actionable, the same pattern H25 (Round 4) established.
+
+**Round 5 picks:** top 4 by score — H69 (36.84), H58/H60/H61 (tied at 22.18) — selected as this round's active hypotheses, built as v19-v22.
+
+## Round 5 — New variants
+
+### dk-prop-logic-parser-v19 (parent: v1)
+Hypothesis: H69 — Round 2's H6 only tested full removal of `necsuff-rule` (REFUTED as non-load-bearing). A *weakened* version — the two directional bullets ("A is necessary for B" → B→A; "A is sufficient for B" → A→B) merged into one vaguer combined statement — will show a real accuracy drop that full removal's clean-absence verdict didn't capture, since a half-present, confusing rule may actively mislead rather than leave a clean gap.
+Change made: replaced the two directional bullets with one: `"A is necessary or sufficient for B" → translate as an implication between A and B, choosing the direction that fits which condition is being described.` Nothing else changed from v1.
+Target rows: 130-138 (necessary-for-phrasing, sufficient-for-phrasing, consequent-first-ordering — 9 rows).
+Result: **REFUTED, 45/45 correct across all 5 runs.** Every run derived the correct direction on every target row, including the consequent-first-ordering rows (136-138) which require recognizing the antecedent regardless of clause order — no confusion or degradation from the vaguer combined wording.
+Rival explanation considered: could the model simply be reusing memorized answers for these commonly-taught necessary/sufficient constructions rather than genuinely parsing the vaguer rule? Unlikely to fully explain the result — if that were true, Round 2's H6 (full removal) should have shown the same clean pass rate it did, which is consistent, but a *vaguer, actively confusing* rule (as opposed to a clean absence) was specifically hypothesized to introduce a different failure mode. It didn't, and the mechanism proposed (a half-present rule creates ambiguity a clean absence wouldn't) doesn't require memorization to be a real risk — its absence here is itself informative, not just a null result.
+Lesson: this closes a real gap H6 left open — not just "is `necsuff-rule` load-bearing" but "does a garbled/weakened version of it actively mislead." It doesn't. The model's general command of necessary/sufficient phrasing is robust enough that neither a clean absence nor a confusing half-rule trips it up. Combined with H6, this makes `necsuff-rule` a strong candidate for permanent removal from any future leader, not just a "safe to prune" one.
+
+### dk-prop-logic-parser-v20 (parent: v1)
+Hypothesis: H58 — fully removing (not weakening) `paraphrase-merge-rule`'s near-certain-equivalence bullet (the "reuse the same symbol only when two phrasings are near-certainly the same claim" bullet, with its "not raining"/"dry" and "lights off"/"room not lit" worked examples) will cause rows 82-84's direct-antonym pairs to be treated as two unrelated propositions instead of P/¬P, since antonym-merging may share the same underlying mechanism as general paraphrase-merging.
+Change made: removed the near-certain-equivalence bullet entirely from Step 2. Nothing else changed from v1 (the separate "never reuse a symbol just because two sentences share vocabulary" bullet, including its polysemy example, was left intact).
+Target rows: 82-84 (contradictory-set: "raining"/"not raining", "open"/"closed", "arrived"/"has not arrived yet").
+Result: **CONFIRMED, with a sharper finding than expected.** Rows 82 and 84 (which use explicit negation phrasing — "not raining," "has not arrived yet") stayed correct in 5/5 runs. Row 83 ("the store is open"/"the store is closed" — a true antonym pair with no explicit negation word) failed in 4/5 runs, rendered as two unrelated propositions (`P; Q`) instead of the correct `P; ¬P`.
+Rival explanation considered: could row 83's failure be unrelated noise, given rows 82/84 stayed clean? The pattern is too consistent to be noise — 4/5 independent runs converged on the same specific failure, on the one row of the three that requires recognizing a *lexical* antonym ("closed" as the negation of "open") rather than a *syntactic* one ("not raining" already contains the negation word "not," which Step 3's `¬` connective mapping can catch independently of the removed bullet). This is a clean mechanistic story, not a coincidence.
+Lesson: `paraphrase-merge-rule`'s near-certain-equivalence bullet is genuinely load-bearing, but narrowly — its value is concentrated in lexical-antonym recognition ("open"/"closed," "on"/"off"), not general negation-handling, since Step 3's separate `¬` connective rule already covers explicit "not X" phrasing on its own. This is a more precise finding than the hypothesis's original framing ("antonym-merging may share the same mechanism as general paraphrase-merging") — the rule doesn't merely help with antonyms in general, it's specifically necessary for the subset that isn't already covered by explicit negation words.
+
+### dk-prop-logic-parser-v21 (parent: v1)
+Hypothesis: H60 — removing the polysemy-specific clause from `paraphrase-merge-rule`'s vocabulary-overlap bullet (the "'the bank was steep' and 'the bank raised rates' use 'bank' in different senses and must get different symbols" clause) will cause homonym conflation on rows 148-150, since this guidance has never been isolated as its own tested rule before — distinct from general semantic-equivalence merging (H58, above).
+Change made: removed the polysemy clause from the vocabulary-overlap bullet, keeping the bullet's other clause ("the team won the game" and "the team won the championship" are different propositions despite sharing "won") intact. Nothing else changed from v1.
+Target rows: 148-150 (equivocation-same-word-different-sense: "bank," "spring," "bear").
+Result: **REFUTED, 15/15 correct across all 5 runs.** Every run kept the second sense of each homonym (the financial "bank," the mechanical "spring," the animal "bear") on a distinct symbol from the first, in every single case.
+Rival explanation considered: could the target rows be answerable without genuine sense-disambiguation, e.g. from surrounding context making the different senses too obvious to need the rule? Checked the actual wording (row 148: "The bank was steep and covered in grass. The bank raised interest rates yesterday.") — the second sentence's financial meaning is only clear from world knowledge about what raises interest rates, not from any explicit disambiguating marker in the text the rule itself would need to point to. The model's general semantic competence appears sufficient without the carve-out.
+Lesson: unlike H58's near-certain-equivalence bullet (genuinely load-bearing, narrowly, for lexical antonyms), the polysemy-specific clause is redundant — the general "don't merge just because of shared vocabulary" guidance in the same bullet already covers polysemy cases without needing a dedicated example. Matches the "does fine without the rule" pattern seen with H6/H9/H29 in earlier rounds: not every clarifying example earns its keep once the more general rule is already stated.
+
+### dk-prop-logic-parser-v22 (parent: v1)
+Hypothesis: H61 — removing "use the input's own explicit labels" (the "if the input itself explicitly labels a proposition (e.g. 'call this X'), use that label" bullet) will cause the model to override input-provided labels with its own re-derived symbols on rows 121-123, since this precedence rule has never been a target on its own before.
+Change made: removed the explicit-label-precedence bullet entirely from Step 2. Nothing else changed from v1.
+Target rows: 121-123 (mixed-symbolic-english-consistent: inputs that pre-label their own propositions, e.g. "Let A = the store is open").
+Result: **REFUTED, 15/15 correct across all 5 runs.** Every run adopted the input's own labels (P/Q, A/B, X/Y matching the input's own stated names) in every case, with no rule present telling it to do so.
+Rival explanation considered: could this just be coincidence — the model's default first-appearance letter-assignment (P, Q, R, ...) happening to match the input's chosen labels by chance? Checked row 122 specifically, where the input explicitly says "Let A = the store is open" — under plain first-appearance symbol assignment with no special instruction, a model would default to starting at P, not A. Every run used A (and B for the second proposition) instead, which can only be explained by the model following the input's own stated "Let A = ..." as an ordinary instruction to comply with, not by any first-appearance-letter default coinciding with it.
+Lesson: this rule is redundant with general instruction-following competence — "let X = ..." inside the input text reads as an ordinary directive the model already follows, independent of any skill-specific rule naming that behavior. Another instance of the "does fine without the rule" pattern; the model doesn't need to be told to respect the input's own stated definitions any more than it needs to be told to follow other plainly-stated instructions in its input.
+
+## Round 5 — Active set
+
+v19, v20, v21, v22 (4 new variants, testing H69/H58/H60/H61 respectively). v1 and prior rounds' winners are not re-run — none of these four hypotheses touch content outside what's already isolated in the new variants.
+
+## Round 5 — Summary
+
+| Variant | Hypothesis | Result | Verdict |
+|---|---|---|---|
+| v19 | H69 (necsuff-rule weakened, not removed) | 45/45 correct on rows 130-138 | REFUTED |
+| v20 | H58 (paraphrase-merge-rule near-certain-equivalence bullet removed) | 5/5 correct on rows 82/84; 4/5 failed on row 83 | CONFIRMED |
+| v21 | H60 (polysemy clause removed) | 15/15 correct on rows 148-150 | REFUTED |
+| v22 | H61 (explicit-label precedence removed) | 15/15 correct on rows 121-123 | REFUTED |
+
+One of four new-variant hypotheses confirmed a genuinely load-bearing (if narrowly-scoped) rule: `paraphrase-merge-rule`'s near-certain-equivalence bullet is necessary specifically for lexical-antonym recognition not already covered by explicit negation words. The other three extend the "does fine without the rule" pattern seen repeatedly in prior rounds (H6, H9, H29, and now H60/H61/H69): general model competence — semantic disambiguation, instruction-following, and necessary/sufficient reasoning — already covers what these bullets were guarding against, whether the guard is fully removed or (H69's sharper test) left in a confusing, half-present state.
+
 ## Process note (post-Round-4, test-suite coverage gap discovered)
 
 Generating a fresh 20-hypothesis backlog after Round 4 surfaced three hypotheses (H41 "does v11's subjunctive-conditional fix generalize to novel phrasings, or is it narrowly pattern-matched to its own worked example," H42 "does inconsistency-detect's redefinition handling degrade when the redefinition is far apart in a long passage," H43 "does explicit-labeling still work when the label isn't a bare capital letter") that the locked 165-row `tests.csv` (from Step 3, before any variant existed) simply cannot test — no existing row varies along the axis each hypothesis is about. Flagging why, as a candidate for the `skill-variant-lab` Step 13 retrospective:

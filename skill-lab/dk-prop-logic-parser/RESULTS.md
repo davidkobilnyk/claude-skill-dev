@@ -74,6 +74,19 @@ See `HYPOTHESES.md`'s Round 4 entries for full Result/Rival-explanation/Lesson w
 
 All four Round 4 variants cluster tightly around 4.6-4.8 minutes despite being close in size (~5.8-6.3K chars) — a much narrower spread than Round 3 (3.26-4.95 min across a similar size range), consistent with these being smaller, single-clause edits rather than Round 3's mix of added examples/bullets vs. a large compound merge (v14).
 
+## Round 5 (N=5 per variant) — target-row pass rates, not full-suite scores
+
+All four Round 5 variants are single-hypothesis diagnostic tests, each changing one narrow, isolated thing from v1 — picked via `U × D × ln(rows+1)` from a fresh, principle-first-generated 20-hypothesis backlog (H50-H69; see `HYPOTHESES.md`'s Round 5 section for the full principle taxonomy and scoring derivation).
+
+| Variant | Parent | Hypothesis | Target rows | Pass rate (N=5) |
+|---|---|---|---|---|
+| v19 | v1 (necsuff-rule weakened, not removed — two directional bullets merged into one vaguer statement) | H69 | 130-138 (9 rows) | 45/45 correct — **REFUTED** |
+| v20 | v1 (−paraphrase-merge-rule's near-certain-equivalence bullet) | H58 | 82-84 | 5/5 rows 82/84 held; **4/5 row 83 failed** (rendered as unrelated `P;Q` instead of `P;¬P`) — **CONFIRMED** |
+| v21 | v1 (−polysemy clause from the vocabulary-overlap bullet) | H60 | 148-150 | 15/15 correct — **REFUTED** |
+| v22 | v1 (−explicit-label-precedence bullet) | H61 | 121-123 | 15/15 correct — **REFUTED** |
+
+See `HYPOTHESES.md`'s Round 5 entries for full Result/Rival-explanation/Lesson writeups.
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.
