@@ -1,5 +1,17 @@
 # Hypotheses — dk-prop-logic-parser
 
+## Process note (Round 2, results persistence)
+
+**Observation:** Neither round persisted per-variant full-suite scores (avg/min/max/stddev out of 165) to a file — they were only ever reported in chat. By the time Round 2 wrapped, that chat history had scrolled out of context (compacted), and Round 1's numbers were unrecoverable without re-deriving them; Round 2's had to be reconstructed by re-extracting each subagent's raw answers from its saved transcript and re-grading all 45 runs (25 Round 1 + 20 Round 2) against `tests.csv` from scratch — expensive, and avoidable.
+
+**Root cause:** the lab's Step 7 (compile results table) doesn't specify that the table is a durable artifact — nothing prompts writing it to a file in the lab directory, so it defaults to living only in the conversation, which this project's own multi-session, multi-compaction lifespan doesn't reliably preserve.
+
+**Fix for future labs:** after every Step 7 results compilation, write the per-run scores (not just avg/min/max/stddev, but each individual run's raw score) to a `RESULTS.md` (or similar) file in the lab directory, alongside — not instead of — the qualitative HYPOTHESES.md writeups. Keep it simple: a table per round, one row per variant, with per-run scores and the summary stats, so future rounds (or a future session resuming this one) can look up "what did v5 actually score" without re-grading anything.
+
+**Candidate patch to `skill-variant-lab` for Step 13:** make Step 7 explicitly instruct writing the compiled results table to a file in the lab directory (not just presenting it in chat), the same way Step 5's variants and Step 8's hypotheses already get written to files.
+
+**Status:** Logged for the Step 13 retrospective. Applying it now, going forward: Round 1 and Round 2's reconstructed scores will be written to `RESULTS.md` once the current re-grading pass finishes, and future rounds will write to it directly at Step 7 instead of reconstructing after the fact.
+
 ## Process note (Round 1, Step 6)
 
 **Observation:** With 5 initial variants at the lab's default N=5 runs/variant, Step 6 needed 25 concurrent subagents, but the harness caps concurrent subagents at 20. The first launch batch got 20 through and the last 5 (v5's runs) failed with "concurrent subagent limit reached," requiring a second launch once slots freed up — an avoidable extra round-trip.
