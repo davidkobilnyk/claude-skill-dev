@@ -86,6 +86,8 @@ Lesson: (fill in after the next run)
 
 v1, v6, v7, v8, v9, v10 (6, at the cap). v2, v3, v4, v5 retired from the active set this round — their Round 1 data stays on record above; H3 (v3) and H5 (v2) remain deferred, not abandoned, and can return in a future round once budget allows.
 
+**Round 2 run note:** v1 dropped from the actual test launch — it tests none of this round's 5 hypotheses and already has a solid N=5 baseline from Round 1 to compare v6-v9 against, so re-running it would spend budget for no new information. That leaves 5 variants (v6-v10); to fit the 20-subagent concurrency cap in one launch batch, N=4 (not the usual default N=5) is used for this round's exploratory pass.
+
 ## Deferred — Round 1
 
 - **v2×v3 merge** (H5 + H3 are disjoint) — deferred: neither variant currently leads; depth-confirming v1/v4 first, and pruning v1, is higher-value this round.
