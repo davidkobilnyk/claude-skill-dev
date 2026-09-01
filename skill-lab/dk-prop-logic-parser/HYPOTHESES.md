@@ -20,6 +20,16 @@
 
 **Candidate patch to `skill-variant-lab` for Step 13:** Step 9 or Step 11 could explicitly prompt "propose at least one subtractive-from-the-leader variant per round, not only additive fixes for laggards" — flag for the retrospective.
 
+## Process note (Round 2, hypothesis-wording review)
+
+**Observation:** H6 was stated as "Does the model get necessary/sufficient-condition direction right without an explicit rule?" — a question, not a falsifiable prediction. Both possible answers are equally consistent with having asked it, so "confirmed/refuted" language technically has nothing to attach to. What actually made H6 function as a testable hypothesis was an unwritten implicit prediction: since the rule was already present in v1 (the leader), the working assumption was that it's there because it's load-bearing, i.e. the real hypothesis was "the necsuff-rule component is necessary; removing it will cause direction errors on rows 130-135." That version is falsifiable, and it's the version the Round 2 data (4/4 clean without the rule) actually refuted.
+
+**Root cause:** the lab's process doesn't currently require a hypothesis to be phrased as a directional prediction before a variant is built to test it — question-form and prediction-form both slip through Step 9 unchallenged.
+
+**Candidate patch to `skill-variant-lab` for Step 13:** at hypothesis-proposal time (Step 9, or wherever H-numbers are first assigned), require each hypothesis to be stated as a falsifiable prediction with a specific expected outcome ("removing X causes Y on rows Z"), not as an open question ("does the model do X without Y?"). A quick litmus test: if both possible results would be reported the same way ("interesting, we learned something"), it isn't yet a hypothesis.
+
+**Status:** Logged for the Step 13 retrospective. Not applied retroactively — H1-H10's existing wording in this document is left as-is; this is a going-forward lesson for how new hypotheses get written starting next round.
+
 ## Step 8 findings (Round 1)
 
 - **H1 (CONFIRMED):** `symbolic-detect` is load-bearing. v5 (lacks it) failed all 6 already-symbolic-input rows (scenarios 40-44) in all 5/5 runs; v1-v4 (have it) never missed these.
@@ -50,37 +60,37 @@
 ### dk-prop-logic-parser-v6 (parent: v1)
 Hypothesis: H4 was not selected for this round — v6 instead tests H6 (see Step 8 findings above): the model needs no explicit rule to get necessary/sufficient-condition direction right, since this is a very commonly-taught construction it may already handle from general capability.
 Change made: removed the `necsuff-rule` component (the "A is necessary for B" / "A is sufficient for B" bullets in Step 3) — nothing else changed from v1.
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: REFUTED (as a "component is load-bearing" prediction). 4/4 runs at N=4 scored rows 130-135 correctly with no explicit rule present.
+Rival explanation considered: could the target rows be unusually easy/leaky (e.g. answerable from the surrounding component-inventory context rather than the model's own necessary/sufficient knowledge)? No — the subagents only ever see the blinded `tests_inputs_only.txt`, never the component inventory or expected answers, so there's no leakage path. A second rival — that v1's other Step 3 bullets implicitly re-teach the direction — was checked against v1's text and found false; no other bullet mentions necessary/sufficient conditions.
+Lesson: the `necsuff-rule` component is dead weight in v1 — safe to prune permanently. This is exactly the kind of scaffolding the user's "prune from the leader" strategy (Round 1 process note) was designed to surface.
 
 ### dk-prop-logic-parser-v7 (parent: v1)
 Hypothesis: H7 — the model needs no explicit rule to avoid treating a completed causal claim ("because X, Y") as a hypothetical conditional.
 Change made: removed the `causal-vs-cond` component (the "Because A, B" / "A caused B" bullet in Step 3) — nothing else changed from v1.
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: CONFIRMED (as a "component is load-bearing" prediction — the opposite of H6/H9's outcome). 4/4 runs missed row 41 ("the engine overheated, so the car stalled" / "X caused Y" phrasing), converting it to a conditional `P→Q` (or similar) instead of the suite's `P∧Q` completed-causation reading. Only 1/4 runs (run1) also missed rows 67-69 ("because X, Y" phrasing) — the other 3/4 got 67-69 right even without the rule.
+Rival explanation considered: is row 41's miss actually about causal phrasing, or a side effect of the pronoun back-reference in that scenario (a different, adjacent skill)? Checked v1's Round 1 runs on row 41 (correct 5/5 with the rule present) against v7's 4/4 miss (rule absent) — the only textual difference between v1 and v7 is the removed causal-vs-cond bullet, and row 41's phrasing hasn't changed, so the miss traces cleanly to the removed rule, not the pronoun structure. The scenario-94 blast-radius watch flagged in the pre-run regression note didn't materialize as a distinct failure mode — v7's row 94 outputs were consistent with v1's baseline in all 4 runs.
+Lesson: `causal-vs-cond` is genuinely load-bearing and should stay in any future leader — but its necessity is stronger for "X caused Y" pronoun-based phrasing (row 41) than for explicit "because X, Y" phrasing (rows 67-69), where the model partially recovers the right reading from general knowledge even without the rule. A future version of this rule could be tightened to specifically flag the "caused" causal-verb pattern as the highest-risk case, rather than treating all causal phrasings as equally fragile.
 
 ### dk-prop-logic-parser-v8 (parent: v1)
 Hypothesis: H9 — the model needs no explicit rule to decompose a sentence bundling multiple independent claims into separate atomic propositions.
 Change made: removed the `decompose-rule` component (the bundling bullet in Step 3) — nothing else changed from v1.
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: REFUTED (as a "component is load-bearing" prediction). 4/4 runs at N=4 scored all 6 target rows (46-48, 106-108) correctly, decomposing bundled claims into full `P→(Q∧R)`-style structure with no explicit rule present.
+Rival explanation considered: the pre-run regression note flagged that Round 1 data (v4's runs) already showed some models default to bundled decomposition regardless of whether the rule was present — meaning a clean v8 result could reflect a rule-independent tendency rather than genuine non-necessity of the rule. This rival explanation cannot be fully ruled out with this experiment design alone: v8's clean result is consistent with both "the rule was truly unnecessary" and "the model decomposes bundled claims by default regardless of instruction," since there's no arm where the model is pushed toward the wrong (bundled, undecomposed) answer to distinguish the two. Unlike H6/H7's target rows (where the wrong answer is a distinct, unambiguous connective error), decomposition failure would look like a subtler structural miss, and none appeared — but the design can't fully separate "rule unnecessary" from "rule redundant with an even stronger prior."
+Lesson: treat H9 as REFUTED-with-a-caveat rather than cleanly refuted. `decompose-rule` looks safe to prune based on this data, but because the regression-risk note's ambiguity concern wasn't resolved by the experiment, this is a weaker confirmation than H6's — a good reminder that "clean null result" and "definitively refuted" aren't always the same thing, and the diagnosticity of a subtractive test depends on whether the two possible wrong answers are actually distinguishable in the output.
 
 ### dk-prop-logic-parser-v9 (parent: v1)
 Hypothesis: H10 — the model needs no explicit rule to reset symbol scope across independent labeled blocks (e.g. "Example 1: ... Example 2: ...").
 Change made: removed the `scope-boundary` component (the block-boundary bullet in Step 2) — nothing else changed from v1.
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: CONFIRMED (as a "component is load-bearing" prediction). 4/4 runs missed row 153 specifically — reusing symbols from Case 1 into Case 2 instead of resetting scope. Rows 151-152 (also scope-reset scenarios) were unaffected in all 4 runs.
+Rival explanation considered: why would only row 153 break while 151/152 don't? Checked the three scenarios' wording — 151 and 152 introduce genuinely new propositions in their second block ("it snows / school is closed", "John comes / Mary comes"), so a fresh legend is needed regardless of any scope-reset rule. Row 153's second block ("Case 2: it rains, it snows") verbatim-repeats wording from a block used elsewhere in the suite, creating a plausible false continuity for the model to latch onto absent an explicit reset instruction — this is a genuine content-level distinction between the rows, not noise, so the CONFIRMED verdict is specific to that failure mode rather than to scope-reset generally.
+Lesson: `scope-boundary` is load-bearing, but narrowly — the risk is concentrated in verbatim-repeated-wording block pairs, not scope-reset in general. Worth noting in COMPONENTS.md that this rule's value is disproportionate to its rows-affected count (1 of 3 target rows), since the risk it guards against is specific rather than general.
 
 ### dk-prop-logic-parser-v10 (parent: v5)
 Hypothesis: H2 — v5's unreliable handling of mid-input symbol redefinition (passed 2/5 runs, failed 3/5 on the identical scenario in Round 1) can be made deterministic with a more concrete rule, without meaningfully eroding v5's brevity advantage.
 Change made: added one sentence to v5 stating the `inconsistency-detect` rule explicitly (keep the first meaning of a redefined symbol, mint a new symbol for the second) — nothing else changed from v5.
-Result: (fill in after the next run)
-Rival explanation considered: (fill in after the next run)
-Lesson: (fill in after the next run)
+Result: CONFIRMED. 4/4 runs at N=4 correctly minted fresh symbols on rows 124-126, a clear improvement over v5's Round 1 2/5 pass rate on the identical scenario.
+Rival explanation considered: could 4/4 be within the range v5 itself would occasionally hit by chance, given v5's own 2/5 baseline wasn't 0/5? Yes in principle at this small N, but the direction and near-total flip (2/5 → 4/4) plus the mechanism being a direct, on-topic instruction addition (not an unrelated change) makes chance a weak rival; this should still be treated as CONFIRMED-tentative pending N≥20 before calling it fully reliable, per the lab's standing rule.
+Lesson: a single concrete sentence closed v5's most severe reliability gap without materially eroding its brevity (character count added is minimal relative to v5's 1,704-char baseline). This directly supports the user's brevity-first framing: v5 plus this one fix may be a stronger brevity/correctness tradeoff than v1's full checklist, especially now that H6 and H9 suggest two of v1's checklist items are prunable anyway.
 
 ## Round 2 — Active set
 
