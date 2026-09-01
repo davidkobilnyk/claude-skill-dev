@@ -37,6 +37,19 @@ Round 3's four variants are single-hypothesis diagnostic tests (v11, v12, v13 ea
 
 See `HYPOTHESES.md`'s Round 3 entries for the full Result/Rival-explanation/Lesson writeups, including the v13 regression's likely mechanism (the tightened rule's "triggered" keyword false-triggering on rows 40/42's unrelated conditional use of the same word) and v14's sharpened reading of what the compound merge actually demonstrated.
 
+### Round 3 — per-run generation time
+
+Tracked starting this round (see the "tracking per-run generation time" process note in `HYPOTHESES.md`) — going forward, record this alongside every round's pass-rate/score table, not just reconstructed after the fact.
+
+| Variant | Size (chars) | Avg duration (N=5) | Min | Max |
+|---|---|---|---|---|
+| v11 | 5,372 | 3.26 min | 2.9 min | 3.5 min |
+| v12 | 6,489 | 4.95 min | 4.0 min | 5.9 min |
+| v13 | 6,031 | 4.57 min | 3.6 min | 5.3 min |
+| v14 | 8,950 | 4.02 min | 3.5 min | 4.7 min |
+
+Not simply a function of file size — v14 is the largest document by far but ran faster on average than v12 or v13. v12 (the paraphrase-merge bullet) was the slowest and had the widest spread, consistent with a rule that invites more per-row justification across the whole response rather than only on its target row.
+
 ## Reading these numbers
 
 - v1 remains the strongest full-suite performer across both rounds (160.6 avg in Round 1, and v6-v9's scores — each v1 minus one component — cluster close to it: 158.75-161.25). This is consistent with the Round 2 hypothesis verdicts: only two of the four removed components (causal-vs-cond in v7, scope-boundary in v9) are confirmed load-bearing, so removing any single one costs at most ~2-3 points off v1's baseline, not a collapse.

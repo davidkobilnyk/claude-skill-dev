@@ -1,5 +1,24 @@
 # Hypotheses — dk-prop-logic-parser
 
+## Process note (Round 3, tracking per-run generation time)
+
+**Observation:** Round 3's 20 subagent runs showed a real, non-trivial spread in individual duration (~2.9 to ~5.9 minutes) that clusters by variant, not just by chance:
+
+| Variant | Avg duration (N=5) | Range | SKILL.md size |
+|---|---|---|---|
+| v11 | 3.26 min | 2.9-3.5 min | 5,372 chars |
+| v14 | 4.02 min | 3.5-4.7 min | 8,950 chars |
+| v13 | 4.57 min | 3.6-5.3 min | 6,031 chars |
+| v12 | 4.95 min | 4.0-5.9 min | 6,489 chars |
+
+Two things stand out: it isn't simply file size (v14 has the largest `SKILL.md` by far but ran faster on average than v12/v13), and v12 — which added one bullet asking the model to actively judge "is this the same event continuing, or a genuinely separate fact sharing vocabulary?" — was the slowest, nearly 50% above v11's average. The leading hypothesis (untested) is that some rules invite more per-row justification/hedging in the response itself, inflating output length across the whole 165-row response, not just on the rows they target — which would make generation time a second, independent signal alongside correctness for judging what a candidate rule change actually costs.
+
+**Decision:** track per-run duration going forward as a standing metric, the same way per-run correctness scores are tracked. At minimum, record each run's `duration_ms` (from the subagent's `usage` block) when saving results, and report per-variant avg/min/max in `RESULTS.md` alongside the pass-rate/score table, not just reconstructed after the fact when someone asks. Because rounds already isolate one change per variant (or a compound test with its own labeled name), this makes it possible to attribute a time increase or decrease to a specific rule change the same way a correctness change is attributed — e.g. "this hypothesis's fix cost N seconds of extra generation time per run" becomes a first-class, comparable data point across rounds, not just a one-off observation.
+
+**Candidate patch to `skill-variant-lab` for Step 13:** Step 6 (running variants) or Step 7 (compiling results) should explicitly instruct capturing and reporting per-run duration alongside correctness, since generation cost is a real, trackable dimension of a candidate change's impact (relevant to both raw wall-clock cost of running the lab and, plausibly, to real-world latency/cost if the skill were used as-is) — not yet formalized as its own scored dimension (like generalizability/uncertainty/diagnosticity), but worth tracking as raw data now so a future round has enough history to decide whether it should be.
+
+**Status:** Logged as a going-forward practice, applied starting now. Round 3's numbers above are the first data point; not yet enough rounds to draw a firm conclusion about which specific kinds of rule changes reliably cost more generation time.
+
 ## Process note (Round 2, intuition vs. explicit rules for prioritization)
 
 **Observation:** While building a hypothesis-prioritization score (Uncertainty × Diagnosticity × f(rows)) for the 15-item backlog (H3, H4, H5, H8, H11-H21), the user articulated a general principle for when to use intuition versus explicit, evidence-based rules: intuition is fine for generating ideas and making one-off judgment calls, but for decisions worth getting right repeatedly, explicit rules are preferable *because they're correctable* — "if things go wrong based on intuition, there's nothing concrete to correct. if a rule's application ends up being wrong, then we have specific things to check for where the problem occurred: the rule or the way the rule was applied."
