@@ -1,0 +1,56 @@
+_base_: ../_base_/default.yaml
+
+model:
+  optimizer_backend: claude_chat
+  target_backend: claude_chat
+  optimizer: claude-sonnet-5
+  target: claude-sonnet-5
+  reasoning_effort: low
+
+train:
+  num_epochs: 2
+  train_size: 0
+  batch_size: 11
+  accumulation: 1
+  seed: 42
+
+gradient:
+  minibatch_size: 6
+  merge_batch_size: 6
+  analyst_workers: 4
+  failure_only: false
+
+optimizer:
+  learning_rate: 3
+  min_learning_rate: 2
+  lr_scheduler: constant
+  skill_update_mode: patch
+  use_slow_update: false
+  use_meta_skill: false
+
+evaluation:
+  use_gate: true
+  sel_env_num: 0
+  test_env_num: 0
+  eval_test: true
+
+env:
+  name: csvqa
+  skill_init: skillopt/envs/csvqa/skills/proplogic_initial.md
+  split_mode: ratio
+  split_ratio: "4:2:4"
+  split_seed: 42
+  data_path: ../claude-skill-dev/skill-lab/dk-prop-logic-parser/tests.csv
+  grader: proplogic
+  workers: 8
+  exec_timeout: 240
+  max_completion_tokens: 4096
+  limit: 0
+  answer_format: |
+    Inside <answer>, use exactly this layout on one line:
+    `P=<proposition>; Q=<proposition> => <formula>; <formula>`
+    Legend entries are `SYMBOL=<English proposition>` separated by `; `. After ` => ` list the formulas separated by `; `, using only the symbols ∧ ∨ ¬ → ↔ ⊕ and parentheses.
+    If the entire input is invalid, the answer is only `INVALID: <reason>`.
+    If the input has independent blocks, put each block on its own line prefixed by its label, e.g. `Block1: P=...; Q=... => P→Q`.
+    If the input labels premises and a conclusion, write the formulas as `=> Premises: <formula>; <formula>. Conclusion: <formula>`.
+    Put nothing else inside the answer tags; reasoning goes before them.

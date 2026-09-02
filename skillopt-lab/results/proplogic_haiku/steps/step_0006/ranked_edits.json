@@ -1,0 +1,12 @@
+{
+  "reasoning": "The skill already says to assign a fresh symbol to a redefined proposition, but doesn't say to actually use that fresh symbol in place of the reused letter in subsequent formulas/legend. The model treated the second definition as discardable metadata rather than propagating it. Clarify that the fresh symbol must appear in the legend and be substituted for the original letter in any formula occurring after the redefinition.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- If the input itself redefines a symbol inconsistently (the same letter used for two different propositions), keep the first definition and assign a fresh symbol to the second.",
+      "content": "- If the input itself redefines a symbol inconsistently (the same letter used for two different propositions), keep the first definition and assign a fresh symbol (e.g. next unused letter) to the second — add that fresh symbol to the legend, and substitute it for the original letter in every formula that appears after the redefinition (formulas before the redefinition keep the original letter's original meaning).",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}

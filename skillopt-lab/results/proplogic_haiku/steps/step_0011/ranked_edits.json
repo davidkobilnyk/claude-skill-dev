@@ -1,0 +1,12 @@
+{
+  "reasoning": "The model conflated a generic conditional claim (using 'sufficient for') with an implicit universal generalization like 'Students who study pass'. Need to clarify that necessary/sufficient/if-then constructions with generic subjects are conditionals, not FOL quantification, unless they explicitly use quantifier words or restrictive relative clauses over a class.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- An implicit universal generalization even without \"all\"/\"every\" (e.g. \"Students who study pass\" = \"all students who study pass\").",
+      "content": "- An implicit universal generalization even without \"all\"/\"every\" (e.g. \"Students who study pass\" = \"all students who study pass\") — this applies specifically to sentences with a restrictive relative clause or class-defining subject (\"X who/that do Y\") generalizing over members of a class. It does NOT apply to simple conditional-style claims phrased with generic subjects, including \"is necessary/sufficient for\", \"if...then\", \"unless\", etc. (e.g. \"A passing grade is sufficient for graduation eligibility\" is a plain conditional — translate it as P→Q using Step 3's necessary/sufficient rules, not as INVALID).",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}

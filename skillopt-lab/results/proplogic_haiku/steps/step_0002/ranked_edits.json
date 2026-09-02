@@ -1,0 +1,26 @@
+{
+  "reasoning": "No conflicts between groups; failure edits address modal 'can' exception and single-sense atomicity, success edit addresses P1/P2 numbering consistency (higher support_count=6 from surviving prior merges). All three are distinct, non-overlapping points, so all are kept with failure edits prioritized in ordering.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- Modal or deontic (\"must\", \"might\", \"should\", \"could\" expressing necessity/possibility/obligation) — this is modal logic. (\"May\" used to grant permission, e.g. \"you may enter\", is a plain declarative, not modal in this sense.)",
+      "content": "- Modal or deontic (\"must\", \"might\", \"should\", \"could\" expressing necessity/possibility/obligation) — this is modal logic. (\"May\" used to grant permission, e.g. \"you may enter\", is a plain declarative, not modal in this sense. Likewise \"can\" describing a resulting ability/permission, e.g. \"if A, she can B\", is a plain declarative — do not treat it as modal exclusion.)",
+      "source_type": "failure",
+      "support_count": 2
+    },
+    {
+      "op": "replace",
+      "target": "- Never reuse a symbol just because two sentences share vocabulary (e.g. \"the team won the game\" and \"the team won the championship\" are different propositions despite sharing \"won\"; \"the bank was steep\" and \"the bank raised rates\" use \"bank\" in different senses and must get different symbols).",
+      "content": "- Never reuse a symbol just because two sentences share vocabulary (e.g. \"the team won the game\" and \"the team won the championship\" are different propositions despite sharing \"won\"; \"the bank was steep and covered in grass\" and \"the bank raised rates\" use \"bank\" in different senses and must get different symbols). When multiple clauses tightly describe the same single-sense subject in one sentence (e.g. \"was steep and covered in grass\"), keep them as ONE atomic proposition rather than splitting into separate conjuncts, unless each clause is independently a distinct, separately-assertable claim.",
+      "source_type": "failure",
+      "support_count": 2
+    },
+    {
+      "op": "insert_after",
+      "target": "continuing past Z with P1, P2, ... if you exceed 26 distinct propositions",
+      "content": " — if the total set of distinct propositions in the input is likely to exceed 26, apply P1, P2, ... uniformly to ALL propositions from the first one, rather than starting with single letters (P, Q, R, ...) and switching partway through.",
+      "source_type": "success",
+      "support_count": 6
+    }
+  ]
+}

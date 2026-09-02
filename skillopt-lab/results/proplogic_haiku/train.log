@@ -1,0 +1,989 @@
+
+============================================================
+  SkillOpt — Executive Strategy for Self-Evolving Agent Skills
+============================================================
+  env:            csvqa
+  optimizer_model:  claude-sonnet-5
+  target_model:  claude-haiku-4-5-20251001
+  optimizer_backend:claude_chat
+  target_backend:claude_chat
+  reasoning:      low
+  rewrite_effort: off
+  epochs:         2
+  train_size:     from dataset
+  steps/epoch:    auto
+  batch_size:     11
+  edit_budget:    3
+  lr_scheduler:   constant
+  update_mode:    patch
+  min_edit_budget:2
+  minibatch_size: 6
+  seed:           42
+  meta_skill:     False
+  skill_aware_reflection: False
+  slow_update:    False
+  out_root:       /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_haiku
+============================================================
+
+  [CsvQADataLoader] generated ratio split 4:2:4 at /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_haiku/_generated_splits/csvqa_4-2-4_seed42 from /home/user/claude-skill-dev/skill-lab/dk-prop-logic-parser/tests.csv
+  [CsvQADataLoader] train=66 val=33 test=66  (from /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_haiku/_generated_splits/csvqa_4-2-4_seed42)
+  [model config] backend=azure_openai  optimizer=claude-sonnet-5 (claude_chat)  target=claude-haiku-4-5-20251001 (claude_chat)  reasoning=low
+  [initial skill] /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/skillopt/envs/csvqa/skills/proplogic_initial.md (5742 chars)
+
+  [config] epochs=2 steps/epoch=6 (auto) accum=1 batch_size=11
+  [config] train_size=66
+  [config] batches/epoch=6 total_steps=12 games/epoch=66
+  [config] lr_scheduler=constant edit_budget=3 min_edit_budget=2
+  [config] skill_update_mode=patch lr_control_mode=fixed rewrite_reasoning_effort=off rewrite_max_completion_tokens=64000
+  [config] longitudinal_pair_policy=mixed
+  [config] base_seeds=[43, 44, 45, 46, 47, 48]
+  [gate] metric=hard
+  [slow update] acceptance=force-accept (unconditional)
+
+============================================================
+  BASELINE — evaluate initial skill on Selection set (valid_seen)
+============================================================
+  Selection items: 33
+    [rollout] 1/33 (acc=1.000) id=r052 hard=1
+    [rollout] 2/33 (acc=1.000) id=r129 hard=1
+    [rollout] 3/33 (acc=1.000) id=r005 hard=1
+    [rollout] 4/33 (acc=1.000) id=r155 hard=1
+    [rollout] 5/33 (acc=1.000) id=r165 hard=1
+    [rollout] 6/33 (acc=1.000) id=r096 hard=1
+    [rollout] 7/33 (acc=1.000) id=r106 hard=1
+    [rollout] 8/33 (acc=1.000) id=r032 hard=1
+    [rollout] 9/33 (acc=1.000) id=r042 hard=1
+    [rollout] 10/33 (acc=1.000) id=r138 hard=1
+    [rollout] 11/33 (acc=1.000) id=r132 hard=1
+    [rollout] 12/33 (acc=1.000) id=r022 hard=1
+    [rollout] 13/33 (acc=1.000) id=r010 hard=1
+    [rollout] 14/33 (acc=1.000) id=r118 hard=1
+    [rollout] 15/33 (acc=0.933) id=r083 hard=0
+    [rollout] 16/33 (acc=0.938) id=r093 hard=1
+    [rollout] 17/33 (acc=0.941) id=r086 hard=1
+    [rollout] 18/33 (acc=0.889) id=r149 hard=0
+    [rollout] 19/33 (acc=0.895) id=r131 hard=1
+    [rollout] 20/33 (acc=0.900) id=r127 hard=1
+    [rollout] 21/33 (acc=0.905) id=r048 hard=1
+    [rollout] 22/33 (acc=0.909) id=r021 hard=1
+    [rollout] 23/33 (acc=0.913) id=r035 hard=1
+    [rollout] 24/33 (acc=0.917) id=r135 hard=1
+    [rollout] 25/33 (acc=0.920) id=r082 hard=1
+    [rollout] 26/33 (acc=0.923) id=r159 hard=1
+    [rollout] 27/33 (acc=0.926) id=r013 hard=1
+    [rollout] 28/33 (acc=0.929) id=r102 hard=1
+    [rollout] 29/33 (acc=0.931) id=r141 hard=1
+    [rollout] 30/33 (acc=0.933) id=r116 hard=1
+    [rollout] 31/33 (acc=0.903) id=r124 hard=0
+    [rollout] 32/33 (acc=0.906) id=r119 hard=1
+    [rollout] 33/33 (acc=0.909) id=r126 hard=1
+  [baseline result] selection hard=0.9091 soft=0.9091 gate[hard]=0.9091
+
+  [EPOCH 1/2] shuffled_seeds=[1043, 1044, 1045, 1046, 1047, 1048]
+
+  [STEP 1/12] epoch=1 step_in_epoch=0 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=1043)
+    [rollout] 1/11 (acc=1.000) id=r123 hard=1
+    [rollout] 2/11 (acc=1.000) id=r139 hard=1
+    [rollout] 3/11 (acc=1.000) id=r112 hard=1
+    [rollout] 4/11 (acc=1.000) id=r037 hard=1
+    [rollout] 5/11 (acc=1.000) id=r067 hard=1
+    [rollout] 6/11 (acc=1.000) id=r079 hard=1
+    [rollout] 7/11 (acc=1.000) id=r012 hard=1
+    [rollout] 8/11 (acc=1.000) id=r017 hard=1
+    [rollout] 9/11 (acc=1.000) id=r044 hard=1
+    [rollout] 10/11 (acc=1.000) id=r015 hard=1
+    [rollout] 11/11 (acc=1.000) id=r101 hard=1
+    [1/6 done] hard=1.0000 soft=1.0000
+    [2/6 REFLECT minibatch] failure=0→0 groups  success=11→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/2 minibatch_succ_001 (5 trajs) → 0 edits
+      [analyst] 2/2 minibatch_succ_000 (6 trajs) → 0 edits
+    [2/6 done] failure_patches=0 success_patches=0
+    [skip] no usable patches — skill unchanged
+
+  [STEP 2/12] epoch=1 step_in_epoch=1 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=1044)
+    [rollout] 1/11 (acc=1.000) id=r061 hard=1
+    [rollout] 2/11 (acc=1.000) id=r110 hard=1
+    [rollout] 3/11 (acc=1.000) id=r100 hard=1
+    [rollout] 4/11 (acc=1.000) id=r097 hard=1
+    [rollout] 5/11 (acc=0.800) id=r148 hard=0
+    [rollout] 6/11 (acc=0.833) id=r033 hard=1
+    [rollout] 7/11 (acc=0.857) id=r095 hard=1
+    [rollout] 8/11 (acc=0.875) id=r143 hard=1
+    [rollout] 9/11 (acc=0.889) id=r028 hard=1
+    [rollout] 10/11 (acc=0.900) id=r161 hard=1
+    [rollout] 11/11 (acc=0.818) id=r003 hard=0
+    [1/6 done] hard=0.8182 soft=0.8182
+    [2/6 REFLECT minibatch] failure=2→1 groups  success=9→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_001 (3 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_000 (6 trajs) → 1 edits
+      [analyst] 3/3 minibatch_fail_000 (2 trajs) → 2 edits
+    [2/6 done] failure_patches=1 success_patches=1
+    [3/6 AGGREGATE] failure=1 success=1 (parallel, workers=4)
+    [aggregate final] 2+1 → 3 edits
+    [3/6 done] merged 3 edits
+    [4/6 SELECT] 3 -> 3 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6429
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r129 hard=1
+    [rollout] 2/33 (acc=1.000) id=r005 hard=1
+    [rollout] 3/33 (acc=1.000) id=r155 hard=1
+    [rollout] 4/33 (acc=1.000) id=r052 hard=1
+    [rollout] 5/33 (acc=1.000) id=r138 hard=1
+    [rollout] 6/33 (acc=1.000) id=r165 hard=1
+    [rollout] 7/33 (acc=1.000) id=r096 hard=1
+    [rollout] 8/33 (acc=1.000) id=r132 hard=1
+    [rollout] 9/33 (acc=1.000) id=r042 hard=1
+    [rollout] 10/33 (acc=1.000) id=r106 hard=1
+    [rollout] 11/33 (acc=1.000) id=r032 hard=1
+    [rollout] 12/33 (acc=1.000) id=r022 hard=1
+    [rollout] 13/33 (acc=1.000) id=r010 hard=1
+    [rollout] 14/33 (acc=0.929) id=r093 hard=0
+    [rollout] 15/33 (acc=0.867) id=r083 hard=0
+    [rollout] 16/33 (acc=0.875) id=r086 hard=1
+    [rollout] 17/33 (acc=0.882) id=r118 hard=1
+    [rollout] 18/33 (acc=0.833) id=r149 hard=0
+    [rollout] 19/33 (acc=0.842) id=r127 hard=1
+    [rollout] 20/33 (acc=0.850) id=r048 hard=1
+    [rollout] 21/33 (acc=0.857) id=r021 hard=1
+    [rollout] 22/33 (acc=0.864) id=r082 hard=1
+    [rollout] 23/33 (acc=0.870) id=r135 hard=1
+    [rollout] 24/33 (acc=0.875) id=r013 hard=1
+    [rollout] 25/33 (acc=0.880) id=r131 hard=1
+    [rollout] 26/33 (acc=0.885) id=r159 hard=1
+    [rollout] 27/33 (acc=0.852) id=r035 hard=0
+    [rollout] 28/33 (acc=0.857) id=r102 hard=1
+    [rollout] 29/33 (acc=0.862) id=r116 hard=1
+    [rollout] 30/33 (acc=0.867) id=r141 hard=1
+    [rollout] 31/33 (acc=0.871) id=r119 hard=1
+    [rollout] 32/33 (acc=0.844) id=r126 hard=0
+    [rollout] 33/33 (acc=0.818) id=r124 hard=0
+    [6/6 EVALUATE] REJECT hard=0.8182 <= current=0.9091
+
+  [STEP 2 done] epoch=1 action=reject current=0.9091 best=0.9091 dt=241.9s
+    timing: rollout=54.1s reflect=15.4s aggregate=10.1s select=0.0s evaluate=162.3s
+
+  [STEP 3/12] epoch=1 step_in_epoch=2 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=1045)
+    [rollout] 1/11 (acc=1.000) id=r062 hard=1
+    [rollout] 2/11 (acc=1.000) id=r050 hard=1
+    [rollout] 3/11 (acc=1.000) id=r156 hard=1
+    [rollout] 4/11 (acc=1.000) id=r077 hard=1
+    [rollout] 5/11 (acc=1.000) id=r089 hard=1
+    [rollout] 6/11 (acc=1.000) id=r064 hard=1
+    [rollout] 7/11 (acc=1.000) id=r090 hard=1
+    [rollout] 8/11 (acc=1.000) id=r136 hard=1
+    [rollout] 9/11 (acc=1.000) id=r120 hard=1
+    [rollout] 10/11 (acc=1.000) id=r068 hard=1
+    [rollout] 11/11 (acc=0.909) id=r117 hard=0
+    [1/6 done] hard=0.9091 soft=0.9091
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 1 edits
+    [4/6 SELECT] 1 -> 1 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6155
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r052 hard=1
+    [rollout] 2/33 (acc=1.000) id=r005 hard=1
+    [rollout] 3/33 (acc=1.000) id=r165 hard=1
+    [rollout] 4/33 (acc=1.000) id=r155 hard=1
+    [rollout] 5/33 (acc=1.000) id=r129 hard=1
+    [rollout] 6/33 (acc=1.000) id=r138 hard=1
+    [rollout] 7/33 (acc=1.000) id=r096 hard=1
+    [rollout] 8/33 (acc=1.000) id=r132 hard=1
+    [rollout] 9/33 (acc=1.000) id=r106 hard=1
+    [rollout] 10/33 (acc=1.000) id=r032 hard=1
+    [rollout] 11/33 (acc=0.909) id=r149 hard=0
+    [rollout] 12/33 (acc=0.917) id=r118 hard=1
+    [rollout] 13/33 (acc=0.923) id=r010 hard=1
+    [rollout] 14/33 (acc=0.929) id=r093 hard=1
+    [rollout] 15/33 (acc=0.933) id=r135 hard=1
+    [rollout] 16/33 (acc=0.875) id=r083 hard=0
+    [rollout] 17/33 (acc=0.882) id=r086 hard=1
+    [rollout] 18/33 (acc=0.889) id=r042 hard=1
+    [rollout] 19/33 (acc=0.895) id=r048 hard=1
+    [rollout] 20/33 (acc=0.900) id=r022 hard=1
+    [rollout] 21/33 (acc=0.905) id=r127 hard=1
+    [rollout] 22/33 (acc=0.909) id=r021 hard=1
+    [rollout] 23/33 (acc=0.913) id=r082 hard=1
+    [rollout] 24/33 (acc=0.917) id=r159 hard=1
+    [rollout] 25/33 (acc=0.920) id=r116 hard=1
+    [rollout] 26/33 (acc=0.923) id=r119 hard=1
+    [rollout] 27/33 (acc=0.926) id=r013 hard=1
+    [rollout] 28/33 (acc=0.929) id=r035 hard=1
+    [rollout] 29/33 (acc=0.931) id=r131 hard=1
+    [rollout] 30/33 (acc=0.933) id=r102 hard=1
+    [rollout] 31/33 (acc=0.935) id=r141 hard=1
+    [rollout] 32/33 (acc=0.906) id=r124 hard=0
+    [rollout] 33/33 (acc=0.909) id=r126 hard=1
+    [6/6 EVALUATE] REJECT hard=0.9091 <= current=0.9091
+
+  [STEP 3 done] epoch=1 action=reject current=0.9091 best=0.9091 dt=208.4s
+    timing: rollout=52.3s reflect=10.5s aggregate=0.0s select=0.0s evaluate=145.7s
+
+  [STEP 4/12] epoch=1 step_in_epoch=3 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=1046)
+    [rollout] 1/11 (acc=1.000) id=r055 hard=1
+    [rollout] 2/11 (acc=1.000) id=r001 hard=1
+    [rollout] 3/11 (acc=1.000) id=r111 hard=1
+    [rollout] 4/11 (acc=1.000) id=r004 hard=1
+    [rollout] 5/11 (acc=1.000) id=r070 hard=1
+    [rollout] 6/11 (acc=1.000) id=r147 hard=1
+    [rollout] 7/11 (acc=1.000) id=r122 hard=1
+    [rollout] 8/11 (acc=1.000) id=r092 hard=1
+    [rollout] 9/11 (acc=1.000) id=r076 hard=1
+    [rollout] 10/11 (acc=1.000) id=r019 hard=1
+    [rollout] 11/11 (acc=0.909) id=r134 hard=0
+    [1/6 done] hard=0.9091 soft=0.9091
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 1 edits
+    [4/6 SELECT] 1 -> 1 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6190
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r052 hard=1
+    [rollout] 2/33 (acc=1.000) id=r129 hard=1
+    [rollout] 3/33 (acc=1.000) id=r165 hard=1
+    [rollout] 4/33 (acc=1.000) id=r005 hard=1
+    [rollout] 5/33 (acc=1.000) id=r135 hard=1
+    [rollout] 6/33 (acc=1.000) id=r096 hard=1
+    [rollout] 7/33 (acc=1.000) id=r155 hard=1
+    [rollout] 8/33 (acc=1.000) id=r132 hard=1
+    [rollout] 9/33 (acc=1.000) id=r138 hard=1
+    [rollout] 10/33 (acc=1.000) id=r106 hard=1
+    [rollout] 11/33 (acc=1.000) id=r042 hard=1
+    [rollout] 12/33 (acc=1.000) id=r032 hard=1
+    [rollout] 13/33 (acc=1.000) id=r022 hard=1
+    [rollout] 14/33 (acc=1.000) id=r010 hard=1
+    [rollout] 15/33 (acc=0.933) id=r083 hard=0
+    [rollout] 16/33 (acc=0.938) id=r086 hard=1
+    [rollout] 17/33 (acc=0.941) id=r127 hard=1
+    [rollout] 18/33 (acc=0.889) id=r149 hard=0
+    [rollout] 19/33 (acc=0.895) id=r093 hard=1
+    [rollout] 20/33 (acc=0.900) id=r048 hard=1
+    [rollout] 21/33 (acc=0.857) id=r118 hard=0
+    [rollout] 22/33 (acc=0.864) id=r021 hard=1
+    [rollout] 23/33 (acc=0.870) id=r082 hard=1
+    [rollout] 24/33 (acc=0.875) id=r159 hard=1
+    [rollout] 25/33 (acc=0.880) id=r131 hard=1
+    [rollout] 26/33 (acc=0.885) id=r035 hard=1
+    [rollout] 27/33 (acc=0.889) id=r013 hard=1
+    [rollout] 28/33 (acc=0.857) id=r119 hard=0
+    [rollout] 29/33 (acc=0.862) id=r102 hard=1
+    [rollout] 30/33 (acc=0.867) id=r141 hard=1
+    [rollout] 31/33 (acc=0.839) id=r116 hard=0
+    [rollout] 32/33 (acc=0.812) id=r124 hard=0
+    [rollout] 33/33 (acc=0.818) id=r126 hard=1
+    [6/6 EVALUATE] REJECT hard=0.8182 <= current=0.9091
+
+  [STEP 4 done] epoch=1 action=reject current=0.9091 best=0.9091 dt=231.1s
+    timing: rollout=79.9s reflect=10.5s aggregate=0.0s select=0.0s evaluate=140.7s
+
+  [STEP 5/12] epoch=1 step_in_epoch=4 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=1047)
+    [rollout] 1/11 (acc=1.000) id=r054 hard=1
+    [rollout] 2/11 (acc=1.000) id=r026 hard=1
+    [rollout] 3/11 (acc=1.000) id=r018 hard=1
+    [rollout] 4/11 (acc=1.000) id=r133 hard=1
+    [rollout] 5/11 (acc=1.000) id=r103 hard=1
+    [rollout] 6/11 (acc=1.000) id=r114 hard=1
+    [rollout] 7/11 (acc=1.000) id=r031 hard=1
+    [rollout] 8/11 (acc=1.000) id=r065 hard=1
+    [rollout] 9/11 (acc=1.000) id=r084 hard=1
+    [rollout] 10/11 (acc=0.900) id=r039 hard=0
+    [rollout] 11/11 (acc=0.909) id=r160 hard=1
+    [1/6 done] hard=0.9091 soft=0.9091
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 1 edits
+    [4/6 SELECT] 1 -> 1 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6160
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r005 hard=1
+    [rollout] 2/33 (acc=1.000) id=r129 hard=1
+    [rollout] 3/33 (acc=1.000) id=r052 hard=1
+    [rollout] 4/33 (acc=1.000) id=r165 hard=1
+    [rollout] 5/33 (acc=1.000) id=r138 hard=1
+    [rollout] 6/33 (acc=1.000) id=r155 hard=1
+    [rollout] 7/33 (acc=1.000) id=r135 hard=1
+    [rollout] 8/33 (acc=1.000) id=r096 hard=1
+    [rollout] 9/33 (acc=1.000) id=r106 hard=1
+    [rollout] 10/33 (acc=1.000) id=r132 hard=1
+    [rollout] 11/33 (acc=1.000) id=r032 hard=1
+    [rollout] 12/33 (acc=0.917) id=r093 hard=0
+    [rollout] 13/33 (acc=0.923) id=r022 hard=1
+    [rollout] 14/33 (acc=0.929) id=r010 hard=1
+    [rollout] 15/33 (acc=0.867) id=r083 hard=0
+    [rollout] 16/33 (acc=0.812) id=r149 hard=0
+    [rollout] 17/33 (acc=0.824) id=r042 hard=1
+    [rollout] 18/33 (acc=0.833) id=r086 hard=1
+    [rollout] 19/33 (acc=0.789) id=r118 hard=0
+    [rollout] 20/33 (acc=0.800) id=r127 hard=1
+    [rollout] 21/33 (acc=0.810) id=r048 hard=1
+    [rollout] 22/33 (acc=0.818) id=r021 hard=1
+    [rollout] 23/33 (acc=0.826) id=r082 hard=1
+    [rollout] 24/33 (acc=0.833) id=r131 hard=1
+    [rollout] 25/33 (acc=0.840) id=r159 hard=1
+    [rollout] 26/33 (acc=0.846) id=r035 hard=1
+    [rollout] 27/33 (acc=0.815) id=r119 hard=0
+    [rollout] 28/33 (acc=0.821) id=r013 hard=1
+    [rollout] 29/33 (acc=0.828) id=r124 hard=1
+    [rollout] 30/33 (acc=0.800) id=r102 hard=0
+    [rollout] 31/33 (acc=0.806) id=r126 hard=1
+    [rollout] 32/33 (acc=0.812) id=r141 hard=1
+    [rollout] 33/33 (acc=0.818) id=r116 hard=1
+    [6/6 EVALUATE] REJECT hard=0.8182 <= current=0.9091
+
+  [STEP 5 done] epoch=1 action=reject current=0.9091 best=0.9091 dt=172.8s
+    timing: rollout=48.8s reflect=11.9s aggregate=0.0s select=0.0s evaluate=112.1s
+
+  [STEP 6/12] epoch=1 step_in_epoch=5 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=1048)
+    [rollout] 1/11 (acc=1.000) id=r075 hard=1
+    [rollout] 2/11 (acc=1.000) id=r073 hard=1
+    [rollout] 3/11 (acc=1.000) id=r142 hard=1
+    [rollout] 4/11 (acc=1.000) id=r014 hard=1
+    [rollout] 5/11 (acc=1.000) id=r020 hard=1
+    [rollout] 6/11 (acc=1.000) id=r053 hard=1
+    [rollout] 7/11 (acc=1.000) id=r066 hard=1
+    [rollout] 8/11 (acc=1.000) id=r145 hard=1
+    [rollout] 9/11 (acc=1.000) id=r043 hard=1
+    [rollout] 10/11 (acc=1.000) id=r105 hard=1
+    [rollout] 11/11 (acc=0.909) id=r125 hard=0
+    [1/6 done] hard=0.9091 soft=0.9091
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 1 edits
+    [4/6 SELECT] 1 -> 1 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 5981
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r129 hard=1
+    [rollout] 2/33 (acc=1.000) id=r052 hard=1
+    [rollout] 3/33 (acc=1.000) id=r138 hard=1
+    [rollout] 4/33 (acc=1.000) id=r005 hard=1
+    [rollout] 5/33 (acc=1.000) id=r165 hard=1
+    [rollout] 6/33 (acc=1.000) id=r155 hard=1
+    [rollout] 7/33 (acc=1.000) id=r096 hard=1
+    [rollout] 8/33 (acc=1.000) id=r135 hard=1
+    [rollout] 9/33 (acc=1.000) id=r106 hard=1
+    [rollout] 10/33 (acc=1.000) id=r032 hard=1
+    [rollout] 11/33 (acc=1.000) id=r132 hard=1
+    [rollout] 12/33 (acc=1.000) id=r042 hard=1
+    [rollout] 13/33 (acc=1.000) id=r010 hard=1
+    [rollout] 14/33 (acc=1.000) id=r093 hard=1
+    [rollout] 15/33 (acc=0.933) id=r083 hard=0
+    [rollout] 16/33 (acc=0.875) id=r118 hard=0
+    [rollout] 17/33 (acc=0.882) id=r022 hard=1
+    [rollout] 18/33 (acc=0.889) id=r086 hard=1
+    [rollout] 19/33 (acc=0.842) id=r149 hard=0
+    [rollout] 20/33 (acc=0.850) id=r124 hard=1
+    [rollout] 21/33 (acc=0.810) id=r035 hard=0
+    [rollout] 22/33 (acc=0.818) id=r048 hard=1
+    [rollout] 23/33 (acc=0.826) id=r127 hard=1
+    [rollout] 24/33 (acc=0.833) id=r021 hard=1
+    [rollout] 25/33 (acc=0.840) id=r082 hard=1
+    [rollout] 26/33 (acc=0.846) id=r013 hard=1
+    [rollout] 27/33 (acc=0.852) id=r159 hard=1
+    [rollout] 28/33 (acc=0.857) id=r102 hard=1
+    [rollout] 29/33 (acc=0.862) id=r131 hard=1
+    [rollout] 30/33 (acc=0.867) id=r141 hard=1
+    [rollout] 31/33 (acc=0.839) id=r116 hard=0
+    [rollout] 32/33 (acc=0.812) id=r119 hard=0
+    [rollout] 33/33 (acc=0.818) id=r126 hard=1
+    [6/6 EVALUATE] REJECT hard=0.8182 <= current=0.9091
+
+  [STEP 6 done] epoch=1 action=reject current=0.9091 best=0.9091 dt=248.6s
+    timing: rollout=108.0s reflect=9.0s aggregate=0.0s select=0.0s evaluate=131.6s
+
+  [EPOCH 2/2] shuffled_seeds=[2043, 2044, 2045, 2046, 2047, 2048]
+
+  [STEP 7/12] epoch=2 step_in_epoch=0 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=2043)
+    [rollout] 1/11 (acc=1.000) id=r053 hard=1
+    [rollout] 2/11 (acc=1.000) id=r014 hard=1
+    [rollout] 3/11 (acc=1.000) id=r097 hard=1
+    [rollout] 4/11 (acc=1.000) id=r156 hard=1
+    [rollout] 5/11 (acc=1.000) id=r031 hard=1
+    [rollout] 6/11 (acc=1.000) id=r105 hard=1
+    [rollout] 7/11 (acc=1.000) id=r003 hard=1
+    [rollout] 8/11 (acc=0.875) id=r148 hard=0
+    [rollout] 9/11 (acc=0.889) id=r015 hard=1
+    [rollout] 10/11 (acc=0.900) id=r076 hard=1
+    [rollout] 11/11 (acc=0.818) id=r117 hard=0
+    [1/6 done] hard=0.8182 soft=0.8182
+    [2/6 REFLECT minibatch] failure=2→1 groups  success=9→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_001 (3 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (2 trajs) → 2 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 2 edits
+    [4/6 SELECT] 2 -> 2 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6569
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r129 hard=1
+    [rollout] 2/33 (acc=1.000) id=r052 hard=1
+    [rollout] 3/33 (acc=1.000) id=r005 hard=1
+    [rollout] 4/33 (acc=1.000) id=r165 hard=1
+    [rollout] 5/33 (acc=1.000) id=r155 hard=1
+    [rollout] 6/33 (acc=1.000) id=r135 hard=1
+    [rollout] 7/33 (acc=1.000) id=r096 hard=1
+    [rollout] 8/33 (acc=1.000) id=r138 hard=1
+    [rollout] 9/33 (acc=1.000) id=r042 hard=1
+    [rollout] 10/33 (acc=1.000) id=r132 hard=1
+    [rollout] 11/33 (acc=1.000) id=r106 hard=1
+    [rollout] 12/33 (acc=1.000) id=r032 hard=1
+    [rollout] 13/33 (acc=1.000) id=r010 hard=1
+    [rollout] 14/33 (acc=0.929) id=r083 hard=0
+    [rollout] 15/33 (acc=0.867) id=r149 hard=0
+    [rollout] 16/33 (acc=0.875) id=r093 hard=1
+    [rollout] 17/33 (acc=0.882) id=r035 hard=1
+    [rollout] 18/33 (acc=0.889) id=r118 hard=1
+    [rollout] 19/33 (acc=0.895) id=r086 hard=1
+    [rollout] 20/33 (acc=0.900) id=r048 hard=1
+    [rollout] 21/33 (acc=0.905) id=r021 hard=1
+    [rollout] 22/33 (acc=0.909) id=r127 hard=1
+    [rollout] 23/33 (acc=0.913) id=r022 hard=1
+    [rollout] 24/33 (acc=0.917) id=r159 hard=1
+    [rollout] 25/33 (acc=0.920) id=r082 hard=1
+    [rollout] 26/33 (acc=0.923) id=r119 hard=1
+    [rollout] 27/33 (acc=0.926) id=r013 hard=1
+    [rollout] 28/33 (acc=0.929) id=r102 hard=1
+    [rollout] 29/33 (acc=0.897) id=r141 hard=0
+    [rollout] 30/33 (acc=0.900) id=r116 hard=1
+    [rollout] 31/33 (acc=0.903) id=r131 hard=1
+    [rollout] 32/33 (acc=0.906) id=r124 hard=1
+    [rollout] 33/33 (acc=0.879) id=r126 hard=0
+    [6/6 EVALUATE] REJECT hard=0.8788 <= current=0.9091
+
+  [STEP 7 done] epoch=2 action=reject current=0.9091 best=0.9091 dt=211.6s
+    timing: rollout=39.6s reflect=13.9s aggregate=0.0s select=0.0s evaluate=158.1s
+
+  [STEP 8/12] epoch=2 step_in_epoch=1 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=2044)
+    [rollout] 1/11 (acc=1.000) id=r073 hard=1
+    [rollout] 2/11 (acc=1.000) id=r147 hard=1
+    [rollout] 3/11 (acc=1.000) id=r012 hard=1
+    [rollout] 4/11 (acc=1.000) id=r066 hard=1
+    [rollout] 5/11 (acc=1.000) id=r133 hard=1
+    [rollout] 6/11 (acc=1.000) id=r112 hard=1
+    [rollout] 7/11 (acc=1.000) id=r001 hard=1
+    [rollout] 8/11 (acc=1.000) id=r110 hard=1
+    [rollout] 9/11 (acc=1.000) id=r019 hard=1
+    [rollout] 10/11 (acc=1.000) id=r084 hard=1
+    [rollout] 11/11 (acc=1.000) id=r044 hard=1
+    [1/6 done] hard=1.0000 soft=1.0000
+    [2/6 REFLECT minibatch] failure=0→0 groups  success=11→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/2 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 2/2 minibatch_succ_001 (5 trajs) → 0 edits
+    [2/6 done] failure_patches=0 success_patches=0
+    [skip] no usable patches — skill unchanged
+
+  [STEP 9/12] epoch=2 step_in_epoch=2 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=2045)
+    [rollout] 1/11 (acc=1.000) id=r065 hard=1
+    [rollout] 2/11 (acc=1.000) id=r139 hard=1
+    [rollout] 3/11 (acc=1.000) id=r092 hard=1
+    [rollout] 4/11 (acc=1.000) id=r103 hard=1
+    [rollout] 5/11 (acc=1.000) id=r101 hard=1
+    [rollout] 6/11 (acc=1.000) id=r100 hard=1
+    [rollout] 7/11 (acc=1.000) id=r122 hard=1
+    [rollout] 8/11 (acc=1.000) id=r055 hard=1
+    [rollout] 9/11 (acc=1.000) id=r061 hard=1
+    [rollout] 10/11 (acc=1.000) id=r160 hard=1
+    [rollout] 11/11 (acc=1.000) id=r039 hard=1
+    [1/6 done] hard=1.0000 soft=1.0000
+    [2/6 REFLECT minibatch] failure=0→0 groups  success=11→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/2 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 2/2 minibatch_succ_001 (5 trajs) → 0 edits
+    [2/6 done] failure_patches=0 success_patches=0
+    [skip] no usable patches — skill unchanged
+
+  [STEP 10/12] epoch=2 step_in_epoch=3 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=2046)
+    [rollout] 1/11 (acc=1.000) id=r095 hard=1
+    [rollout] 2/11 (acc=1.000) id=r070 hard=1
+    [rollout] 3/11 (acc=1.000) id=r037 hard=1
+    [rollout] 4/11 (acc=1.000) id=r067 hard=1
+    [rollout] 5/11 (acc=1.000) id=r020 hard=1
+    [rollout] 6/11 (acc=1.000) id=r054 hard=1
+    [rollout] 7/11 (acc=1.000) id=r033 hard=1
+    [rollout] 8/11 (acc=1.000) id=r111 hard=1
+    [rollout] 9/11 (acc=0.889) id=r043 hard=0
+    [rollout] 10/11 (acc=0.900) id=r018 hard=1
+    [rollout] 11/11 (acc=0.909) id=r120 hard=1
+    [1/6 done] hard=0.9091 soft=0.9909
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 2 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 2 edits
+    [4/6 SELECT] 2 -> 2 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6170
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r129 hard=1
+    [rollout] 2/33 (acc=1.000) id=r052 hard=1
+    [rollout] 3/33 (acc=1.000) id=r138 hard=1
+    [rollout] 4/33 (acc=1.000) id=r155 hard=1
+    [rollout] 5/33 (acc=1.000) id=r165 hard=1
+    [rollout] 6/33 (acc=1.000) id=r096 hard=1
+    [rollout] 7/33 (acc=1.000) id=r005 hard=1
+    [rollout] 8/33 (acc=1.000) id=r106 hard=1
+    [rollout] 9/33 (acc=1.000) id=r032 hard=1
+    [rollout] 10/33 (acc=1.000) id=r132 hard=1
+    [rollout] 11/33 (acc=0.909) id=r149 hard=0
+    [rollout] 12/33 (acc=0.917) id=r135 hard=1
+    [rollout] 13/33 (acc=0.923) id=r010 hard=1
+    [rollout] 14/33 (acc=0.857) id=r083 hard=0
+    [rollout] 15/33 (acc=0.800) id=r118 hard=0
+    [rollout] 16/33 (acc=0.812) id=r086 hard=1
+    [rollout] 17/33 (acc=0.824) id=r093 hard=1
+    [rollout] 18/33 (acc=0.833) id=r127 hard=1
+    [rollout] 19/33 (acc=0.842) id=r048 hard=1
+    [rollout] 20/33 (acc=0.850) id=r131 hard=1
+    [rollout] 21/33 (acc=0.857) id=r022 hard=1
+    [rollout] 22/33 (acc=0.864) id=r082 hard=1
+    [rollout] 23/33 (acc=0.870) id=r021 hard=1
+    [rollout] 24/33 (acc=0.875) id=r035 hard=1
+    [rollout] 25/33 (acc=0.880) id=r042 hard=1
+    [rollout] 26/33 (acc=0.885) id=r013 hard=1
+    [rollout] 27/33 (acc=0.889) id=r159 hard=1
+    [rollout] 28/33 (acc=0.893) id=r102 hard=1
+    [rollout] 29/33 (acc=0.897) id=r141 hard=1
+    [rollout] 30/33 (acc=0.867) id=r119 hard=0
+    [rollout] 31/33 (acc=0.839) id=r116 hard=0
+    [rollout] 32/33 (acc=0.812) id=r124 hard=0
+    [rollout] 33/33 (acc=0.788) id=r126 hard=0
+    [6/6 EVALUATE] REJECT hard=0.7879 <= current=0.9091
+
+  [STEP 10 done] epoch=2 action=reject current=0.9091 best=0.9091 dt=178.2s
+    timing: rollout=33.4s reflect=10.7s aggregate=0.0s select=0.0s evaluate=134.2s
+
+  [STEP 11/12] epoch=2 step_in_epoch=4 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=2047)
+    [rollout] 1/11 (acc=1.000) id=r075 hard=1
+    [rollout] 2/11 (acc=1.000) id=r145 hard=1
+    [rollout] 3/11 (acc=1.000) id=r017 hard=1
+    [rollout] 4/11 (acc=1.000) id=r004 hard=1
+    [rollout] 5/11 (acc=1.000) id=r114 hard=1
+    [rollout] 6/11 (acc=1.000) id=r079 hard=1
+    [rollout] 7/11 (acc=1.000) id=r068 hard=1
+    [rollout] 8/11 (acc=1.000) id=r123 hard=1
+    [rollout] 9/11 (acc=1.000) id=r143 hard=1
+    [rollout] 10/11 (acc=1.000) id=r136 hard=1
+    [rollout] 11/11 (acc=0.909) id=r134 hard=0
+    [1/6 done] hard=0.9091 soft=0.9091
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 1 edits
+    [4/6 SELECT] 1 -> 1 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 6224
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r052 hard=1
+    [rollout] 2/33 (acc=1.000) id=r005 hard=1
+    [rollout] 3/33 (acc=1.000) id=r155 hard=1
+    [rollout] 4/33 (acc=1.000) id=r129 hard=1
+    [rollout] 5/33 (acc=1.000) id=r165 hard=1
+    [rollout] 6/33 (acc=1.000) id=r138 hard=1
+    [rollout] 7/33 (acc=1.000) id=r135 hard=1
+    [rollout] 8/33 (acc=1.000) id=r096 hard=1
+    [rollout] 9/33 (acc=1.000) id=r106 hard=1
+    [rollout] 10/33 (acc=1.000) id=r032 hard=1
+    [rollout] 11/33 (acc=1.000) id=r132 hard=1
+    [rollout] 12/33 (acc=1.000) id=r093 hard=1
+    [rollout] 13/33 (acc=1.000) id=r042 hard=1
+    [rollout] 14/33 (acc=1.000) id=r022 hard=1
+    [rollout] 15/33 (acc=1.000) id=r010 hard=1
+    [rollout] 16/33 (acc=0.938) id=r118 hard=0
+    [rollout] 17/33 (acc=0.882) id=r083 hard=0
+    [rollout] 18/33 (acc=0.889) id=r086 hard=1
+    [rollout] 19/33 (acc=0.895) id=r048 hard=1
+    [rollout] 20/33 (acc=0.900) id=r127 hard=1
+    [rollout] 21/33 (acc=0.857) id=r149 hard=0
+    [rollout] 22/33 (acc=0.864) id=r131 hard=1
+    [rollout] 23/33 (acc=0.870) id=r021 hard=1
+    [rollout] 24/33 (acc=0.875) id=r082 hard=1
+    [rollout] 25/33 (acc=0.880) id=r159 hard=1
+    [rollout] 26/33 (acc=0.885) id=r013 hard=1
+    [rollout] 27/33 (acc=0.852) id=r102 hard=0
+    [rollout] 28/33 (acc=0.857) id=r035 hard=1
+    [rollout] 29/33 (acc=0.862) id=r141 hard=1
+    [rollout] 30/33 (acc=0.867) id=r119 hard=1
+    [rollout] 31/33 (acc=0.871) id=r126 hard=1
+    [rollout] 32/33 (acc=0.875) id=r116 hard=1
+    [rollout] 33/33 (acc=0.848) id=r124 hard=0
+    [6/6 EVALUATE] REJECT hard=0.8485 <= current=0.9091
+
+  [STEP 11 done] epoch=2 action=reject current=0.9091 best=0.9091 dt=251.4s
+    timing: rollout=38.0s reflect=10.4s aggregate=0.0s select=0.0s evaluate=202.9s
+
+  [STEP 12/12] epoch=2 step_in_epoch=5 ==============================
+    [1/6 ROLLOUT] train items=11 (from pool, batch_seed=2048)
+    [rollout] 1/11 (acc=1.000) id=r062 hard=1
+    [rollout] 2/11 (acc=1.000) id=r090 hard=1
+    [rollout] 3/11 (acc=1.000) id=r050 hard=1
+    [rollout] 4/11 (acc=1.000) id=r142 hard=1
+    [rollout] 5/11 (acc=1.000) id=r026 hard=1
+    [rollout] 6/11 (acc=1.000) id=r089 hard=1
+    [rollout] 7/11 (acc=1.000) id=r077 hard=1
+    [rollout] 8/11 (acc=1.000) id=r064 hard=1
+    [rollout] 9/11 (acc=1.000) id=r161 hard=1
+    [rollout] 10/11 (acc=1.000) id=r028 hard=1
+    [rollout] 11/11 (acc=0.909) id=r125 hard=0
+    [1/6 done] hard=0.9091 soft=0.9545
+    [2/6 REFLECT minibatch] failure=1→1 groups  success=10→2 groups  (M=6, L=3, workers=4)
+      [analyst] 1/3 minibatch_succ_001 (4 trajs) → 0 edits
+      [analyst] 2/3 minibatch_succ_000 (6 trajs) → 0 edits
+      [analyst] 3/3 minibatch_fail_000 (1 trajs) → 1 edits
+    [2/6 done] failure_patches=1 success_patches=0
+    [3/6 AGGREGATE] failure=1 success=0 (parallel, workers=4)
+    [3/6 done] merged 1 edits
+    [4/6 SELECT] 1 -> 1 edits (budget=3, lr_control=fixed)
+    [5/6 UPDATE] skill_len 5742 -> 5930
+    [6/6 EVALUATE] selection items=33
+    [rollout] 1/33 (acc=1.000) id=r052 hard=1
+    [rollout] 2/33 (acc=1.000) id=r005 hard=1
+    [rollout] 3/33 (acc=1.000) id=r129 hard=1
+    [rollout] 4/33 (acc=1.000) id=r155 hard=1
+    [rollout] 5/33 (acc=1.000) id=r165 hard=1
+    [rollout] 6/33 (acc=1.000) id=r096 hard=1
+    [rollout] 7/33 (acc=1.000) id=r138 hard=1
+    [rollout] 8/33 (acc=1.000) id=r132 hard=1
+    [rollout] 9/33 (acc=1.000) id=r106 hard=1
+    [rollout] 10/33 (acc=0.900) id=r149 hard=0
+    [rollout] 11/33 (acc=0.909) id=r032 hard=1
+    [rollout] 12/33 (acc=0.917) id=r135 hard=1
+    [rollout] 13/33 (acc=0.923) id=r042 hard=1
+    [rollout] 14/33 (acc=0.929) id=r010 hard=1
+    [rollout] 15/33 (acc=0.933) id=r093 hard=1
+    [rollout] 16/33 (acc=0.875) id=r083 hard=0
+    [rollout] 17/33 (acc=0.824) id=r118 hard=0
+    [rollout] 18/33 (acc=0.833) id=r124 hard=1
+    [rollout] 19/33 (acc=0.842) id=r086 hard=1
+    [rollout] 20/33 (acc=0.850) id=r035 hard=1
+    [rollout] 21/33 (acc=0.857) id=r127 hard=1
+    [rollout] 22/33 (acc=0.864) id=r048 hard=1
+    [rollout] 23/33 (acc=0.870) id=r022 hard=1
+    [rollout] 24/33 (acc=0.875) id=r021 hard=1
+    [rollout] 25/33 (acc=0.880) id=r131 hard=1
+    [rollout] 26/33 (acc=0.885) id=r082 hard=1
+    [rollout] 27/33 (acc=0.889) id=r159 hard=1
+    [rollout] 28/33 (acc=0.893) id=r013 hard=1
+    [rollout] 29/33 (acc=0.862) id=r119 hard=0
+    [rollout] 30/33 (acc=0.867) id=r141 hard=1
+    [rollout] 31/33 (acc=0.871) id=r102 hard=1
+    [rollout] 32/33 (acc=0.875) id=r116 hard=1
+    [rollout] 33/33 (acc=0.879) id=r126 hard=1
+    [6/6 EVALUATE] REJECT hard=0.8788 <= current=0.9091
+
+  [STEP 12 done] epoch=2 action=reject current=0.9091 best=0.9091 dt=273.7s
+    timing: rollout=95.4s reflect=8.7s aggregate=0.0s select=0.0s evaluate=169.6s
+
+  [done] best skill from step 0, score=0.9091
+
+  [final skill == best skill] final_selection_hard=0.9091 (reused)
+
+============================================================
+  BASELINE TEST — evaluate initial skill on Test set (valid_unseen)
+============================================================
+  Test items: 66
+    [rollout] 1/66 (acc=1.000) id=r121 hard=1
+    [rollout] 2/66 (acc=1.000) id=r085 hard=1
+    [rollout] 3/66 (acc=1.000) id=r091 hard=1
+    [rollout] 4/66 (acc=1.000) id=r128 hard=1
+    [rollout] 5/66 (acc=1.000) id=r030 hard=1
+    [rollout] 6/66 (acc=0.833) id=r113 hard=0
+    [rollout] 7/66 (acc=0.857) id=r074 hard=1
+    [rollout] 8/66 (acc=0.875) id=r047 hard=1
+    [rollout] 9/66 (acc=0.778) id=r080 hard=0
+    [rollout] 10/66 (acc=0.700) id=r081 hard=0
+    [rollout] 11/66 (acc=0.727) id=r107 hard=1
+    [rollout] 12/66 (acc=0.667) id=r099 hard=0
+    [rollout] 13/66 (acc=0.692) id=r049 hard=1
+    [rollout] 14/66 (acc=0.714) id=r011 hard=1
+    [rollout] 15/66 (acc=0.733) id=r153 hard=1
+    [rollout] 16/66 (acc=0.750) id=r016 hard=1
+    [rollout] 17/66 (acc=0.765) id=r094 hard=1
+    [rollout] 18/66 (acc=0.778) id=r069 hard=1
+    [rollout] 19/66 (acc=0.789) id=r006 hard=1
+    [rollout] 20/66 (acc=0.750) id=r059 hard=0
+    [rollout] 21/66 (acc=0.762) id=r078 hard=1
+    [rollout] 22/66 (acc=0.773) id=r162 hard=1
+    [rollout] 23/66 (acc=0.783) id=r104 hard=1
+    [rollout] 24/66 (acc=0.750) id=r038 hard=0
+    [rollout] 25/66 (acc=0.760) id=r025 hard=1
+    [rollout] 26/66 (acc=0.769) id=r046 hard=1
+    [rollout] 27/66 (acc=0.778) id=r034 hard=1
+    [rollout] 28/66 (acc=0.786) id=r045 hard=1
+    [rollout] 29/66 (acc=0.793) id=r151 hard=1
+    [rollout] 30/66 (acc=0.800) id=r158 hard=1
+    [rollout] 31/66 (acc=0.806) id=r098 hard=1
+    [rollout] 32/66 (acc=0.812) id=r137 hard=1
+    [rollout] 33/66 (acc=0.818) id=r087 hard=1
+    [rollout] 34/66 (acc=0.794) id=r150 hard=0
+    [rollout] 35/66 (acc=0.800) id=r146 hard=1
+    [rollout] 36/66 (acc=0.806) id=r088 hard=1
+    [rollout] 37/66 (acc=0.811) id=r154 hard=1
+    [rollout] 38/66 (acc=0.816) id=r002 hard=1
+    [rollout] 39/66 (acc=0.821) id=r072 hard=1
+    [rollout] 40/66 (acc=0.825) id=r057 hard=1
+    [rollout] 41/66 (acc=0.829) id=r051 hard=1
+    [rollout] 42/66 (acc=0.833) id=r108 hard=1
+    [rollout] 43/66 (acc=0.837) id=r041 hard=1
+    [rollout] 44/66 (acc=0.841) id=r157 hard=1
+    [rollout] 45/66 (acc=0.822) id=r115 hard=0
+    [rollout] 46/66 (acc=0.826) id=r144 hard=1
+    [rollout] 47/66 (acc=0.830) id=r163 hard=1
+    [rollout] 48/66 (acc=0.833) id=r024 hard=1
+    [rollout] 49/66 (acc=0.837) id=r056 hard=1
+    [rollout] 50/66 (acc=0.840) id=r009 hard=1
+    [rollout] 51/66 (acc=0.843) id=r008 hard=1
+    [rollout] 52/66 (acc=0.846) id=r109 hard=1
+    [rollout] 53/66 (acc=0.849) id=r023 hard=1
+    [rollout] 54/66 (acc=0.852) id=r152 hard=1
+    [rollout] 55/66 (acc=0.836) id=r060 hard=0
+    [rollout] 56/66 (acc=0.839) id=r027 hard=1
+    [rollout] 57/66 (acc=0.825) id=r140 hard=0
+    [rollout] 58/66 (acc=0.828) id=r063 hard=1
+    [rollout] 59/66 (acc=0.831) id=r130 hard=1
+    [rollout] 60/66 (acc=0.833) id=r071 hard=1
+    [rollout] 61/66 (acc=0.836) id=r007 hard=1
+    [rollout] 62/66 (acc=0.839) id=r164 hard=1
+    [rollout] 63/66 (acc=0.841) id=r029 hard=1
+    [rollout] 64/66 (acc=0.844) id=r058 hard=1
+    [rollout] 65/66 (acc=0.846) id=r040 hard=1
+    [rollout] 66/66 (acc=0.848) id=r036 hard=1
+
+  === Baseline Test Results (S_0) ===
+    interrogative-invalid                   : hard=1.0/1=1.0000
+    mixed-valid-invalid-set                 : hard=1.0/1=1.0000
+    near-miss-scope-ambiguous-negation      : hard=0.0/1=0.0000
+    large-set-scale                         : hard=1.0/1=1.0000
+    generic-habitual-disguised-singular     : hard=1.0/1=1.0000
+    consequent-first-ordering               : hard=1.0/1=1.0000
+    markdown-list-input                     : hard=1.0/1=1.0000
+    plain-negation                          : hard=1.0/1=1.0000
+    syntactic-and-or-not-propositional      : hard=0.0/1=0.0000
+    causal-conditional-ambiguity            : hard=1.0/1=1.0000
+    nested-conditional                      : hard=0/0=0.0000
+    near-miss-false-paraphrase-trap         : hard=1.0/1=1.0000
+    just-in-case-biconditional-idiom        : hard=1.0/1=1.0000
+    implicit-conditional-only-if            : hard=0/0=0.0000
+    near-miss-ambiguous-pronoun             : hard=0/0=0.0000
+    mixed-symbolic-english-consistent       : hard=1.0/1=1.0000
+    plain-conditional                       : hard=1.0/1=1.0000
+    implicit-conditional-unless             : hard=1.0/1=1.0000
+    modal-invalid                           : hard=0/0=0.0000
+    mixed-symbolic-inconsistent             : hard=0/0=0.0000
+    negated-paraphrase                      : hard=0.0/1=0.0000
+    empty-input                             : hard=1.0/1=1.0000
+    sufficient-for-phrasing                 : hard=0/0=0.0000
+    near-miss-modal-conditional             : hard=1.0/2=0.5000
+    single-word-fragment                    : hard=1.0/1=1.0000
+    symbol-exhaustion-scale                 : hard=1.0/1=1.0000
+    plain-conjunction                       : hard=1.0/1=1.0000
+    temporal-invalid                        : hard=2.0/2=1.0000
+    biconditional                           : hard=0/0=0.0000
+    equivocation-same-word-different-sense  : hard=0.0/1=0.0000
+    imperative-invalid                      : hard=0/0=0.0000
+    quantified-invalid                      : hard=2.0/2=1.0000
+    non-english-input                       : hard=1.0/1=1.0000
+    fully-symbolic-standard-notation        : hard=0.0/1=0.0000
+    contradictory-set                       : hard=0/0=0.0000
+    subjective-vague-claim                  : hard=2.0/2=1.0000
+    neither-nor                             : hard=2.0/2=1.0000
+    prompt-injection-shaped                 : hard=0.0/2=0.0000
+    valid-syllogism-shaped-singular         : hard=1.0/1=1.0000
+    near-miss-rhetorical-question           : hard=1.0/1=1.0000
+    fully-symbolic-ascii-notation           : hard=0/0=0.0000
+    either-or-ambiguity                     : hard=2.0/2=1.0000
+    fully-symbolic-malformed                : hard=1.0/1=1.0000
+    pronoun-back-reference                  : hard=2.0/2=1.0000
+    argument-structure-input                : hard=2.0/2=1.0000
+    necessary-for-phrasing                  : hard=1.0/1=1.0000
+    near-miss-bundled-shared-subject        : hard=2.0/2=1.0000
+    implicit-conditional-provided-that      : hard=2.0/2=1.0000
+    paraphrase-consistency                  : hard=2.0/2=1.0000
+    negation-scope-ambiguity                : hard=2.0/2=1.0000
+    bundling-decomposition                  : hard=2.0/2=1.0000
+    explicit-exclusive-or                   : hard=2.0/2=1.0000
+    multiple-independent-example-blocks     : hard=3.0/3=1.0000
+    narrative-invalid                       : hard=1.0/3=0.3333
+    plain-disjunction                       : hard=3.0/3=1.0000
+    overall                                 : hard=56.0/66=0.8485
+
+============================================================
+  BEST SKILL TEST — evaluate best skill on Test set (valid_unseen)
+============================================================
+  Test items: 66
+    [rollout] 1/66 (acc=1.000) id=r128 hard=1
+    [rollout] 2/66 (acc=1.000) id=r121 hard=1
+    [rollout] 3/66 (acc=1.000) id=r091 hard=1
+    [rollout] 4/66 (acc=1.000) id=r085 hard=1
+    [rollout] 5/66 (acc=1.000) id=r030 hard=1
+    [rollout] 6/66 (acc=1.000) id=r074 hard=1
+    [rollout] 7/66 (acc=1.000) id=r047 hard=1
+    [rollout] 8/66 (acc=1.000) id=r080 hard=1
+    [rollout] 9/66 (acc=0.889) id=r099 hard=0
+    [rollout] 10/66 (acc=0.900) id=r107 hard=1
+    [rollout] 11/66 (acc=0.909) id=r113 hard=1
+    [rollout] 12/66 (acc=0.833) id=r081 hard=0
+    [rollout] 13/66 (acc=0.846) id=r049 hard=1
+    [rollout] 14/66 (acc=0.857) id=r011 hard=1
+    [rollout] 15/66 (acc=0.867) id=r153 hard=1
+    [rollout] 16/66 (acc=0.875) id=r094 hard=1
+    [rollout] 17/66 (acc=0.882) id=r069 hard=1
+    [rollout] 18/66 (acc=0.889) id=r016 hard=1
+    [rollout] 19/66 (acc=0.895) id=r006 hard=1
+    [rollout] 20/66 (acc=0.900) id=r162 hard=1
+    [rollout] 21/66 (acc=0.905) id=r104 hard=1
+    [rollout] 22/66 (acc=0.909) id=r078 hard=1
+    [rollout] 23/66 (acc=0.913) id=r034 hard=1
+    [rollout] 24/66 (acc=0.917) id=r046 hard=1
+    [rollout] 25/66 (acc=0.880) id=r059 hard=0
+    [rollout] 26/66 (acc=0.885) id=r025 hard=1
+    [rollout] 27/66 (acc=0.889) id=r151 hard=1
+    [rollout] 28/66 (acc=0.893) id=r158 hard=1
+    [rollout] 29/66 (acc=0.897) id=r137 hard=1
+    [rollout] 30/66 (acc=0.867) id=r045 hard=0
+    [rollout] 31/66 (acc=0.871) id=r087 hard=1
+    [rollout] 32/66 (acc=0.875) id=r146 hard=1
+    [rollout] 33/66 (acc=0.848) id=r150 hard=0
+    [rollout] 34/66 (acc=0.824) id=r098 hard=0
+    [rollout] 35/66 (acc=0.829) id=r154 hard=1
+    [rollout] 36/66 (acc=0.833) id=r088 hard=1
+    [rollout] 37/66 (acc=0.838) id=r072 hard=1
+    [rollout] 38/66 (acc=0.842) id=r057 hard=1
+    [rollout] 39/66 (acc=0.846) id=r002 hard=1
+    [rollout] 40/66 (acc=0.825) id=r038 hard=0
+    [rollout] 41/66 (acc=0.829) id=r108 hard=1
+    [rollout] 42/66 (acc=0.833) id=r157 hard=1
+    [rollout] 43/66 (acc=0.837) id=r144 hard=1
+    [rollout] 44/66 (acc=0.841) id=r051 hard=1
+    [rollout] 45/66 (acc=0.844) id=r163 hard=1
+    [rollout] 46/66 (acc=0.826) id=r041 hard=0
+    [rollout] 47/66 (acc=0.830) id=r040 hard=1
+    [rollout] 48/66 (acc=0.833) id=r056 hard=1
+    [rollout] 49/66 (acc=0.837) id=r130 hard=1
+    [rollout] 50/66 (acc=0.840) id=r024 hard=1
+    [rollout] 51/66 (acc=0.843) id=r008 hard=1
+    [rollout] 52/66 (acc=0.846) id=r115 hard=1
+    [rollout] 53/66 (acc=0.849) id=r009 hard=1
+    [rollout] 54/66 (acc=0.852) id=r109 hard=1
+    [rollout] 55/66 (acc=0.855) id=r023 hard=1
+    [rollout] 56/66 (acc=0.839) id=r140 hard=0
+    [rollout] 57/66 (acc=0.842) id=r027 hard=1
+    [rollout] 58/66 (acc=0.845) id=r152 hard=1
+    [rollout] 59/66 (acc=0.847) id=r063 hard=1
+    [rollout] 60/66 (acc=0.850) id=r071 hard=1
+    [rollout] 61/66 (acc=0.852) id=r007 hard=1
+    [rollout] 62/66 (acc=0.855) id=r029 hard=1
+    [rollout] 63/66 (acc=0.841) id=r060 hard=0
+    [rollout] 64/66 (acc=0.844) id=r164 hard=1
+    [rollout] 65/66 (acc=0.831) id=r058 hard=0
+    [rollout] 66/66 (acc=0.833) id=r036 hard=1
+
+  === Best Skill Test Results ===
+    interrogative-invalid                   : hard=1.0/1=1.0000
+    mixed-valid-invalid-set                 : hard=1.0/1=1.0000
+    near-miss-scope-ambiguous-negation      : hard=1.0/1=1.0000
+    large-set-scale                         : hard=0.0/1=0.0000
+    generic-habitual-disguised-singular     : hard=1.0/1=1.0000
+    consequent-first-ordering               : hard=1.0/1=1.0000
+    markdown-list-input                     : hard=1.0/1=1.0000
+    plain-negation                          : hard=1.0/1=1.0000
+    syntactic-and-or-not-propositional      : hard=0.0/1=0.0000
+    causal-conditional-ambiguity            : hard=1.0/1=1.0000
+    nested-conditional                      : hard=0/0=0.0000
+    near-miss-false-paraphrase-trap         : hard=1.0/1=1.0000
+    just-in-case-biconditional-idiom        : hard=1.0/1=1.0000
+    implicit-conditional-only-if            : hard=0/0=0.0000
+    near-miss-ambiguous-pronoun             : hard=0/0=0.0000
+    mixed-symbolic-english-consistent       : hard=1.0/1=1.0000
+    plain-conditional                       : hard=1.0/1=1.0000
+    implicit-conditional-unless             : hard=1.0/1=1.0000
+    modal-invalid                           : hard=0/0=0.0000
+    mixed-symbolic-inconsistent             : hard=0/0=0.0000
+    negated-paraphrase                      : hard=0.0/1=0.0000
+    empty-input                             : hard=1.0/1=1.0000
+    sufficient-for-phrasing                 : hard=0/0=0.0000
+    near-miss-modal-conditional             : hard=0.0/2=0.0000
+    single-word-fragment                    : hard=1.0/1=1.0000
+    symbol-exhaustion-scale                 : hard=1.0/1=1.0000
+    plain-conjunction                       : hard=1.0/1=1.0000
+    temporal-invalid                        : hard=2.0/2=1.0000
+    biconditional                           : hard=0/0=0.0000
+    equivocation-same-word-different-sense  : hard=0.0/1=0.0000
+    imperative-invalid                      : hard=0/0=0.0000
+    quantified-invalid                      : hard=2.0/2=1.0000
+    non-english-input                       : hard=1.0/1=1.0000
+    fully-symbolic-standard-notation        : hard=1.0/1=1.0000
+    contradictory-set                       : hard=0/0=0.0000
+    subjective-vague-claim                  : hard=2.0/2=1.0000
+    neither-nor                             : hard=2.0/2=1.0000
+    prompt-injection-shaped                 : hard=1.0/2=0.5000
+    valid-syllogism-shaped-singular         : hard=1.0/1=1.0000
+    near-miss-rhetorical-question           : hard=1.0/1=1.0000
+    fully-symbolic-ascii-notation           : hard=0/0=0.0000
+    either-or-ambiguity                     : hard=2.0/2=1.0000
+    fully-symbolic-malformed                : hard=1.0/1=1.0000
+    pronoun-back-reference                  : hard=1.0/2=0.5000
+    argument-structure-input                : hard=2.0/2=1.0000
+    necessary-for-phrasing                  : hard=1.0/1=1.0000
+    near-miss-bundled-shared-subject        : hard=2.0/2=1.0000
+    implicit-conditional-provided-that      : hard=2.0/2=1.0000
+    paraphrase-consistency                  : hard=2.0/2=1.0000
+    negation-scope-ambiguity                : hard=2.0/2=1.0000
+    bundling-decomposition                  : hard=2.0/2=1.0000
+    explicit-exclusive-or                   : hard=2.0/2=1.0000
+    multiple-independent-example-blocks     : hard=3.0/3=1.0000
+    narrative-invalid                       : hard=0.0/3=0.0000
+    plain-disjunction                       : hard=3.0/3=1.0000
+    overall                                 : hard=55.0/66=0.8333
+
+  [final skill == best skill] final_test_hard=0.8333 (reused)
+
+  === Improvement vs baseline (init S_0) ===
+    [2] best-on-val hard: 0.8485 -> 0.8333  (delta=-0.0152)
+    [3] final/last  hard: 0.8485 -> 0.8333  (delta=-0.0152)
+
+============================================================
+  Final Summary
+============================================================
+  steps=12 accept=0 reject=9 skip=3
+  best_score=0.9091 (step 0)  wall=2791s
+    epoch 1: accept=0 reject=5 best=0.9091
+    epoch 2: accept=0 reject=4 best=0.9091
+
+  === TEST scores (3 skills, split=valid_unseen) ===
+    [1] init/baseline (S_0)          : test_hard=0.8485
+    [2] best-on-val (step 0)         : test_hard=0.8333 test_soft=0.8621
+    [3] final/last skill             : test_hard=0.8333 test_soft=0.8621
+  total tokens: 1,038,836 (prompt=6,008 completion=1,032,828 calls=628)
+
+  Output saved to: /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_haiku
+  Final test: 0.8333
+EXIT=0

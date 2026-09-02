@@ -1,0 +1,163 @@
+
+============================================================
+  SkillOpt — Executive Strategy for Self-Evolving Agent Skills
+============================================================
+  env:            csvqa
+  optimizer_model:  claude-sonnet-5
+  target_model:  claude-sonnet-5
+  optimizer_backend:claude_chat
+  target_backend:claude_chat
+  reasoning:      low
+  rewrite_effort: off
+  epochs:         1
+  train_size:     from dataset
+  steps/epoch:    auto
+  batch_size:     4
+  edit_budget:    2
+  lr_scheduler:   constant
+  update_mode:    patch
+  min_edit_budget:2
+  minibatch_size: 4
+  seed:           42
+  meta_skill:     False
+  skill_aware_reflection: False
+  slow_update:    False
+  out_root:       /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_smoke
+============================================================
+
+  [CsvQADataLoader] generated ratio split 4:2:4 at /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_smoke/_generated_splits/csvqa_4-2-4_seed42 from /home/user/claude-skill-dev/skill-lab/dk-prop-logic-parser/tests.csv
+  [CsvQADataLoader] train=6 val=6 test=6  (from /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_smoke/_generated_splits/csvqa_4-2-4_seed42)
+  [model config] backend=azure_openai  optimizer=claude-sonnet-5 (claude_chat)  target=claude-sonnet-5 (claude_chat)  reasoning=low
+  [initial skill] /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/skillopt/envs/csvqa/skills/proplogic_initial.md (5742 chars)
+
+  [config] epochs=1 steps/epoch=2 (auto) accum=1 batch_size=4
+  [config] train_size=6
+  [config] batches/epoch=2 total_steps=2 games/epoch=6
+  [config] lr_scheduler=constant edit_budget=2 min_edit_budget=2
+  [config] skill_update_mode=patch lr_control_mode=fixed rewrite_reasoning_effort=off rewrite_max_completion_tokens=64000
+  [config] longitudinal_pair_policy=mixed
+  [config] base_seeds=[43, 44]
+  [gate] metric=hard
+  [slow update] acceptance=force-accept (unconditional)
+
+============================================================
+  BASELINE — evaluate initial skill on Selection set (valid_seen)
+============================================================
+  Selection items: 6
+    [rollout] 1/6 (acc=1.000) id=r138 hard=1
+    [rollout] 2/6 (acc=1.000) id=r129 hard=1
+    [rollout] 3/6 (acc=1.000) id=r005 hard=1
+    [rollout] 4/6 (acc=1.000) id=r052 hard=1
+    [rollout] 5/6 (acc=1.000) id=r155 hard=1
+    [rollout] 6/6 (acc=1.000) id=r042 hard=1
+  [baseline result] selection hard=1.0000 soft=1.0000 gate[hard]=1.0000
+
+  [EPOCH 1/1] shuffled_seeds=[1043, 1044]
+
+  [STEP 1/2] epoch=1 step_in_epoch=0 ==============================
+    [1/6 ROLLOUT] train items=4 (from pool, batch_seed=1043)
+    [rollout] 1/4 (acc=1.000) id=r147 hard=1
+    [rollout] 2/4 (acc=1.000) id=r112 hard=1
+    [rollout] 3/4 (acc=1.000) id=r062 hard=1
+    [rollout] 4/4 (acc=1.000) id=r043 hard=1
+    [1/6 done] hard=1.0000 soft=1.0000
+    [2/6 REFLECT minibatch] failure=0→0 groups  success=4→1 groups  (M=4, L=2, workers=2)
+      [analyst] 1/1 minibatch_succ_000 (4 trajs) → 0 edits
+    [2/6 done] failure_patches=0 success_patches=0
+    [skip] no usable patches — skill unchanged
+
+  [STEP 2/2] epoch=1 step_in_epoch=1 ==============================
+    [1/6 ROLLOUT] train items=2 (from pool, batch_seed=1044)
+    [rollout] 1/2 (acc=1.000) id=r092 hard=1
+    [rollout] 2/2 (acc=1.000) id=r136 hard=1
+    [1/6 done] hard=1.0000 soft=1.0000
+    [2/6 REFLECT minibatch] failure=0→0 groups  success=2→1 groups  (M=4, L=2, workers=2)
+      [analyst] 1/1 minibatch_succ_000 (2 trajs) → 0 edits
+    [2/6 done] failure_patches=0 success_patches=0
+    [skip] no usable patches — skill unchanged
+
+  [done] best skill from step 0, score=1.0000
+
+  [final skill == best skill] final_selection_hard=1.0000 (reused)
+
+============================================================
+  BASELINE TEST — evaluate initial skill on Test set (valid_unseen)
+============================================================
+  Test items: 6
+    [rollout] 1/6 (acc=1.000) id=r085 hard=1
+    [rollout] 2/6 (acc=1.000) id=r121 hard=1
+    [rollout] 3/6 (acc=1.000) id=r113 hard=1
+    [rollout] 4/6 (acc=1.000) id=r153 hard=1
+    [rollout] 5/6 (acc=1.000) id=r030 hard=1
+    [rollout] 6/6 (acc=1.000) id=r099 hard=1
+
+  === Baseline Test Results (S_0) ===
+    interrogative-invalid                   : hard=0/0=0.0000
+    mixed-valid-invalid-set                 : hard=0/0=0.0000
+    near-miss-scope-ambiguous-negation      : hard=1.0/1=1.0000
+    large-set-scale                         : hard=0/0=0.0000
+    generic-habitual-disguised-singular     : hard=0/0=0.0000
+    consequent-first-ordering               : hard=0/0=0.0000
+    modal-invalid                           : hard=0/0=0.0000
+    plain-conjunction                       : hard=0/0=0.0000
+    fully-symbolic-malformed                : hard=0/0=0.0000
+    just-in-case-biconditional-idiom        : hard=0/0=0.0000
+    pronoun-back-reference                  : hard=0/0=0.0000
+    near-miss-modal-conditional             : hard=1.0/1=1.0000
+    either-or-ambiguity                     : hard=1.0/1=1.0000
+    negation-scope-ambiguity                : hard=1.0/1=1.0000
+    mixed-symbolic-english-consistent       : hard=1.0/1=1.0000
+    multiple-independent-example-blocks     : hard=1.0/1=1.0000
+    overall                                 : hard=6.0/6=1.0000
+
+============================================================
+  BEST SKILL TEST — evaluate best skill on Test set (valid_unseen)
+============================================================
+  Test items: 6
+    [rollout] 1/6 (acc=1.000) id=r030 hard=1
+    [rollout] 2/6 (acc=1.000) id=r085 hard=1
+    [rollout] 3/6 (acc=1.000) id=r121 hard=1
+    [rollout] 4/6 (acc=1.000) id=r099 hard=1
+    [rollout] 5/6 (acc=1.000) id=r153 hard=1
+    [rollout] 6/6 (acc=1.000) id=r113 hard=1
+
+  === Best Skill Test Results ===
+    interrogative-invalid                   : hard=0/0=0.0000
+    mixed-valid-invalid-set                 : hard=0/0=0.0000
+    near-miss-scope-ambiguous-negation      : hard=1.0/1=1.0000
+    large-set-scale                         : hard=0/0=0.0000
+    generic-habitual-disguised-singular     : hard=0/0=0.0000
+    consequent-first-ordering               : hard=0/0=0.0000
+    modal-invalid                           : hard=0/0=0.0000
+    plain-conjunction                       : hard=0/0=0.0000
+    fully-symbolic-malformed                : hard=0/0=0.0000
+    just-in-case-biconditional-idiom        : hard=0/0=0.0000
+    pronoun-back-reference                  : hard=0/0=0.0000
+    near-miss-modal-conditional             : hard=1.0/1=1.0000
+    either-or-ambiguity                     : hard=1.0/1=1.0000
+    negation-scope-ambiguity                : hard=1.0/1=1.0000
+    mixed-symbolic-english-consistent       : hard=1.0/1=1.0000
+    multiple-independent-example-blocks     : hard=1.0/1=1.0000
+    overall                                 : hard=6.0/6=1.0000
+
+  [final skill == best skill] final_test_hard=1.0000 (reused)
+
+  === Improvement vs baseline (init S_0) ===
+    [2] best-on-val hard: 1.0000 -> 1.0000  (delta=+0.0000)
+    [3] final/last  hard: 1.0000 -> 1.0000  (delta=+0.0000)
+
+============================================================
+  Final Summary
+============================================================
+  steps=2 accept=0 reject=0 skip=2
+  best_score=1.0000 (step 0)  wall=47s
+    epoch 1: accept=0 reject=0 best=1.0000
+
+  === TEST scores (3 skills, split=valid_unseen) ===
+    [1] init/baseline (S_0)          : test_hard=1.0000
+    [2] best-on-val (step 0)         : test_hard=1.0000 test_soft=1.0000
+    [3] final/last skill             : test_hard=1.0000 test_soft=1.0000
+  total tokens: 3,084 (prompt=52 completion=3,032 calls=26)
+
+  Output saved to: /tmp/claude-0/-home-user-claude-skill-dev/7ee7b936-300b-5ce9-99c2-8ac102edb072/scratchpad/SkillOpt/outputs/proplogic_smoke
+  Final test: 1.0000

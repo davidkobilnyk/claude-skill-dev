@@ -1,0 +1,19 @@
+{
+  "reasoning": "Two distinct issues: capitalization mismatch in legend entries, and overly aggressive exclusive-or inference for disjunctions that aren't strictly, definitionally mutually exclusive (game being cancelled vs rescheduled is a real-world tendency, not a logical necessity like win/lose).",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- \"or\" (inclusive default; treat as exclusive only when the two disjuncts are inherently mutually exclusive by definition, e.g. win/lose) → `∨` (or `⊕` when inherently exclusive)",
+      "content": "- \"or\" (inclusive default; treat as exclusive only when the two disjuncts are logically/definitionally mutually exclusive, i.e. it is impossible by definition for both to be true, e.g. win/lose) → `∨` — do NOT use `⊕` merely because the sentence implies only one will practically happen (e.g. \"the game is cancelled or rescheduled\" is still `∨`, since both are not strictly contradictory by definition)",
+      "source_type": "failure",
+      "support_count": 1
+    },
+    {
+      "op": "insert_after",
+      "target": "## Step 2 — Build the symbol legend",
+      "content": "\nWrite legend entries using the exact lowercase wording/casing from the input sentence (minus leading articles' capitalization), not capitalized as a standalone sentence — e.g. \"it rains\" not \"It rains\".",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}

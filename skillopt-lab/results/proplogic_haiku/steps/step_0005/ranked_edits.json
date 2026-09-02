@@ -1,0 +1,12 @@
+{
+  "reasoning": "The gold answer treats 'not asleep' and 'awake' as the same proposition (merged to one symbol), but the skill's guidance explicitly instructs the opposite for a similar-looking pair ('not raining'/'dry'), and gives no way to distinguish direct lexical antonyms (asleep/awake) from merely correlated states (raining/dry). Add a rule clarifying that direct antonym pairs where one word IS the negation-equivalent of the other should merge, while correlated-but-distinct states should not.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- Reuse the same symbol only when two phrasings are near-certainly the same claim (e.g. \"not raining\" and \"dry\" are NOT the same claim — keep them separate; \"the lights are off\" and \"the room is not lit\" ARE the same claim — merge them).",
+      "content": "- Reuse the same symbol only when two phrasings are near-certainly the same claim (e.g. \"not raining\" and \"dry\" are NOT the same claim — keep them separate, since dryness and rain are merely correlated, not logical negations of each other; \"the lights are off\" and \"the room is not lit\" ARE the same claim — merge them). Direct lexical antonym pairs where one state is definitionally the absence/opposite of the other (e.g. \"asleep\"/\"awake\", \"alive\"/\"dead\", \"open\"/\"closed\") count as the SAME proposition under negation: \"not asleep\" and \"awake\" both map to `¬P` where P=\"asleep\" (or equivalently both map to the same symbol), not to two separate symbols.",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}
