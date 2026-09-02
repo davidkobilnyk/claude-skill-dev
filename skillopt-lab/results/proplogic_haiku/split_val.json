@@ -1,0 +1,200 @@
+[
+  {
+    "id": "r052",
+    "question": "It must rain tomorrow.",
+    "expected": "INVALID: modal claim (necessity) — not expressible in plain propositional logic",
+    "task_type": "modal-invalid"
+  },
+  {
+    "id": "r138",
+    "question": "The alarm sounds if a window is broken.",
+    "expected": "P=a window is broken; Q=the alarm sounds => P→Q",
+    "task_type": "consequent-first-ordering"
+  },
+  {
+    "id": "r005",
+    "question": "Tom likes coffee and Jerry likes tea.",
+    "expected": "P=Tom likes coffee; Q=Jerry likes tea => P∧Q",
+    "task_type": "plain-conjunction"
+  },
+  {
+    "id": "r129",
+    "question": "P ↔ (Q ∨",
+    "expected": "INVALID: malformed logic expression — unmatched parenthesis / incomplete formula",
+    "task_type": "fully-symbolic-malformed"
+  },
+  {
+    "id": "r155",
+    "question": "The alarm triggers just in case a sensor is breached.",
+    "expected": "P=the alarm triggers; Q=a sensor is breached => P↔Q [flag: P→Q also accepted under the colloquial reading]",
+    "task_type": "just-in-case-biconditional-idiom"
+  },
+  {
+    "id": "r042",
+    "question": "If the tank ruptures, chemicals will leak. It also triggers an emergency shutdown.",
+    "expected": "P=the tank ruptures; Q=chemicals will leak; R=an emergency shutdown is triggered => P→Q; P→R",
+    "task_type": "pronoun-back-reference"
+  },
+  {
+    "id": "r165",
+    "question": "Premise 1: If the exam is passed, the certificate is issued. Premise 2: The certificate was not issued. Conclusion: Therefore, the exam was not passed.",
+    "expected": "P=the exam is passed; Q=the certificate is issued => Premises: P→Q; ¬Q. Conclusion: ¬P",
+    "task_type": "argument-structure-input"
+  },
+  {
+    "id": "r135",
+    "question": "A signed form is sufficient for approval.",
+    "expected": "P=a signed form is submitted; Q=approval is granted => P→Q",
+    "task_type": "sufficient-for-phrasing"
+  },
+  {
+    "id": "r132",
+    "question": "Sleep is necessary for good health.",
+    "expected": "P=sleep occurs; Q=good health results => Q→P",
+    "task_type": "necessary-for-phrasing"
+  },
+  {
+    "id": "r096",
+    "question": "もし雨が降れば、地面が濡れる。",
+    "expected": "INVALID: non-English input — out of scope for this conversion",
+    "task_type": "non-english-input"
+  },
+  {
+    "id": "r149",
+    "question": "The spring was cold and clear. The spring in the mechanism finally broke.",
+    "expected": "P=the water spring was cold and clear; Q=the mechanical spring broke => P; Q [flag: equivocation on \"spring\" — distinct senses, distinct symbols]",
+    "task_type": "equivocation-same-word-different-sense"
+  },
+  {
+    "id": "r106",
+    "question": "If it rains, the game is cancelled and the field is closed.",
+    "expected": "P=it rains; Q=the game is cancelled; R=the field is closed => P→(Q∧R) [flag: consequent bundles two independent claims under a shared \"if\" — must decompose into Q∧R]",
+    "task_type": "near-miss-bundled-shared-subject"
+  },
+  {
+    "id": "r032",
+    "question": "If you pass the exam, then if you also complete the project, you earn the certificate.",
+    "expected": "P=you pass the exam; Q=you complete the project; R=you earn the certificate => P→(Q→R)",
+    "task_type": "nested-conditional"
+  },
+  {
+    "id": "r118",
+    "question": "P -> Q, Q & R, !P",
+    "expected": "P→Q; Q∧R; ¬P [flag: ASCII pseudo-notation normalized to standard symbols]",
+    "task_type": "fully-symbolic-ascii-notation"
+  },
+  {
+    "id": "r022",
+    "question": "You can borrow the car, provided that you return it by noon.",
+    "expected": "P=you can borrow the car; Q=you return it by noon => Q→P",
+    "task_type": "implicit-conditional-provided-that"
+  },
+  {
+    "id": "r093",
+    "question": "Either John comes or Mary comes. All guests must arrive by six.",
+    "expected": "P=John comes; Q=Mary comes => P∨Q [flag: second sentence is quantified/modal, excluded from formalization]",
+    "task_type": "mixed-valid-invalid-set"
+  },
+  {
+    "id": "r124",
+    "question": "Let P = it is raining. P → Q, where Q = the ground is wet. Later, P = the store is open, and P ∧ Q.",
+    "expected": "P=it is raining; Q=the ground is wet; R=the store is open => P→Q; R∧Q [flag: input inconsistently redefines P mid-text; resolved by assigning a new symbol R to the second, distinct proposition]",
+    "task_type": "mixed-symbolic-inconsistent"
+  },
+  {
+    "id": "r010",
+    "question": "It is not raining.",
+    "expected": "P=it is raining => ¬P",
+    "task_type": "plain-negation"
+  },
+  {
+    "id": "r083",
+    "question": "The store is open. The store is closed.",
+    "expected": "P=the store is open => P; ¬P [flag: contradictory, treating \"closed\" as ¬open]",
+    "task_type": "contradictory-set"
+  },
+  {
+    "id": "r035",
+    "question": "The store is closed today. The store being closed means deliveries are delayed.",
+    "expected": "P=the store is closed; Q=deliveries are delayed => P; P→Q",
+    "task_type": "paraphrase-consistency"
+  },
+  {
+    "id": "r086",
+    "question": "It is not true that she will call or she will email.",
+    "expected": "P=she will call; Q=she will email => ¬(P∨Q)",
+    "task_type": "negation-scope-ambiguity"
+  },
+  {
+    "id": "r131",
+    "question": "A valid ticket is necessary for entry.",
+    "expected": "P=a valid ticket is present; Q=entry is granted => Q→P",
+    "task_type": "necessary-for-phrasing"
+  },
+  {
+    "id": "r127",
+    "question": "P → → Q, (R ∧ S",
+    "expected": "INVALID: malformed logic expression — dangling connective (\"→ →\") and unmatched parenthesis",
+    "task_type": "fully-symbolic-malformed"
+  },
+  {
+    "id": "r048",
+    "question": "If the power fails, the lights go out and the servers shut down.",
+    "expected": "P=the power fails; Q=the lights go out; R=the servers shut down => P→(Q∧R)",
+    "task_type": "bundling-decomposition"
+  },
+  {
+    "id": "r021",
+    "question": "She will sign the contract only if the price is fair.",
+    "expected": "P=she will sign the contract; Q=the price is fair => P→Q",
+    "task_type": "implicit-conditional-only-if"
+  },
+  {
+    "id": "r126",
+    "question": "X = the door is locked. X ∧ Y, Y = the alarm is armed. Suppose instead X = the window is open; X → Y.",
+    "expected": "X=the door is locked; Y=the alarm is armed; Z=the window is open => X∧Y; Z→Y [flag: resolved inconsistent redefinition of X]",
+    "task_type": "mixed-symbolic-inconsistent"
+  },
+  {
+    "id": "r082",
+    "question": "It is raining. It is not raining.",
+    "expected": "P=it is raining => P; ¬P [flag: contradictory set — both P and ¬P asserted]",
+    "task_type": "contradictory-set"
+  },
+  {
+    "id": "r119",
+    "question": "A | B, !A -> C, A <-> D",
+    "expected": "A∨B; ¬A→C; A↔D [flag: ASCII notation normalized]",
+    "task_type": "fully-symbolic-ascii-notation"
+  },
+  {
+    "id": "r159",
+    "question": "Either the north gate or the south gate is open, never both at once.",
+    "expected": "P=the north gate is open; Q=the south gate is open => P⊕Q",
+    "task_type": "explicit-exclusive-or"
+  },
+  {
+    "id": "r116",
+    "question": "A ∨ B, ¬A → C, A ↔ D",
+    "expected": "A∨B; ¬A→C; A↔D [flag: already fully symbolic and well-formed]",
+    "task_type": "fully-symbolic-standard-notation"
+  },
+  {
+    "id": "r013",
+    "question": "It rains if and only if the clouds are dark.",
+    "expected": "P=it rains; Q=the clouds are dark => P↔Q",
+    "task_type": "biconditional"
+  },
+  {
+    "id": "r102",
+    "question": "If the valve sticks or the pressure spikes, the system trips. It should be inspected.",
+    "expected": "P=the valve sticks; Q=the pressure spikes; R=the system trips => (P∨Q)→R [flag: ambiguous \"it\" antecedent]",
+    "task_type": "near-miss-ambiguous-pronoun"
+  },
+  {
+    "id": "r141",
+    "question": "The team includes engineers and designers.",
+    "expected": "P=the team includes engineers and designers => P [flag: objects, not propositions — not a case of P∧Q]",
+    "task_type": "syntactic-and-or-not-propositional"
+  }
+]

@@ -1,0 +1,54 @@
+diff --git a/scripts/eval_only.py b/scripts/eval_only.py
+index abe4490..20700fc 100644
+--- a/scripts/eval_only.py
++++ b/scripts/eval_only.py
+@@ -75,6 +75,11 @@ def _register_builtins() -> None:
+         _ENV_REGISTRY["alfworld"] = ALFWorldAdapter
+     except ImportError:
+         pass
++    try:
++        from skillopt.envs.csvqa.adapter import CsvQAAdapter
++        _ENV_REGISTRY["csvqa"] = CsvQAAdapter
++    except ImportError:
++        pass
+     try:
+         from skillopt.envs.searchqa.adapter import SearchQAAdapter
+         _ENV_REGISTRY["searchqa"] = SearchQAAdapter
+diff --git a/scripts/train.py b/scripts/train.py
+index f8f6cbf..a51a021 100644
+--- a/scripts/train.py
++++ b/scripts/train.py
+@@ -50,6 +50,11 @@ def _register_builtins() -> None:
+         _ENV_REGISTRY["alfworld"] = ALFWorldAdapter
+     except ImportError:
+         pass  # ALFWorld deps not installed — skip
++    try:
++        from skillopt.envs.csvqa.adapter import CsvQAAdapter
++        _ENV_REGISTRY["csvqa"] = CsvQAAdapter
++    except ImportError:
++        pass
+     try:
+         from skillopt.envs.searchqa.adapter import SearchQAAdapter
+         _ENV_REGISTRY["searchqa"] = SearchQAAdapter
+diff --git a/skillopt/model/claude_backend.py b/skillopt/model/claude_backend.py
+index 373811a..59865e1 100644
+--- a/skillopt/model/claude_backend.py
++++ b/skillopt/model/claude_backend.py
+@@ -17,6 +17,8 @@ from skillopt.model.common import CompatAssistantMessage, CompatToolCall, Compat
+ CLAUDE_BIN = os.environ.get("CLAUDE_CLI_BIN", "claude")
+ CLAUDE_PERMISSION_MODE = os.environ.get("CLAUDE_PERMISSION_MODE", "dontAsk")
+ CLAUDE_SETTING_SOURCES = os.environ.get("CLAUDE_SETTING_SOURCES", "user,project")
++# Optional: restrict the CLI tool set for chat calls (e.g. "" to disable all tools).
++CLAUDE_CHAT_TOOLS = os.environ.get("CLAUDE_CHAT_TOOLS")
+ CLAUDE_ALLOW_ATTACHMENT_READ = os.environ.get("CLAUDE_ALLOW_ATTACHMENT_READ", "1").strip().lower() not in {"0", "false", "no"}
+ 
+ OPTIMIZER_DEPLOYMENT = os.environ.get("OPTIMIZER_DEPLOYMENT", "claude-sonnet-4-6")
+@@ -256,6 +258,8 @@ def _run_claude_print(*, system: str, prompt: str, model: str, tools: list[dict[
+             cmd.extend(["--model", model])
+         if CLAUDE_SETTING_SOURCES:
+             cmd.extend(["--setting-sources", CLAUDE_SETTING_SOURCES])
++        if CLAUDE_CHAT_TOOLS is not None:
++            cmd.extend(["--tools", CLAUDE_CHAT_TOOLS])
+         if system:
+             # Write the system prompt to a file, not argv: here the skill being
+             # optimized IS the system prompt, and SkillOpt grows it over training,

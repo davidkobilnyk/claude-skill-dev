@@ -1,0 +1,12 @@
+{
+  "reasoning": "The existing rule says to assign a fresh symbol to the second definition of a redefined letter, but doesn't say to actually substitute that fresh symbol into any occurrences of the connective after the redefinition point. This caused the model to keep the stale symbol in the final formula.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- If the input itself redefines a symbol inconsistently (the same letter used for two different propositions), keep the first definition and assign a fresh symbol to the second.",
+      "content": "- If the input itself redefines a symbol inconsistently (the same letter used for two different propositions), keep the first definition and assign a fresh symbol to the second — and use that fresh symbol in place of the original letter in every formula appearing after the redefinition point, since those occurrences refer to the new meaning, not the original one.",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "reasoning": "The skill's Step 2 note about handling ASCII/Unicode symbols implies symbolic input is expected, but Step 1's validity checks don't clarify that well-formed symbolic-only input (with no English needed) is valid and should pass through as-is, using the symbols themselves as legend entries or being output directly. Add an explicit rule so the model doesn't wrongly invalidate already-symbolic input.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "- If the input is already partly or fully in symbolic notation (Unicode ∧∨¬→↔, or ASCII `&|!-> <->`), treat the ASCII forms as equivalent to the Unicode ones and adopt/reuse the symbols already given rather than re-deriving new ones.",
+      "content": "- If the input is ALREADY fully symbolic and well-formed (valid formulas using only the given connectives/symbols, no English prose to translate), this is NOT invalid for lacking English — output the formulas as-is (converting ASCII to Unicode), using the existing single-letter symbols directly with no legend entries required (or an empty/trivial legend), since there is no English proposition text to define.",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+_base_: ../_base_/default.yaml
+
+model:
+  optimizer_backend: claude_chat
+  target_backend: claude_chat
+  optimizer: claude-sonnet-5
+  target: claude-sonnet-5
+  reasoning_effort: low
+
+train:
+  num_epochs: 2
+  train_size: 0
+  batch_size: 10
+  accumulation: 1
+  seed: 42
+
+gradient:
+  minibatch_size: 5
+  merge_batch_size: 5
+  analyst_workers: 4
+  failure_only: false
+
+optimizer:
+  learning_rate: 3
+  min_learning_rate: 2
+  lr_scheduler: constant
+  skill_update_mode: patch
+  use_slow_update: false
+  use_meta_skill: false
+
+evaluation:
+  use_gate: true
+  sel_env_num: 0
+  test_env_num: 0
+  eval_test: true
+
+env:
+  name: csvqa
+  skill_init: skillopt/envs/csvqa/skills/arith_initial.md
+  split_mode: ratio
+  split_ratio: "4:2:4"
+  split_seed: 42
+  data_path: ../claude-skill-dev/skill-lab/dk-arithmetic/tests.csv
+  grader: arith
+  workers: 8
+  exec_timeout: 180
+  max_completion_tokens: 4096
+  limit: 0

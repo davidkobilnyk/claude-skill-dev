@@ -1,0 +1,19 @@
+{
+  "reasoning": "One trajectory shows the model correctly avoided merging symbols for 'bank' but still produced ambiguous legend text and wrongly conjoined 'steep' and 'covered in grass' as two atoms rather than one compound claim about the same referent; a rule clarifying legend wording disambiguation and single-referent compound descriptions is needed. The other shows the 'not in English' validity rule being wrongly applied to input that is already fully symbolic/well-formed logic notation, which should be treated as valid input to pass through/normalize, not rejected.",
+  "edits": [
+    {
+      "op": "replace",
+      "target": "- Empty, whitespace-only, a bare fragment, or not in English.",
+      "content": "- Empty, whitespace-only, a bare fragment, or not in English. (Note: input that is already fully in symbolic logical notation, e.g. `X ∧ ¬Y`, is NOT invalid — treat it as already-formalized valid content and pass it through per Step 2's rule on existing symbolic notation, converting ASCII to Unicode as needed.)",
+      "source_type": "failure",
+      "support_count": 2
+    },
+    {
+      "op": "insert_after",
+      "target": "- Never reuse a symbol just because two sentences share vocabulary (e.g. \"the team won the game\" and \"the team won the championship\" are different propositions despite sharing \"won\"; \"the bank was steep\" and \"the bank raised rates\" use \"bank\" in different senses and must get different symbols).",
+      "content": "  - When two propositions share an ambiguous or polysemous word, write each legend entry with enough disambiguating context to make the distinct senses clear (e.g. \"the river bank was steep\" vs. \"the financial bank raised rates\"), not the bare ambiguous phrase alone.\n  - Do not split a single sentence describing multiple attributes of the SAME referent/event into separate atomic propositions unless the input treats them as independently assertable claims — assess whether the sentence expresses one compound claim about one subject before creating multiple symbols for it.",
+      "source_type": "failure",
+      "support_count": 2
+    }
+  ]
+}

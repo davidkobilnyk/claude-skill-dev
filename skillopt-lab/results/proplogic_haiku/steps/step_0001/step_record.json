@@ -1,0 +1,33 @@
+{
+  "step": 1,
+  "epoch": 1,
+  "step_in_epoch": 0,
+  "timing": {
+    "rollout_s": 84.7,
+    "reflect_s": 6.9
+  },
+  "tokens": {},
+  "rollout_hard": 1.0,
+  "rollout_soft": 1.0,
+  "rollout_n": 11,
+  "accumulation_batches": [
+    {
+      "batch_idx": 0,
+      "batch_seed": 1043,
+      "n_envs": 11,
+      "hard": 1.0,
+      "soft": 1.0,
+      "n_failure_patches": 0,
+      "n_success_patches": 0
+    }
+  ],
+  "n_patches": 0,
+  "n_failure_patches": 0,
+  "n_success_patches": 0,
+  "action": "skip_no_patches",
+  "current_score": 0.9090909090909091,
+  "best_score": 0.9090909090909091,
+  "best_step": 0,
+  "skill_len": 5742,
+  "wall_time_s": 91.6
+}

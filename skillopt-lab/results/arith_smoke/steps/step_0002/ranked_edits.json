@@ -1,0 +1,12 @@
+{
+  "reasoning": "Add explicit rule that if the input is just a single number (no operator needed), output that number as the result rather than N/A.",
+  "edits": [
+    {
+      "op": "insert_after",
+      "target": "If the text contains no arithmetic to compute, output: `N/A - no arithmetic expression found`",
+      "content": "\nIf the text is just a single standalone number with no operation described, output that number as the result (this is not \"no arithmetic\").",
+      "source_type": "failure",
+      "support_count": 1
+    }
+  ]
+}
