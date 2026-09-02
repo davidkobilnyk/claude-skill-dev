@@ -45,6 +45,8 @@ Both suites: 100 % on every row seen, 0 edits accepted. In the arithmetic run th
 
 Baseline validation 30/33 (0.9091). Final = initial skill. Test score of the initial skill (66 rows, Haiku 4.5): **0.8333** hard accuracy.
 
+The trainer evaluated that *same* initial text on the test set twice (once as the S_0 baseline, once as the best-on-val skill) and got **56/66 (0.8485)** and then **55/66 (0.8333)**. Identical text, different score: that one-row swing on 66 rows is the run-to-run variance the gate had to see through on 33.
+
 ### Why nothing was accepted
 
 Every proposed edit was locally sensible and addressed the real failure in its batch. None survived the gate because:
